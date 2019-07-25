@@ -1,4 +1,4 @@
-# Importing to Hyrax with Darlingtonia
+# Importing to Hyrax with Zizia
 
 ## Getting Started
 The simplest use case is importing content that matches [Hyrax's core and basic metadata fields](http://samvera.github.io/metadata_application_profile.html), plus a few extra fields that let Hyrax know how to display the content properly. At a very high level we're going to:
@@ -66,13 +66,13 @@ The simplest use case is importing content that matches [Hyrax's core and basic 
 So, at this point, your test is running, but the importer isn't yet creating any records.
 
 ### 2. Get the test passing
-1. Add the darlingtonia gem to your `Gemfile` and run bundle update:
+1. Add the zizia gem to your `Gemfile` and run bundle update:
   ```
-    gem `darlingtonia`
+    gem `zizia`
   ```
 2. Edit `app/importer/modular_importer.rb` so it looks like this:
   ```ruby
-    require 'darlingtonia'
+    require 'zizia'
 
     class ModularImporter
       def initialize(csv_file)
@@ -82,7 +82,7 @@ So, at this point, your test is running, but the importer isn't yet creating any
 
       def import
         file = File.open(@csv_file)
-        Darlingtonia::Importer.new(parser: Darlingtonia::CsvParser.new(file: file), record_importer: Darlingtonia::HyraxRecordImporter.new).import
+        Zizia::Importer.new(parser: Zizia::CsvParser.new(file: file), record_importer: Zizia::HyraxRecordImporter.new).import
         file.close # Note that we must close any files we open.
       end
     end

@@ -6,8 +6,8 @@ ENV['environment'] ||= 'test'
 require 'bundler/setup'
 require 'active_fedora'
 require 'active_fedora/cleaner'
-require 'darlingtonia'
-require 'darlingtonia/spec'
+require 'zizia'
+require 'zizia/spec'
 require 'byebug'
 
 RSpec.configure do |config|

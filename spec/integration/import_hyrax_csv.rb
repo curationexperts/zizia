@@ -2,9 +2,9 @@
 require 'spec_helper'
 
 describe 'importing a CSV with Hyrax defaults', :clean do
-  subject(:importer) { Darlingtonia::Importer.new(parser: parser, record_importer: record_importer) }
-  let(:parser) { Darlingtonia::CsvParser.new(file: csv_file) }
-  let(:record_importer) { Darlingtonia::HyraxRecordImporter.new }
+  subject(:importer) { Zizia::Importer.new(parser: parser, record_importer: record_importer) }
+  let(:parser) { Zizia::CsvParser.new(file: csv_file) }
+  let(:record_importer) { Zizia::HyraxRecordImporter.new }
 
   let(:csv_file) { File.open('spec/fixtures/hyrax/example.csv') }
   after { csv_file.close }

@@ -4,7 +4,7 @@ Gemfile.lock
 .byebug_history
 .fcrepo_wrapper_test.yml
 .solr_wrapper_test.yml
-darlingtonia_import.log
+zizia_import.log
 *~
 \#*\#
 /.emacs.desktop

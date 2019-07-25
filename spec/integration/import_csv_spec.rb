@@ -3,8 +3,8 @@
 require 'spec_helper'
 
 describe 'importing a csv batch', :clean do
-  subject(:importer) { Darlingtonia::Importer.new(parser: parser) }
-  let(:parser)       { Darlingtonia::CsvParser.new(file: file) }
+  subject(:importer) { Zizia::Importer.new(parser: parser) }
+  let(:parser)       { Zizia::CsvParser.new(file: file) }
   let(:file)         { File.open('spec/fixtures/example.csv') }
 
   load File.expand_path("../../support/shared_contexts/with_work_type.rb", __FILE__)

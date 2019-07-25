@@ -1,0 +1,22 @@
+# frozen_string_literal: true
+
+class FakeParser < Zizia::Parser
+  METADATA = [{ 'title' => '1' }, { 'title' => '2' }, { 'title' => '3' }].freeze
+
+  def initialize(file: METADATA)
+    super
+  end
+
+  def records
+    return enum_for(:records) unless block_given?
+
+    file.each { |hsh| yield Zizia::InputRecord.from(metadata: hsh) }
+  end
+end
+
+describe FakeParser do
+  it_behaves_like 'a Zizia::Parser' do
+    subject(:parser)   { described_class.new }
+    let(:record_count) { 3 }
+  end
+end
