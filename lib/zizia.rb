@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "zizia/engine"
+
 ##
 # Bulk object import for Samvera.
 #

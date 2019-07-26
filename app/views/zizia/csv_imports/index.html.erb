@@ -1,0 +1,21 @@
+<p id="notice"><%= notice %></p>
+
+<h2>CSV Imports</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @csv_imports.each do |csv_import| %>
+      <tr>
+        <% link_text = csv_import.manifest.file ? File.basename(csv_import.manifest.to_s) : 'show' %>
+        <td><%= link_to link_text, csv_import %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+

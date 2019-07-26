@@ -32,3 +32,7 @@ desc 'Check style and run specs'
 task ci: %w[rubocop spec_with_server]
 
 task default: :ci
+APP_RAKEFILE = File.expand_path("../spec/dummy/Rakefile", __FILE__)
+load 'rails/tasks/engine.rake'
+
+load 'rails/tasks/statistics.rake'

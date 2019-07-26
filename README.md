@@ -56,9 +56,30 @@ environment variables called `IMPORT_PATH`. If `IMPORT_PATH` is not set, `HyraxR
 To input any kind of file other than CSV, you need to provide a `Parser` (out of the box, we support simple CSV import with `CsvParser`). We will be writing guides about
 how to support custom mappers (for metadata outside of Hyrax's core and basic metadata fields).
 
-This software is primarily intended for use in a [Hyrax](https://github.com/samvera/hyrax) project.
-However, its dependency on `hyrax` is kept strictly optional so most of its code can be reused to
-good effect elsewhere. Note: As of release 2.0, `HyraxBasicMetadataMapper` will be the default mapper.
+## Hyrax User Interface
+
+Zizia can be installed as a Rails Engine in a Hyrax application. To use the Zizia UI in Hyrax:
+
+1. Add the engine to `routes.rb`:
+```
+  mount Zizia::Engine => '/'
+```
+
+2. Add the helpers to the `ApplicationController`
+
+```
+helper Zizia::Engine.helpers
+```
+
+3. Add documentation and sample csv files to your project at
+
+`app/assets/csv/import_manifest.csv`
+
+and
+
+`app/assets/markdown/importer_guide.md`
+
+4. Add links to `/csv_imports/new` and `/importer_documentation/csv` in the Hyrax dashboard
 
 ## Development
 
