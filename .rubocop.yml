@@ -5,6 +5,13 @@ inherit_gem:
 
 AllCops:
   TargetRubyVersion: 2.3
+  Exclude:
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'script/**/*'
+    - 'vendor/**/*'
+    - 'bin/{rails,rake}'
+    - 'spec/dummy/**/*'
 
 Lint/HandleExceptions:
   Exclude:
@@ -20,6 +27,7 @@ Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
     - 'lib/zizia/spec/**/*'
+    - 'zizia.gemspec'
 
 Metrics/ClassLength:
   Enabled: false
@@ -60,6 +68,7 @@ RSpec/MultipleExpectations:
   Exclude:
     - 'spec/zizia/hyrax_basic_metadata_mapper_spec.rb'
     - 'spec/integration/import_hyrax_csv.rb'
+    - 'spec/controllers/importer_documentation_controller_spec.rb'
 
 Style/StructInheritance:
   Enabled: false

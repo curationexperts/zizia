@@ -1,0 +1,31 @@
+<h2> Importing Records from a CSV File </h2>
+<p id="notice"><%= notice %></p>
+
+<div class="panel panel-default">
+  <div class="panel-body">
+
+    <p>
+    <label> CSV Manifest: </label>
+    <span> <%= File.basename(@csv_import.manifest.to_s) %> </span>
+    <br />
+    <label> Collection: </label>
+    <span>  <%=  ActiveFedora::SolrService.query("id:#{@csv_import.fedora_collection_id}")[0]['title_tesim'][0] %> </span>
+    <br />
+    <label> Uploaded by: </label>
+    <span> <%= @csv_import.user.name %> </span>
+    <br />
+    <label> Start time: </label>
+    <span> <%= @csv_import.created_at %> </span>
+    </p>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class='well'>
+          <p> Your records will be imported in the background.  To check the current status, please check the background job status page. </p><br />
+          <div class="text-center"> <%= link_to 'Background Job Status', sidekiq_web_path, class: "btn btn-primary btn-lg" %> </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

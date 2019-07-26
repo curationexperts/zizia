@@ -1,0 +1,76 @@
+<h2><span class="glyphicon glyphicon-cloud-upload"></span> Preview your CSV Import</h2>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div id='csv_info'>
+      <% if @csv_import.manifest.file %>
+        <div class="row">
+          <div class="col-md-4">
+            <label> CSV Manifest: </label>
+            <%= File.basename(@csv_import.manifest.to_s) %>
+          </div>
+          <div class="col-md-4">
+            <label> Collection: </label>
+            <%= ActiveFedora::SolrService.query("id:#{@csv_import.fedora_collection_id}")[0]['title_tesim'][0] %>
+          </div>
+        </div>
+      <% end %>
+
+      <%= render 'record_count', locals: { csv_import: @csv_import } %>
+
+      <% unless @csv_import.manifest_errors.empty? %>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="alert alert-danger">
+              <div id='csv_errors'>
+                <b><i class="glyphicon glyphicon-remove-sign"></i> The CSV file has the following errors:</b>
+                <ul>
+                  <% @csv_import.manifest_errors.each do |error| %>
+                    <li> <%= error %> </li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <% unless @csv_import.manifest_warnings.empty? %>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="alert alert-warning">
+              <div id='csv_warnings'>
+                <b><i class="glyphicon glyphicon-exclamation-sign"></i> The CSV file has the following warnings:</b>
+                <ul>
+                  <% @csv_import.manifest_warnings.each do |warning| %>
+                    <li> <%= warning %> </li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @csv_import.manifest_errors.empty? %>
+        <div class="row">
+          <div class="col-md-2">
+            <%= render 'start_import_form', csv_import: @csv_import, class: "btn btn-large btn-danger" %>
+          </div>
+          <div class="col-md-2">
+            <%= link_to 'Cancel', new_csv_import_path, class: "btn btn-lg btn-danger" %>
+          </div>
+        </div>
+      <% else %>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="well"><p>You will need to correct the errors with the CSV file before you can continue.</p></br>
+              <div class="text-center"><%= link_to 'Try Again', new_csv_import_path, class: 'btn btn-lg btn-primary' %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+</div>
