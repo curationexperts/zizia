@@ -14,7 +14,7 @@ module Zizia
 
     ##
     # @param mapper [#map_fields]
-    def initialize(mapper: HyraxBasicMetadataMapper.new)
+    def initialize(mapper: Zizia.config.metadata_mapper_class.new)
       self.mapper = mapper
     end
 
@@ -25,7 +25,7 @@ module Zizia
       #
       # @return [InputRecord] an input record mapping metadata with the given
       #   mapper
-      def from(metadata:, mapper: HyraxBasicMetadataMapper.new)
+      def from(metadata:, mapper: Zizia.config.metadata_mapper_class.new)
         mapper.metadata = metadata
         new(mapper: mapper)
       end
