@@ -10,7 +10,6 @@ module Zizia
       log_stream << "Starting import with batch ID: #{csv_import_id}"
       importer = ModularImporter.new(csv_import)
       importer.import
-      endcs
     end
   end
 end
