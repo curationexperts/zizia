@@ -14,7 +14,7 @@ The simplest use case is importing content that matches [Hyrax's core and basic 
 1. Make a directory for your fixture files: `mkdir spec/fixtures/images`
 1. Put three small images in `spec/fixtures/images` In this guide, we're using copyright free images from https://www.pexels.com/, `birds.jpg`, `cat.jpg`, and `dog.jpg`.
 1. Make a directory for your CSV fixture files: `mkdir spec/fixtures/csv_import`
-1. Put a file like this in `spec/fixtures/csv_import`:
+1. Put a file like this in `spec/fixtures/csv_import/zizia_basic.csv`:
   ```
   title,source,visibility
   "A Cute Dog",https://www.pexels.com/photo/animal-blur-canine-close-up-551628/,open
@@ -26,16 +26,10 @@ The simplest use case is importing content that matches [Hyrax's core and basic 
     # frozen_string_literal: true
 
     require 'rails_helper'
-    require 'active_fedora/cleaner'
 
     RSpec.describe ModularImporter do
-      let(:modular_csv)     { 'spec/fixtures/csv_import/modular_input.csv' }
+      let(:modular_csv)     { 'spec/fixtures/csv_import/zizia_basic.csv' }
       let(:user) { ::User.batch_user }
-
-      before do
-        DatabaseCleaner.clean
-        ActiveFedora::Cleaner.clean!
-      end
 
       it "imports a csv" do
         expect { ModularImporter.new(modular_csv).import }.to change { Work.count }.by 3
@@ -96,3 +90,24 @@ So, at this point, your test is running, but the importer isn't yet creating any
   Finished in 7.56 seconds (files took 9.06 seconds to load)
   1 example, 0 failures
   ```
+
+### 3. Import in development and production
+
+A passing test tell us that records are being created, but it's only happening in our test environment right now. Let's write a rake task so we can make it happen in development or production and really see the records we made.
+
+Make a file like this at `lib/tasks/import.rake`:
+
+```ruby
+  namespace :basic_import do
+    desc 'Ingest sample data'
+    task sample: [:environment] do
+      Rake::Task["hyrax:default_admin_set:create"].invoke
+      Rake::Task["hyrax:default_collection_types:create"].invoke
+      Rake::Task["hyrax:workflow:load"].invoke
+      csv_file = Rails.root.join('spec', 'fixtures', 'csv_import', 'zizia_basic.csv')
+      ModularImporter.new(csv_file).import
+    end
+  end
+```
+
+Now you should be able to run `rake basic_import:sample` and see your records appear in Hyrax.
