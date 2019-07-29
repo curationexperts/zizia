@@ -1,0 +1,36 @@
+version: 2.1
+orbs:
+    samvera: samvera/circleci-orb@dev:fix-bundle-cache
+jobs:
+    build:
+        parameters:
+            ruby_version:
+                type: string
+                default: 2.5.3
+            bundler_version:
+                type: string
+                default: 2.0.1
+        executor:
+            name: samvera/ruby_fcrepo_solr_redis
+            ruby_version: << parameters.ruby_version >>
+        working_directory: ~/project
+        parallelism: 4
+        steps:
+            - checkout
+
+            - samvera/bundle:
+                ruby_version: << parameters.ruby_version >>
+                bundler_version: << parameters.bundler_version >>
+
+            - samvera/rubocop
+
+            - samvera/install_solr_core
+
+            - samvera/parallel_rspec
+
+workflows:
+    version: 2
+    ci:
+        jobs:
+            - build:
+                name: ruby2-5-3
