@@ -18,6 +18,10 @@ jobs:
         steps:
             - checkout
 
+            - run:
+                name: install sqlite3
+                command: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
+
             - samvera/bundle:
                 ruby_version: << parameters.ruby_version >>
                 bundler_version: << parameters.bundler_version >>
@@ -25,6 +29,10 @@ jobs:
             - samvera/rubocop
 
             - samvera/install_solr_core
+
+            - run:
+                name: install sqlite3
+                command: bundle exec rake db:migrate
 
             - samvera/parallel_rspec
 
