@@ -10,3 +10,5 @@ unless ENV['CI']
   gem 'guard'
   gem 'pry'
 end
+
+gem 'coveralls', require: false

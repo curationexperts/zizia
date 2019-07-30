@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-
+require 'coveralls'
+Coveralls.wear!
 require 'pry' unless ENV['CI']
 
 ENV['environment'] ||= 'test'
