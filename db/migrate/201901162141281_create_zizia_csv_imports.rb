@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class CreateCsvImports < ActiveRecord::Migration[5.1]
+class CreateZiziaCsvImports < ActiveRecord::Migration[5.1]
   def change
     create_table :zizia_csv_imports do |t|
       t.references :user, foreign_key: true
