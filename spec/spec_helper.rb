@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require 'coveralls'
-Coveralls.wear!
+Coveralls.wear!('rails')
 require 'pry' unless ENV['CI']
 
 ENV['environment'] ||= 'test'
