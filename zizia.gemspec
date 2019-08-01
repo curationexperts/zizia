@@ -21,6 +21,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'rails', '~> 5.1.7'
   gem.add_dependency 'carrierwave'
   gem.add_dependency 'redcarpet'
+  gem.add_dependency 'sassc-rails'
 
   gem.add_development_dependency 'yard'
   gem.add_development_dependency 'bixby'
