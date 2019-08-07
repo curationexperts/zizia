@@ -12,11 +12,11 @@ module Zizia
 
     # The directory where the csv manifest will be stored.
     def store_dir
-      configured_upload_path + "#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+      Rails.root.join('tmp', 'csv_uploads')
     end
 
     def cache_dir
-      configured_cache_path + "#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+      Rails.root.join('tmp', 'csv_uploads_cache')
     end
 
     # Add a white list of extensions which are allowed to be uploaded.
@@ -45,22 +45,6 @@ module Zizia
       def validate_csv
         @validator = CsvManifestValidator.new(self)
         @validator.validate
-      end
-
-      def configured_upload_path
-        ENV['CSV_MANIFESTS_PATH'] || base_path_uploads + 'csv_uploads'
-      end
-
-      def configured_cache_path
-        ENV['CSV_MANIFESTS_CACHE_PATH'] || base_path_cache + 'csv_uploads/cache'
-      end
-
-      def base_path_uploads
-        ENV['TRAVIS'] ? Rails.root : Hyrax.config.upload_path.call
-      end
-
-      def base_path_cache
-        ENV['TRAVIS'] ? Rails.root : Hyrax.config.cache_path.call
       end
   end
 end
