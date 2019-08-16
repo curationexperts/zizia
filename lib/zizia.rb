@@ -48,6 +48,7 @@ module Zizia
   require 'zizia/validators/csv_format_validator'
   require 'zizia/validators/title_validator'
   require 'zizia/parser'
+  require 'zizia/csv_template'
 
   ##
   # Module-wide options for `Zizia`.
