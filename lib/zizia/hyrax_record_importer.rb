@@ -193,7 +193,7 @@ module Zizia
       # We assume the object was created as expected if the actor stack returns true.
       # Note that for now the update stack will only update metadata and update collection membership, it will not re-import files.
       def update_for(existing_record:, update_record:)
-        info_stream << "event: record_update_started, batch_id: #{batch_id}, collection_id: #{collection_id}, #{deduplication_field}: #{update_record.respond_to?(deduplication_field) ? update_record.send(deduplication_field) : update_record}"
+        info_stream << "[zizia] event: record_update_started, batch_id: #{batch_id}, collection_id: #{collection_id}, #{deduplication_field}: #{update_record.respond_to?(deduplication_field) ? update_record.send(deduplication_field) : update_record}"
         additional_attrs = {
           depositor: @depositor.user_key
         }
@@ -211,11 +211,11 @@ module Zizia
 
         actor_env = Hyrax::Actors::Environment.new(existing_record, ::Ability.new(@depositor), attrs)
         if metadata_only_middleware.update(actor_env)
-          info_stream << "event: record_updated, batch_id: #{batch_id}, record_id: #{existing_record.id}, collection_id: #{collection_id}, #{deduplication_field}: #{existing_record.respond_to?(deduplication_field) ? existing_record.send(deduplication_field) : existing_record}"
+          info_stream << "[zizia] event: record_updated, batch_id: #{batch_id}, record_id: #{existing_record.id}, collection_id: #{collection_id}, #{deduplication_field}: #{existing_record.respond_to?(deduplication_field) ? existing_record.send(deduplication_field) : existing_record}"
           @success_count += 1
         else
           existing_record.errors.each do |attr, msg|
-            error_stream << "event: validation_failed, batch_id: #{batch_id}, collection_id: #{collection_id}, attribute: #{attr.capitalize}, message: #{msg}, record_title: record_title: #{attrs[:title] ? attrs[:title] : attrs}"
+            error_stream << "[zizia] event: validation_failed, batch_id: #{batch_id}, collection_id: #{collection_id}, attribute: #{attr.capitalize}, message: #{msg}, record_title: record_title: #{attrs[:title] ? attrs[:title] : attrs}"
           end
           @failure_count += 1
         end
@@ -224,7 +224,7 @@ module Zizia
       # Create an object using the Hyrax actor stack
       # We assume the object was created as expected if the actor stack returns true.
       def create_for(record:)
-        info_stream << "event: record_import_started, batch_id: #{batch_id}, collection_id: #{collection_id}, record_title: #{record.respond_to?(:title) ? record.title : record}"
+        info_stream << "[zizia] event: record_import_started, batch_id: #{batch_id}, collection_id: #{collection_id}, record_title: #{record.respond_to?(:title) ? record.title : record}"
 
         additional_attrs = {
           uploaded_files: create_upload_files(record),
@@ -248,11 +248,11 @@ module Zizia
                                                    attrs)
 
         if Hyrax::CurationConcern.actor.create(actor_env)
-          info_stream << "event: record_created, batch_id: #{batch_id}, record_id: #{created.id}, collection_id: #{collection_id}, record_title: #{attrs[:title]&.first}"
+          info_stream << "[zizia] event: record_created, batch_id: #{batch_id}, record_id: #{created.id}, collection_id: #{collection_id}, record_title: #{attrs[:title]&.first}"
           @success_count += 1
         else
           created.errors.each do |attr, msg|
-            error_stream << "event: validation_failed, batch_id: #{batch_id}, collection_id: #{collection_id}, attribute: #{attr.capitalize}, message: #{msg}, record_title: record_title: #{attrs[:title] ? attrs[:title] : attrs}"
+            error_stream << "[zizia] event: validation_failed, batch_id: #{batch_id}, collection_id: #{collection_id}, attribute: #{attr.capitalize}, message: #{msg}, record_title: record_title: #{attrs[:title] ? attrs[:title] : attrs}"
           end
           @failure_count += 1
         end
