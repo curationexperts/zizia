@@ -11,7 +11,7 @@ information. See the <a href="https://curationexperts.github.io/zizia/">Getting 
 
 
 [![Gem Version](https://badge.fury.io/rb/zizia.svg)](https://badge.fury.io/rb/zizia)
-[![Build Status](https://travis-ci.org/curationexperts/zizia.svg?branch=master)](https://travis-ci.org/curationexperts/zizia)
+[![CircleCI](https://circleci.com/gh/curationexperts/zizia.svg?style=svg)](https://circleci.com/gh/curationexperts/zizia)
 [![Yard Docs](http://img.shields.io/badge/yard-docs-blue.svg)](http://www.rubydoc.info/gems/zizia) [![Coverage Status](https://coveralls.io/repos/github/curationexperts/zizia/badge.svg?branch=coveralls)](https://coveralls.io/github/curationexperts/zizia?branch=coveralls)
 
 </td></tr>
