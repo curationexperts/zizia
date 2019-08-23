@@ -13,3 +13,4 @@ zizia_import.log
 auto-save-list
 tramp
 .\#*
+coverage/

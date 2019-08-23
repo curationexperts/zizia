@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe Zizia::TitleValidator do
-  subject(:validator) { described_class.new(error_stream: []) }
+  subject(:validator) { described_class.new }
 
   let(:invalid_parser) do
     FakeParser.new(file: [{ 'title' => 'moomin' }, {}, {}])

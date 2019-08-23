@@ -22,6 +22,7 @@ Metrics/AbcSize:
   Exclude:
     - 'spec/support/hyrax/basic_metadata.rb'
     - 'lib/zizia/hyrax_record_importer.rb'
+    - lib/zizia/importer.rb
 
 Metrics/BlockLength:
   Exclude:
@@ -63,6 +64,10 @@ RSpec/ExampleLength:
   Exclude:
     - 'spec/zizia/hyrax_basic_metadata_mapper_spec.rb'
     - 'spec/integration/import_hyrax_csv.rb'
+
+RSpec/MessageSpies:
+  Exclude:
+    - spec/integration/import_csv_spec.rb
 
 RSpec/MultipleExpectations:
   Exclude:

@@ -31,17 +31,14 @@ module Zizia
     #   records.
     # @param record_importer [RecordImporter] An object to handle import of
     #   each record
-    def initialize(parser:, record_importer: RecordImporter.new, info_stream: Zizia.config.default_info_stream, error_stream: Zizia.config.default_error_stream)
+    def initialize(parser:, record_importer: RecordImporter.new)
       self.parser          = parser
       self.record_importer = record_importer
-      @info_stream = info_stream
-      @error_stream = error_stream
     end
 
     # Do not attempt to run an import if there are no records. Instead, just write to the log.
     def no_records_message
-      @info_stream << "[zizia] event: empty_import, batch_id: #{record_importer.batch_id}"
-      @error_stream << "[zizia] event: empty_import, batch_id: #{record_importer.batch_id}"
+      Rails.logger.error "[zizia] event: empty_import, batch_id: #{record_importer.batch_id}"
     end
 
     ##
@@ -51,11 +48,11 @@ module Zizia
     def import
       no_records_message && return unless records.count.positive?
       start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-      @info_stream << "[zizia] event: start_import, batch_id: #{record_importer.batch_id}, expecting to import #{records.count} records."
+      Rails.logger.info "[zizia] event: start_import, batch_id: #{record_importer.batch_id}, expecting to import #{records.count} records."
       records.each { |record| record_importer.import(record: record) }
       end_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       elapsed_time = end_time - start_time
-      @info_stream << "[zizia] event: finish_import, batch_id: #{record_importer.batch_id}, successful_record_count: #{record_importer.success_count}, failed_record_count: #{record_importer.failure_count}, elapsed_time: #{elapsed_time}, elapsed_time_per_record: #{elapsed_time / records.count}"
+      Rails.logger.info "[zizia] event: finish_import, batch_id: #{record_importer.batch_id}, successful_record_count: #{record_importer.success_count}, failed_record_count: #{record_importer.failure_count}, elapsed_time: #{elapsed_time}, elapsed_time_per_record: #{elapsed_time / records.count}"
     end
   end
 end

@@ -4,12 +4,10 @@ require 'spec_helper'
 
 describe Zizia::RecordImporter, :clean do
   subject(:importer) do
-    described_class.new(error_stream: error_stream, info_stream: info_stream)
+    described_class.new
   end
 
-  let(:error_stream) { [] }
-  let(:info_stream)  { [] }
-  let(:record)       { Zizia::InputRecord.from(metadata: metadata) }
+  let(:record) { Zizia::InputRecord.from(metadata: metadata) }
   let(:metadata) do
     {
       'title' => 'A Title',
@@ -33,21 +31,12 @@ describe Zizia::RecordImporter, :clean do
         .by 1
     end
 
-    it 'writes to the info stream before and after create' do
-      expect { importer.import(record: record) }
-        .to change { info_stream }
-        .to contain_exactly(/^Creating record/, /^Record created/)
-    end
-
     context 'when input record errors with LDP errors' do
       let(:ldp_error) { Ldp::PreconditionFailed }
 
       before { allow(record).to receive(:attributes).and_raise(ldp_error) }
-
-      it 'writes errors to the error stream (no reraise!)' do
-        expect { importer.import(record: record) }
-          .to change { error_stream }
-          .to contain_exactly(an_instance_of(ldp_error))
+      it 'catches the error' do
+        expect { importer.import(record: record) }.not_to raise_error(ldp_error)
       end
     end
 
@@ -55,12 +44,6 @@ describe Zizia::RecordImporter, :clean do
       let(:custom_error) { Class.new(RuntimeError) }
 
       before { allow(record).to receive(:attributes).and_raise(custom_error) }
-
-      it 'writes errors to the error stream' do
-        expect { begin; importer.import(record: record); rescue; end }
-          .to change { error_stream }
-          .to contain_exactly(an_instance_of(custom_error))
-      end
 
       it 'reraises error' do
         expect { importer.import(record: record) }.to raise_error(custom_error)

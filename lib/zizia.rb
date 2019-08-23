@@ -18,9 +18,6 @@ require "zizia/engine"
 #
 # @example A basic configuration
 #   Zizia.config do |config|
-#     # error/info streams must respond to `#<<`
-#     config.default_error_stream = MyErrorStream.new
-#     config.default_info_stream  = STDOUT
 #   end
 #
 module Zizia
@@ -35,7 +32,6 @@ module Zizia
   end
   module_function :config
 
-  require 'zizia/log_stream'
   require 'zizia/version'
   require 'zizia/metadata_mapper'
   require 'zizia/hash_mapper'
@@ -53,18 +49,9 @@ module Zizia
   ##
   # Module-wide options for `Zizia`.
   class Configuration
-    ##
-    # @!attribute [rw] default_error_stream
-    #   @return [#<<]
-    # @!attribute [rw] default_info_stream
-    #   @return [#<<]
-    attr_accessor :default_error_stream
-    attr_accessor :default_info_stream
     attr_accessor :metadata_mapper_class
 
     def initialize
-      self.default_error_stream = Zizia::LogStream.new
-      self.default_info_stream  = Zizia::LogStream.new
       self.metadata_mapper_class = Zizia::HyraxBasicMetadataMapper
     end
   end

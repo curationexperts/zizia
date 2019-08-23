@@ -18,10 +18,9 @@ describe 'importing a csv batch', :clean do
     context 'with invalid CSV' do
       let(:file) { File.open('spec/fixtures/bad_example.csv') }
 
-      it 'outputs invalid file notice to error stream' do
-        expect { parser.validate }
-          .to output(/^CSV::MalformedCSVError.*line 2/)
-          .to_stdout_from_any_process
+      it 'outputs invalid file notice to Rails.logger' do
+        expect(Rails.logger).to receive(:error).with("[zizia] CSV::MalformedCSVError: Illegal quoting in line 2. (Zizia::CsvFormatValidator)")
+        parser.validate
       end
     end
   end

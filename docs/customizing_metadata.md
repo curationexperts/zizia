@@ -36,8 +36,6 @@ It should look like this:
 ```ruby
 Zizia.config do |config|
   config.metadata_mapper_class = CustomMapper
-  config.default_info_stream = Rails.logger
-  config.default_error_stream = Rails.logger
 end
 ```
-This tells zizia what class to use for metadata mappings, and where to log the output.
+This tells zizia what class to use for metadata mappings. Output is logged to `Rails.logger` and all output is prefixed with `[zizia]` for easy log parsing.
