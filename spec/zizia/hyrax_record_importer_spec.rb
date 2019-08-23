@@ -3,15 +3,13 @@ require 'spec_helper'
 
 describe Zizia::HyraxRecordImporter, :clean do
   subject(:importer) do
-    described_class.new(error_stream: error_stream, info_stream: info_stream)
+    described_class.new
   end
 
   load File.expand_path("../../support/shared_contexts/with_work_type.rb", __FILE__)
   include_context 'with a work type'
 
-  let(:error_stream) { [] }
-  let(:info_stream)  { [] }
-  let(:record)       { Zizia::InputRecord.from(metadata: metadata) }
+  let(:record) { Zizia::InputRecord.from(metadata: metadata) }
 
   context 'collection id' do
     subject(:importer) do
@@ -128,7 +126,7 @@ describe Zizia::HyraxRecordImporter, :clean do
     end
 
     context 'when depositor is passed to initializer' do
-      subject(:importer) { described_class.new(error_stream: error_stream, info_stream: info_stream, attributes: { depositor_id: user.user_key }) }
+      subject(:importer) { described_class.new(attributes: { depositor_id: user.user_key }) }
 
       let(:user) { ::User.new(id: '123', user_key: 'special_user@example.com') }
       before { allow(::User).to receive(:find).and_return(user) }

@@ -38,8 +38,8 @@ module Zizia
       CSV.parse(file.read, headers: true).each do |row|
         yield InputRecord.from(metadata: row)
       end
-    rescue CSV::MalformedCSVError
-      []
+    rescue CSV::MalformedCSVError => e
+      Rails.logger.error "[zizia] The file #{file} could not be parsed as CSV: #{e}"
     end
   end
 end

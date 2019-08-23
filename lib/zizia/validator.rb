@@ -8,7 +8,7 @@ module Zizia
   # validator must respond to `#validate` and return a collection of errors
   # found during validation. If the input is valid, this collection must be
   # empty. Otherwise, it contains any number of `Validator::Error` structs
-  # which should be sent to the `#error_stream` by the validator.
+  # which should be logged to Rails.logger by the validator.
   #
   # The validation process accepts an entire `Parser` and is free to inspect
   # the input `#file` content, or view its individual `#records`.
@@ -81,23 +81,12 @@ module Zizia
     end
 
     ##
-    # @!attribute [rw] error_stream
-    #   @return [#<<]
-    attr_accessor :error_stream
-
-    ##
-    # @param error_stream [#<<]
-    def initialize(error_stream: Zizia.config.default_error_stream)
-      self.error_stream = error_stream
-    end
-
-    ##
     # @param parser [Parser]
     #
     # @return [Enumerator<Error>] a collection of errors found in validation
     def validate(parser:)
       run_validation(parser: parser).tap do |errors|
-        errors.map { |error| error_stream << error }
+        errors.map { |error| Rails.logger.error "[zizia] #{error}" }
       end
     end
 

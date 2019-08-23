@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe Zizia::CsvFormatValidator do
-  subject(:validator)  { described_class.new(error_stream: []) }
+  subject(:validator)  { described_class.new }
   let(:invalid_parser) { Zizia::CsvParser.new(file: invalid_file) }
   let(:invalid_file)   { File.open('spec/fixtures/bad_example.csv') }
 
