@@ -12,11 +12,11 @@ module Zizia
 
     # The directory where the csv manifest will be stored.
     def store_dir
-      Rails.root.join('tmp', 'csv_uploads')
+      manifests_path || Rails.root.join('tmp', 'csv_uploads')
     end
 
     def cache_dir
-      Rails.root.join('tmp', 'csv_uploads_cache')
+      manifests_cache_path || Rails.root.join('tmp', 'csv_uploads_cache')
     end
 
     # Add a white list of extensions which are allowed to be uploaded.
@@ -41,6 +41,18 @@ module Zizia
     end
 
     private
+
+      def manifests_path
+        return false if ENV['CSV_MANIFESTS_PATH'].nil?
+        return false unless File.directory?(ENV['CSV_MANIFESTS_PATH'])
+        ENV['CSV_MANIFESTS_PATH']
+      end
+
+      def manifests_cache_path
+        return false if ENV['CSV_MANIFESTS_CACHE_PATH'].nil?
+        return false unless File.directory?(ENV['CSV_MANIFESTS_CACHE_PATH'])
+        ENV['CSV_MANIFESTS_CACHE_PATH']
+      end
 
       def validate_csv
         @validator = CsvManifestValidator.new(self)
