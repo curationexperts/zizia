@@ -64,6 +64,7 @@ RSpec/ExampleLength:
   Exclude:
     - 'spec/zizia/hyrax_basic_metadata_mapper_spec.rb'
     - 'spec/integration/import_hyrax_csv.rb'
+    - 'spec/integration/csv_import_detail_spec.rb'
 
 RSpec/MessageSpies:
   Exclude:
@@ -74,6 +75,7 @@ RSpec/MultipleExpectations:
     - 'spec/zizia/hyrax_basic_metadata_mapper_spec.rb'
     - 'spec/integration/import_hyrax_csv.rb'
     - 'spec/controllers/importer_documentation_controller_spec.rb'
+    - 'spec/integration/csv_import_detail_spec.rb'
 
 Style/StructInheritance:
   Enabled: false

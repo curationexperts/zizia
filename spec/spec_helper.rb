@@ -6,11 +6,13 @@ require 'pry' unless ENV['CI']
 ENV['environment'] ||= 'test'
 # Configure Rails Envinronment
 ENV['RAILS_ENV'] = 'test'
-require File.expand_path('../../spec/dummy/config/environment', __FILE__)
+
+require File.expand_path("../dummy/config/environment", __FILE__)
+ENGINE_RAILS_ROOT = File.join(File.dirname(__FILE__), '../')
+Dir[File.join(ENGINE_RAILS_ROOT, "spec/support/**/*.rb")].each { |f| require f }
+
 require 'rails/all'
 require 'rspec/rails'
-
-ENGINE_RAILS_ROOT = File.join(File.dirname(__FILE__), '../')
 
 ActiveJob::Base.queue_adapter = :test
 
