@@ -1,0 +1,1 @@
+Bundler.require(*Rails.groups)
