@@ -12,7 +12,7 @@ information. See the <a href="https://curationexperts.github.io/zizia/">Getting 
 
 [![Gem Version](https://badge.fury.io/rb/zizia.svg)](https://badge.fury.io/rb/zizia)
 [![CircleCI](https://circleci.com/gh/curationexperts/zizia.svg?style=svg)](https://circleci.com/gh/curationexperts/zizia)
-[![Yard Docs](http://img.shields.io/badge/yard-docs-blue.svg)](http://www.rubydoc.info/gems/zizia) [![Coverage Status](https://coveralls.io/repos/github/curationexperts/zizia/badge.svg?branch=coveralls)](https://coveralls.io/github/curationexperts/zizia?branch=coveralls)
+[![Yard Docs](http://img.shields.io/badge/yard-docs-blue.svg)](http://www.rubydoc.info/gems/zizia) [![Coverage Status](https://coveralls.io/repos/github/curationexperts/zizia/badge.svg?branch=master)](https://coveralls.io/github/curationexperts/zizia?branch=master)
 
 </td></tr>
 </table>
@@ -72,7 +72,13 @@ Zizia can be installed as a Rails Engine in a Hyrax application. To use the Zizi
 helper Zizia::Engine.helpers
 ```
 
-3. Add documentation and sample csv files to your project at
+3. Give admin users permission to import in your `Ability.custom_permissions`:
+
+```
+    can :manage, Zizia::CsvImport if current_user.admin?
+```
+
+4. Add documentation and sample csv files to your project at
 
 `app/assets/csv/import_manifest.csv`
 
@@ -80,7 +86,12 @@ and
 
 `app/assets/markdown/importer_guide.md`
 
-4. Add links to `/csv_imports/new` and `/importer_documentation/csv` in the Hyrax dashboard
+5. Add links to `/csv_imports/new` and `/importer_documentation/csv` in the Hyrax dashboard
+
+The `spec/dummy` folder in this application is a complete Hyrax application with Zizia installed. 
+You can use that as an example for adding this to your current Hyrax application or copy that
+to create a new application with Zizia installed. 
+
 
 ## Development
 
