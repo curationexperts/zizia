@@ -4,10 +4,18 @@ require 'rails/all'
 require 'carrierwave'
 require 'carrierwave/orm/activerecord'
 require 'redcarpet'
+require 'devise'
+require 'hyrax'
+require 'riiif'
+require 'hydra-role-management'
 
 module Zizia
   class Engine < ::Rails::Engine
     isolate_namespace Zizia
+
+    config.generators do |g|
+      g.test_framework :rspec
+    end
 
     initializer :zizia_assets_precompile do |app|
       app.config.assets.precompile << %w[zizia/application.js zizia/application.css]

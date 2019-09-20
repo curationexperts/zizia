@@ -13,22 +13,24 @@ shared_context 'with a work type' do
       include ::Hyrax::BasicMetadata
     end
 
-    class User < Struct.new(:id, :user_key)
-      def initialize(inputs = {})
-        self.id = inputs[:id]
-        self.user_key = inputs[:user_key] || batch_user_key
-      end
+    unless Object.const_defined?('User')
+      class User < Struct.new(:id, :user_key)
+        def initialize(inputs = {})
+          self.id = inputs[:id]
+          self.user_key = inputs[:user_key] || batch_user_key
+        end
 
-      def self.find_by_user_key(email)
-        User.new(user_key: email)
-      end
+        def self.find_by_user_key(email)
+          User.new(user_key: email)
+        end
 
-      def self.find_or_create_system_user(_email)
-        User.new
-      end
+        def self.find_or_create_system_user(_email)
+          User.new
+        end
 
-      def batch_user_key
-        'batchuser@example.com'
+        def batch_user_key
+          'batchuser@example.com'
+        end
       end
     end
 
@@ -42,6 +44,10 @@ shared_context 'with a work type' do
       end
 
       class Config
+        def enable_noids?
+          false
+        end
+
         def curation_concerns
           [Work]
         end
@@ -57,11 +63,13 @@ shared_context 'with a work type' do
         end
       end
 
-      class UploadedFile < ActiveFedora::Base
-        def self.create(*)
-          h = Hyrax::UploadedFile.new
-          h.save
-          h
+      unless Object.const_defined?('Hyrax::UploadedFile')
+        class UploadedFile < ActiveFedora::Base
+          def self.create(*)
+            h = Hyrax::UploadedFile.new
+            h.save
+            h
+          end
         end
       end
 

@@ -8,11 +8,8 @@ ENV['environment'] ||= 'test'
 ENV['RAILS_ENV'] = 'test'
 
 require File.expand_path("../dummy/config/environment", __FILE__)
-ENGINE_RAILS_ROOT = File.join(File.dirname(__FILE__), '../')
+ENGINE_RAILS_ROOT = File.join(File.dirname(__FILE__), '../dummy/')
 Dir[File.join(ENGINE_RAILS_ROOT, "spec/support/**/*.rb")].each { |f| require f }
-
-require 'rails/all'
-require 'rspec/rails'
 
 ActiveJob::Base.queue_adapter = :test
 
