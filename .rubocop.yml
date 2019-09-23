@@ -21,8 +21,10 @@ Lint/HandleExceptions:
 Metrics/AbcSize:
   Exclude:
     - 'spec/support/hyrax/basic_metadata.rb'
-    - 'lib/zizia/hyrax_record_importer.rb'
+    - 'lib/zizia/hyrax/hyrax_record_importer.rb'
     - lib/zizia/importer.rb
+    - lib/zizia/hyrax/hyrax_metadata_only_updater.rb
+    - 'app/importers/modular_importer.rb'
 
 Metrics/BlockLength:
   Exclude:
@@ -35,8 +37,8 @@ Metrics/ClassLength:
 
 Metrics/CyclomaticComplexity:
   Exclude:
-    - lib/zizia/hyrax_basic_metadata_mapper.rb
-    - lib/zizia/hyrax_record_importer.rb
+    - lib/zizia/hyrax/hyrax_basic_metadata_mapper.rb
+    - lib/zizia/hyrax/hyrax_record_importer.rb
 
 Metrics/LineLength:
   Enabled: false
@@ -44,14 +46,11 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Exclude:
     - 'spec/support/hyrax/basic_metadata.rb'
-    - 'lib/zizia/hyrax_basic_metadata_mapper.rb'
-    - lib/zizia/hyrax_record_importer.rb
+    - 'lib/zizia/hyrax/hyrax_basic_metadata_mapper.rb'
+    - lib/zizia/hyrax/hyrax_record_importer.rb
+    - 'app/importers/modular_importer.rb'
 
 Metrics/PerceivedComplexity:
-  Exclude:
-    - lib/zizia/hyrax_record_importer.rb
-
-Naming/AccessorMethodName:
   Exclude:
     - lib/zizia/hyrax_record_importer.rb
 
@@ -62,7 +61,7 @@ RSpec/DescribeClass:
 
 RSpec/ExampleLength:
   Exclude:
-    - 'spec/zizia/hyrax_basic_metadata_mapper_spec.rb'
+    - 'spec/zizia/hyrax/hyrax_basic_metadata_mapper_spec.rb'
     - 'spec/integration/import_hyrax_csv.rb'
     - 'spec/integration/csv_import_detail_spec.rb'
 
@@ -72,7 +71,7 @@ RSpec/MessageSpies:
 
 RSpec/MultipleExpectations:
   Exclude:
-    - 'spec/zizia/hyrax_basic_metadata_mapper_spec.rb'
+    - 'spec/zizia/hyrax/hyrax_basic_metadata_mapper_spec.rb'
     - 'spec/integration/import_hyrax_csv.rb'
     - 'spec/controllers/importer_documentation_controller_spec.rb'
     - 'spec/integration/csv_import_detail_spec.rb'

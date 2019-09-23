@@ -2,20 +2,100 @@
 require 'rails_helper'
 include Warden::Test::Helpers
 
-RSpec.describe 'Importing records from a CSV file', :clean, type: :system, js: true do
+RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type: :system, js: true do
+  before do
+    ENV['IMPORT_PATH'] = File.join(fixture_path, 'images')
+  end
+
   let(:csv_file) { File.join(fixture_path, 'csv_import', 'good', 'all_fields.csv') }
+  let(:csv_metadata_update_file) { File.join(fixture_path, 'csv_import', 'good', 'all_fields_metadata_update.csv') }
 
   context 'logged in as an admin user' do
     let(:collection) { FactoryBot.build(:collection, title: ['Testing Collection']) }
     let(:admin_user) { FactoryBot.create(:admin) }
 
+    let(:admin_set_id) { AdminSet.find_or_create_default_admin_set_id }
+    let(:permission_template) { Hyrax::PermissionTemplate.find_or_create_by!(source_id: admin_set_id) }
+    let(:workflow) { Sipity::Workflow.create!(active: true, name: 'test-workflow', permission_template: permission_template) }
+
     before do
+      # Create a single action that can be taken
+      Sipity::WorkflowAction.create!(name: 'submit', workflow: workflow)
+
+      # Grant the user access to deposit into the admin set.
+      Hyrax::PermissionTemplateAccess.create!(
+        permission_template_id: permission_template.id,
+        agent_type: 'user',
+        agent_id: admin_user.user_key,
+        access: 'deposit'
+      )
+
       allow(CharacterizeJob).to receive(:perform_later) # There is no fits installed on travis-ci
       collection.save!
       login_as admin_user
     end
 
     it 'starts the import' do
+      visit '/csv_imports/new'
+      expect(page).to have_content 'Testing Collection'
+      expect(page).not_to have_content '["Testing Collection"]'
+      select 'Testing Collection', from: "csv_import[fedora_collection_id]"
+      # Fill in and submit the form
+      attach_file('csv_import[manifest]', csv_file, make_visible: true)
+
+      click_on 'Preview Import'
+
+      # We expect to see the title of the collection on the page
+      expect(page).to have_content 'Testing Collection'
+
+      expect(page).to have_content 'This import will add 1 new records.'
+
+      # There is a link so the user can cancel.
+      expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
+
+      # After reading the warnings, the user decides
+      # to continue with the import.
+      click_on 'Start Import'
+
+      # The show page for the CsvImport
+      expect(page).to have_content 'all_fields.csv'
+      expect(page).to have_content 'Start time'
+
+      # We expect to see the title of the collection on the page
+      expect(page).to have_content 'Testing Collection'
+
+      # TO-DO: Determine how to get the background jobs working with the dummy
+      # Let the background jobs run, and check that the expected number of records got created.
+      expect(Work.count).to eq 1
+
+      # Ensure that all the fields got assigned as expected
+      work = Work.where(title: "*haberdashery*").first
+      expect(work.title.first).to match(/haberdashery/)
+
+      # Ensure location (a.k.a. based_near) gets turned into a controlled vocabulary term
+      expect(work.based_near.first.class).to eq Hyrax::ControlledVocabularies::Location
+
+      # It sets the date_uploaded field
+      expect(work.date_uploaded.class).to eq DateTime
+
+      # Ensure visibility gets turned into expected Hyrax values (e.g., 'PUBlic' becomes 'open')
+      expect(work.visibility).to eq 'open'
+
+      # Ensure work is being added to the collection as expected
+      expect(work.member_of_collection_ids).to eq [collection.id]
+
+      visit "/concern/works/#{work.id}"
+      expect(page).to have_content work.title.first
+      # Controlled vocabulary location should have been resolved to its label name
+      expect(page).to have_content "Montana"
+      expect(page).to have_content "United States"
+
+      # The license value resolves to a controlled field from creative commons
+      expect(page).to have_link "Attribution 4.0"
+
+
+      # Updating
+
       visit '/csv_imports/new'
       expect(page).to have_content 'Testing Collection'
       expect(page).not_to have_content '["Testing Collection"]'
@@ -45,7 +125,52 @@ RSpec.describe 'Importing records from a CSV file', :clean, type: :system, js: t
       # We expect to see the title of the collection on the page
       expect(page).to have_content 'Testing Collection'
 
+      # Let the background jobs run, and check that the expected number of records got created.
+      expect(Work.count).to eq 1
+
+      # Ensure that all the fields got assigned as expected
+      work = Work.where(title: "*haberdashery*").first
+      expect(work.title.first).to match(/Interior/)
+
+      # Updating with files
+
+      visit '/csv_imports/new'
+      expect(page).to have_content 'Testing Collection'
+      expect(page).not_to have_content '["Testing Collection"]'
+      select 'Testing Collection', from: "csv_import[fedora_collection_id]"
+
+      # Fill in and submit the form
+      attach_file('csv_import[manifest]', csv_metadata_update_file, make_visible: true)
+
+      click_on 'Preview Import'
+
+      # We expect to see the title of the collection on the page
+      expect(page).to have_content 'Testing Collection'
+
+      expect(page).to have_content 'This import will add 1 new records.'
+
+      # There is a link so the user can cancel.
+      expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
+
+      # After reading the warnings, the user decides
+      # to continue with the import.
+      click_on 'Start Import'
+
+      # The show page for the CsvImport
+      expect(page).to have_content 'all_fields_metadata_update.csv'
+      expect(page).to have_content 'Start time'
+
+      # We expect to see the title of the collection on the page
+      expect(page).to have_content 'Testing Collection'
+
       # TO-DO: Determine how to get the background jobs working with the dummy
+      # Let the background jobs run, and check that the expected number of records got created.
+      expect(Work.count).to eq 1
+
+      # Ensure that all the fields got assigned as expected
+      work = Work.where(title: "*haberdashery*").first
+      expect(work.title.first).to match(/Exterior/)
+
     end
   end
 end

@@ -35,10 +35,10 @@ module Zizia
   require 'zizia/version'
   require 'zizia/metadata_mapper'
   require 'zizia/hash_mapper'
-  require 'zizia/hyrax_basic_metadata_mapper'
+  require 'zizia/hyrax/hyrax_basic_metadata_mapper'
   require 'zizia/importer'
   require 'zizia/record_importer'
-  require 'zizia/hyrax_record_importer'
+  require 'zizia/hyrax/hyrax_record_importer'
   require 'zizia/input_record'
   require 'zizia/validator'
   require 'zizia/validators/csv_format_validator'
@@ -59,5 +59,6 @@ module Zizia
   @configuration = Configuration.new
 
   require 'zizia/parsers/csv_parser'
-  require 'zizia/metadata_only_stack'
+  require 'zizia/hyrax/metadata_only_stack'
+  require 'zizia/hyrax/hyrax_metadata_only_updater'
 end
