@@ -47,12 +47,12 @@ module Zizia
     #               }
     def initialize(attributes: {})
       # These attributes are persisted in the CsvImportDetail model
-      self.csv_import_detail = attributes[:csv_import_detail]
-      self.deduplication_field = csv_import_detail.deduplication_field
-      self.collection_id = csv_import_detail.collection_id
-      self.batch_id = csv_import_detail.batch_id
-      @success_count = csv_import_detail.success_count || 0
-      @failure_count = csv_import_detail.failure_count || 0
+      @csv_import_detail = attributes[:csv_import_detail]
+      @deduplication_field = csv_import_detail.deduplication_field
+      @collection_id = csv_import_detail.collection_id
+      @batch_id = csv_import_detail.batch_id
+      @success_count = csv_import_detail.success_count
+      @failure_count = csv_import_detail.failure_count
       find_depositor(csv_import_detail.depositor_id)
     end
 
@@ -121,7 +121,7 @@ module Zizia
       uploaded_file_ids = []
       files_to_attach.each do |filename|
         file = File.open(find_file_path(filename))
-        uploaded_file = Hyrax::UploadedFile.create(user: @depositor, file: file)
+        uploaded_file = Hyrax::UploadedFile.create(user: depositor, file: file)
         uploaded_file_ids << uploaded_file.id
         file.close
       end
@@ -190,17 +190,17 @@ module Zizia
                                                         existing_record: existing_record,
                                                         update_record: update_record,
                                                         attrs: process_attrs(record: update_record))
-                  when 'HyraxDefault'
-                    Hyrax::DefaultMiddlewareStack.new(csv_import_detail: csv_import_detail,
-                                                      existing_record: existing_record,
-                                                      update_record: update_record,
-                                                      attrs: process_attrs(record: update_record))
-                  else
-                    # TO-DO: 'HyraxOnlyNew'
-                    Zizia::HyraxMetadataOnlyUpdater.new(csv_import_detail: csv_import_detail,
-                                                        existing_record: existing_record,
-                                                        update_record: update_record,
-                                                        attrs: process_attrs(record: update_record))
+                  when 'HyraxDelete'
+                    Zizia::HyraxDeleteFilesUpdater.new(csv_import_detail: csv_import_detail,
+                                                       existing_record: existing_record,
+                                                       update_record: update_record,
+                                                       attrs: process_attrs(record: update_record))
+                  when 'HyraxOnlyNew'
+                    return unless existing_record[deduplication_field] != update_record.try(deduplication_field)
+                    Zizia::HyraxDefaultUpdater.new(csv_import_detail: csv_import_detail,
+                                                   existing_record: existing_record,
+                                                   update_record: update_record,
+                                                   attrs: process_attrs(record: update_record))
                   end
         updater.update
       end
@@ -208,7 +208,7 @@ module Zizia
       def process_attrs(record:)
         additional_attrs = {
           uploaded_files: create_upload_files(record),
-          depositor: @depositor.user_key
+          depositor: depositor.user_key
         }
 
         attrs = record.attributes.merge(additional_attrs)
@@ -229,17 +229,17 @@ module Zizia
         created = import_type.new
         attrs = process_attrs(record: record)
         actor_env = Hyrax::Actors::Environment.new(created,
-                                                   ::Ability.new(@depositor),
+                                                   ::Ability.new(depositor),
                                                    attrs)
 
         if Hyrax::CurationConcern.actor.create(actor_env)
           Rails.logger.info "[zizia] event: record_created, batch_id: #{batch_id}, record_id: #{created.id}, collection_id: #{collection_id}, record_title: #{attrs[:title]&.first}"
-          @success_count += 1
+          csv_import_detail.success_count += 1
         else
           created.errors.each do |attr, msg|
             Rails.logger.error "[zizia] event: validation_failed, batch_id: #{batch_id}, collection_id: #{collection_id}, attribute: #{attr.capitalize}, message: #{msg}, record_title: record_title: #{attrs[:title] ? attrs[:title] : attrs}"
           end
-          @failure_count += 1
+          csv_import_detail.failure_count += 1
         end
         csv_import_detail.save
       end
