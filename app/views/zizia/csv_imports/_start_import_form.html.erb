@@ -2,6 +2,7 @@
 
   <%= form.hidden_field :manifest_cache %>
   <%= form.hidden_field :fedora_collection_id, value: csv_import.fedora_collection_id %>
+  <%= form.hidden_field :update_actor_stack, value: csv_import.update_actor_stack %>
 
   <div class="actions">
     <%= form.submit 'Start Import', class: 'btn btn-lg btn-primary' %>

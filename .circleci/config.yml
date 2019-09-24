@@ -35,7 +35,6 @@ jobs:
                 command: bundle exec rake db:migrate
 
             - samvera/parallel_rspec
-
 workflows:
     version: 2
     ci:
