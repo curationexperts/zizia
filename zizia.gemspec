@@ -12,8 +12,8 @@ Gem::Specification.new do |gem|
   gem.summary       = 'Hyrax importers.'
   gem.license       = 'Apache-2.0'
   gem.files         = %w[README.md] +
-                      Dir.glob('lib/**/*.rb')
-  gem.require_paths = %w[lib]
+                      Dir.glob('{app,config,db,lib}/**/*}')
+  gem.require_paths = ['.']
 
   gem.required_ruby_version = '>= 2.3.4'
 
