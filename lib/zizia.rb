@@ -61,4 +61,6 @@ module Zizia
   require 'zizia/parsers/csv_parser'
   require 'zizia/hyrax/metadata_only_stack'
   require 'zizia/hyrax/hyrax_metadata_only_updater'
+  require 'zizia/hyrax/hyrax_default_updater'
+  require 'zizia/hyrax/hyrax_delete_files_updater'
 end

@@ -9,6 +9,8 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
 
   let(:csv_file) { File.join(fixture_path, 'csv_import', 'good', 'all_fields.csv') }
   let(:csv_metadata_update_file) { File.join(fixture_path, 'csv_import', 'good', 'all_fields_metadata_update.csv') }
+  let(:csv_complete_update_file) { File.join(fixture_path, 'csv_import', 'good', 'all_fields_complete_update.csv') }
+  let(:csv_only_new_file) { File.join(fixture_path, 'csv_import', 'good', 'all_fields_only_new.csv') }
 
   context 'logged in as an admin user' do
     let(:collection) { FactoryBot.build(:collection, title: ['Testing Collection']) }
@@ -48,7 +50,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
       # We expect to see the title of the collection on the page
       expect(page).to have_content 'Testing Collection'
 
-      expect(page).to have_content 'This import will add 1 new records.'
+      expect(page).to have_content 'This import will create or update 1 records.'
 
       # There is a link so the user can cancel.
       expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
@@ -102,44 +104,6 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
       select 'Testing Collection', from: "csv_import[fedora_collection_id]"
 
       # Fill in and submit the form
-      attach_file('csv_import[manifest]', csv_file, make_visible: true)
-
-      click_on 'Preview Import'
-
-      # We expect to see the title of the collection on the page
-      expect(page).to have_content 'Testing Collection'
-
-      expect(page).to have_content 'This import will add 1 new records.'
-
-      # There is a link so the user can cancel.
-      expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
-
-      # After reading the warnings, the user decides
-      # to continue with the import.
-      click_on 'Start Import'
-
-      # The show page for the CsvImport
-      expect(page).to have_content 'all_fields.csv'
-      expect(page).to have_content 'Start time'
-
-      # We expect to see the title of the collection on the page
-      expect(page).to have_content 'Testing Collection'
-
-      # Let the background jobs run, and check that the expected number of records got created.
-      expect(Work.count).to eq 1
-
-      # Ensure that all the fields got assigned as expected
-      work = Work.where(title: "*haberdashery*").first
-      expect(work.title.first).to match(/Interior/)
-
-      # Updating with files
-
-      visit '/csv_imports/new'
-      expect(page).to have_content 'Testing Collection'
-      expect(page).not_to have_content '["Testing Collection"]'
-      select 'Testing Collection', from: "csv_import[fedora_collection_id]"
-
-      # Fill in and submit the form
       attach_file('csv_import[manifest]', csv_metadata_update_file, make_visible: true)
 
       click_on 'Preview Import'
@@ -147,8 +111,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
       # We expect to see the title of the collection on the page
       expect(page).to have_content 'Testing Collection'
 
-      expect(page).to have_content 'This import will add 1 new records.'
-
+      expect(page).to have_content 'This import will create or update 1 records.'
       # There is a link so the user can cancel.
       expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
 
@@ -163,14 +126,117 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
       # We expect to see the title of the collection on the page
       expect(page).to have_content 'Testing Collection'
 
-      # TO-DO: Determine how to get the background jobs working with the dummy
       # Let the background jobs run, and check that the expected number of records got created.
       expect(Work.count).to eq 1
 
       # Ensure that all the fields got assigned as expected
       work = Work.where(title: "*haberdashery*").first
       expect(work.title.first).to match(/Exterior/)
+      expect(work.file_sets.first.label).to eq('dog.jpg')
 
+      # The show page for the CsvImport
+      expect(page).to have_content 'all_fields_metadata_update.csv'
+      expect(page).to have_content 'Start time'
+
+      # We expect to see the title of the collection on the page
+      expect(page).to have_content 'Testing Collection'
+
+      # Let the background jobs run, and check that the expected number of records got created.
+      expect(Work.count).to eq 1
+
+      # Ensure that all the fields got assigned as expected
+      work = Work.where(title: "*haberdashery*").first
+      expect(work.title.first).to match(/Exterior/)
+      expect(work.file_sets.first.label).to eq('dog.jpg')
+
+
+      # Update only new records
+
+      visit '/csv_imports/new'
+      expect(page).to have_content 'Testing Collection'
+      expect(page).not_to have_content '["Testing Collection"]'
+      select 'Testing Collection', from: "csv_import[fedora_collection_id]"
+
+      select 'Only create works for new IDs', from: 'csv_import[update_actor_stack]'
+      # Fill in and submit the form
+      attach_file('csv_import[manifest]', csv_only_new_file, make_visible: true)
+
+      click_on 'Preview Import'
+
+      # We expect to see the title of the collection on the page
+      expect(page).to have_content 'Testing Collection'
+
+      expect(page).to have_content 'This import will create or update 2 records.'
+
+      # There is a link so the user can cancel.
+      expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
+
+
+      # After reading the warnings, the user decides
+      # to continue with the import.
+      click_on 'Start Import'
+
+      # The show page for the CsvImport
+      expect(page).to have_content 'all_fields_only_new.csv'
+      expect(page).to have_content 'Start time'
+
+      # We expect to see the title of the collection on the page
+      expect(page).to have_content 'Testing Collection'
+
+      # Let the background jobs run, and check that the expected number of records got created.
+      expect(Work.count).to eq 2
+
+      # Ensure that all the fields got assigned as expected
+      work = Work.where(title: "*haberdashery*").first
+      expect(work.title.first).to match(/Exterior/)
+      expect(work.file_sets.first.label).to eq('dog.jpg')
+
+      # Ensure that all the fields got assigned as expected
+      work = Work.where(title: "*patisserie*").first
+      expect(work.title.first).to match(/Interior/)
+      expect(work.file_sets.first.label).to eq('cat.jpg')
+
+
+      # Update complete
+
+      visit '/csv_imports/new'
+      expect(page).to have_content 'Testing Collection'
+      expect(page).not_to have_content '["Testing Collection"]'
+      select 'Testing Collection', from: "csv_import[fedora_collection_id]"
+
+      select 'Update metadata and files or create new works as required', from: 'csv_import[update_actor_stack]'
+      # Fill in and submit the form
+      attach_file('csv_import[manifest]', csv_complete_update_file, make_visible: true)
+
+      click_on 'Preview Import'
+
+      # We expect to see the title of the collection on the page
+      expect(page).to have_content 'Testing Collection'
+
+      expect(page).to have_content 'This import will create or update 1 records.'
+
+      # There is a link so the user can cancel.
+      expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
+
+
+      # After reading the warnings, the user decides
+      # to continue with the import.
+      click_on 'Start Import'
+
+      # The show page for the CsvImport
+      expect(page).to have_content 'all_fields_complete_update.csv'
+      expect(page).to have_content 'Start time'
+
+      # We expect to see the title of the collection on the page
+      expect(page).to have_content 'Testing Collection'
+
+      # Let the background jobs run, and check that the expected number of records got created.
+      expect(Work.count).to eq 2
+
+      # Ensure that all the fields got assigned as expected
+      work = Work.where(title: "*haberdashery*").first
+      expect(work.title.first).to match(/Interior/)
+      expect(work.file_sets.first.label).to eq('cat.jpg')
     end
   end
 end
