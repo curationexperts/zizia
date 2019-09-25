@@ -20,9 +20,7 @@ require 'zizia'
 require 'zizia/spec'
 require 'byebug'
 
-if ENV['CI']
-  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
-end
+SimpleCov.formatter = Coveralls::SimpleCov::Formatter if ENV['CI']
 
 RSpec.configure do |config|
   config.filter_run focus: true
