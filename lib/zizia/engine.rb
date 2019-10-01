@@ -3,7 +3,6 @@
 require 'rails/all'
 require 'carrierwave'
 require 'carrierwave/orm/activerecord'
-require 'redcarpet'
 require 'devise'
 require 'hyrax'
 require 'riiif'

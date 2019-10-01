@@ -107,6 +107,10 @@ module Zizia
       Array(metadata[key]&.split(delimiter))
     end
 
+    def self.csv_header(field)
+      CSV_HEADERS[field.to_sym]
+    end
+
     protected
 
       # Some fields should have single values instead

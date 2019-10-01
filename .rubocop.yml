@@ -25,6 +25,7 @@ Metrics/AbcSize:
     - lib/zizia/importer.rb
     - lib/zizia/hyrax/hyrax_metadata_only_updater.rb
     - 'app/importers/modular_importer.rb'
+    - 'app/lib/zizia/metadata_details.rb'
 
 Metrics/BlockLength:
   Exclude:
@@ -75,6 +76,6 @@ RSpec/MultipleExpectations:
     - 'spec/integration/import_hyrax_csv.rb'
     - 'spec/controllers/importer_documentation_controller_spec.rb'
     - 'spec/integration/csv_import_detail_spec.rb'
-
+    - 'spec/controllers/**/*'
 Style/StructInheritance:
   Enabled: false
