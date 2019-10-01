@@ -19,6 +19,7 @@ require 'active_fedora/cleaner'
 require 'zizia'
 require 'zizia/spec'
 require 'byebug'
+require 'rails-controller-testing'
 
 RSpec.configure do |config|
   config.filter_run focus: true

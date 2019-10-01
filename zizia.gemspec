@@ -19,7 +19,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'active-fedora'
   gem.add_dependency 'rails', '~> 5.1.4'
   gem.add_dependency 'carrierwave'
-  gem.add_dependency 'redcarpet'
+  gem.add_dependency 'rails-controller-testing'
 
   gem.add_development_dependency 'bixby'
   gem.add_development_dependency 'bootstrap-sass', '~> 3.0'
@@ -43,6 +43,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'riiif', '~> 2.0'
   gem.add_development_dependency 'rsolr', '>= 1.0'
+  gem.add_development_dependency 'rails-controller-testing'
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'rspec-rails'
   gem.add_development_dependency 'rspec_junit_formatter'
