@@ -36,6 +36,7 @@ module Zizia
   require 'zizia/metadata_mapper'
   require 'zizia/hash_mapper'
   require 'zizia/hyrax/hyrax_basic_metadata_mapper'
+  require 'zizia/hyrax/based_near_attributes'
   require 'zizia/importer'
   require 'zizia/record_importer'
   require 'zizia/hyrax/hyrax_record_importer'
