@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Zizia
-  class CsvImportDetail < ApplicationRecord
+  class CsvImportDetail < ::ApplicationRecord
     after_initialize :set_defaults, unless: :persisted?
 
     belongs_to :csv_import
