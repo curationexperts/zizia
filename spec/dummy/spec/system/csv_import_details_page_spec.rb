@@ -13,6 +13,6 @@ RSpec.describe 'viewing the csv import detail page' do
     visit ('/csv_import_details/index')
     expect(page).to have_content('CSV Imports ID')
     click_on '1'
-    expect(page).to have_content('Total Size in Bytes')
+    expect(page).to have_content('Total Size')
   end
 end

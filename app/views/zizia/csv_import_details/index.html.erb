@@ -4,7 +4,8 @@
     <th>ID</th>
     <th>Associated User</th>
     <th>CSV File</th>
-    <th>Total Size in Bytes</th>
+    <th>Number of Works</th>
+    <th>Total Size</th>
   </tr>
   <% @csv_import_details.each do |csv_import_detail| %>
     <tr>
@@ -18,7 +19,10 @@
         <%= csv_import_detail.csv_import.manifest %>
       </td>
       <td>
-        <%= csv_import_detail.total_size %>
+        <%= csv_import_detail.pre_ingest_works.count  %>
+      </td>
+      <td>
+        <%= number_to_human_size(csv_import_detail.total_size) %>
       </td>
     </tr>
   <% end %>
