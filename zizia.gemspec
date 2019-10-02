@@ -17,6 +17,7 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 2.3.4'
 
   gem.add_dependency 'active-fedora'
+  gem.add_dependency 'kaminari'
   gem.add_dependency 'rails', '~> 5.1.4'
   gem.add_dependency 'carrierwave'
   gem.add_dependency 'rails-controller-testing'

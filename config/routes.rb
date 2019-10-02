@@ -6,4 +6,7 @@ Zizia::Engine.routes.draw do
 
   get 'importer_documentation/guide', to: 'metadata_details#show'
   get 'importer_documentation/profile', to: 'metadata_details#profile'
+
+  get 'csv_import_details/index'
+  get 'csv_import_details/show/:id', to: 'csv_import_details#show', as: 'csv_import_detail'
 end
