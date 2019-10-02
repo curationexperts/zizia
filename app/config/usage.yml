@@ -5,6 +5,7 @@
 arkivo_checksum:        "-- system field - not directly editable --"
 based_near: " A location that something is based near, for some broadly human notion of near."
 contributor:            "Identifies contributors to the material; can be used very broadly if exact contributions aren't known"
+create_date:            "-- system field - not directly editable --"
 creator:                "Identifies the primary Creator(s) of the material"
 date_created:           "The date the material was created"
 date_modified:          "-- system field - not directly editable --"

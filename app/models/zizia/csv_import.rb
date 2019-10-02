@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Zizia
-  class CsvImport < ApplicationRecord
+  class CsvImport < ::ApplicationRecord
     belongs_to :user
 
     # This is where the CSV file is stored:
