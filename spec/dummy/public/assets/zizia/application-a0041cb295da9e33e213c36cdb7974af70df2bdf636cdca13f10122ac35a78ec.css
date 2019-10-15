@@ -1,0 +1,54 @@
+/* line 1, /home/bess/projects/zizia/app/assets/stylesheets/zizia/_file_upload.scss */
+.file-upload {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+/* line 10, /home/bess/projects/zizia/app/assets/stylesheets/zizia/_file_upload.scss */
+.file-upload + label {
+  margin-bottom: 1em;
+}
+
+/* line 14, /home/bess/projects/zizia/app/assets/stylesheets/zizia/_file_upload.scss */
+.file-upload:focus + label {
+  outline: 1px dotted #000;
+  outline: -webkit-focus-ring-color auto 5px;
+}
+
+/* line 1, /home/bess/projects/zizia/app/assets/stylesheets/zizia/_field_guide.scss */
+.system-field {
+  display: none;
+}
+
+/* line 2, /home/bess/projects/zizia/app/assets/stylesheets/zizia/_field_guide.scss */
+.field-guide-intro {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  font-size: large;
+}
+
+/* line 4, /home/bess/projects/zizia/app/assets/stylesheets/zizia/zizia.scss */
+.btn {
+  white-space: normal !important;
+  word-wrap: break-word;
+}
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+
+
+ */
+

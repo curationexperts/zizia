@@ -13,4 +13,8 @@ RSpec.describe 'Viewing the field guide' do
     visit('/importer_documentation/guide')
     expect(page.first('div.system-field', visible: false).class).to eq Capybara::Node::Element
   end
+  it 'displays the configured delimiter' do
+    visit('/importer_documentation/guide')
+    expect(page).to have_content('|~|')
+  end
 end
