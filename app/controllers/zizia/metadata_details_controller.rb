@@ -4,6 +4,9 @@ module Zizia
     def show
       @details = MetadataDetails.instance.details(work_attributes:
                                                      WorkAttributes.instance)
+
+      @delimiter = Zizia::HyraxBasicMetadataMapper.new.delimiter
+
       respond_to do |format|
         format.html
         format.json { render json: @details.to_json }
