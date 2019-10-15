@@ -48,7 +48,7 @@
         </div>
         <div>
           <b>Required on Edit Form:</b>
-          <%= detail[:required_on_form] %>
+          <%= true_false_to_yes_no(detail[:required_on_form]) %>
         </div>
         <div class=metadata_usage>
           <b>Usage:</b>
