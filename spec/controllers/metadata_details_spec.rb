@@ -58,7 +58,7 @@ RSpec.describe Zizia::MetadataDetailsController, type: :controller do
       get :profile
       profile_table = CSV.parse(response.body, headers: :first_row)
       title_definition = profile_table.find { |r| r.field('attribute') == 'title' }
-      expect(title_definition.field('usage')).to include 'name of the resource being described' # match text extracted from ./config/zizia/usage.yml
+      expect(title_definition.field('usage')).to include 'name to aid in identifying a work' # match text extracted from ./config/emory/usage.yml
     end
 
     it 'includes `files`' do
