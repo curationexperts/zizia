@@ -54,11 +54,27 @@ RSpec.describe Zizia::MetadataDetailsController, type: :controller do
       expect(first_row).to include('required_on_form')
     end
 
-    it 'includes usage' do
+    it 'includes `usage`' do
       get :profile
       profile_table = CSV.parse(response.body, headers: :first_row)
       title_definition = profile_table.find { |r| r.field('attribute') == 'title' }
-      expect(title_definition.field('usage')).to include 'name of the resource being described' # match text extracted from ./config/emory/usage.yml
+      expect(title_definition.field('usage')).to include 'name of the resource being described' # match text extracted from ./config/zizia/usage.yml
+    end
+
+    it 'includes `files`' do
+      get :profile
+      profile_table = CSV.parse(response.body, headers: :first_row)
+      files_definition = profile_table.find { |r| r.field('attribute') == 'files' }
+      expect(files_definition.field('csv_header')).to eq('files')
+      expect(files_definition.field('validator')).to match(/Required/)
+    end
+
+    it 'includes `visibility`' do
+      get :profile
+      profile_table = CSV.parse(response.body, headers: :first_row)
+      visibility_definition = profile_table.find { |r| r.field('attribute') == 'visibility' }
+      expect(visibility_definition.field('csv_header')).to eq('visibility')
+      expect(visibility_definition.field('validator')).to match(/Required/)
     end
 
     it 'includes a date in the filename' do

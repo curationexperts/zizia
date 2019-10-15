@@ -7,19 +7,9 @@ module Zizia
 
     def details(work_attributes:)
       validators = work_attributes.validators
-      work_attributes.properties.sort.map do |p|
-        Hash[
-          attribute: p[0],
-          predicate: p[1].predicate.to_s,
-          multiple: p[1].try(:multiple?).to_s,
-          type: type_to_s(p[1].type),
-          validator: validator_to_string(validator: validators[p[0].to_sym][0]),
-          label: I18n.t("simple_form.labels.defaults.#{p[0]}"),
-          csv_header: csv_header(p[0]),
-          required_on_form: required_on_form_to_s(p[0]),
-          usage: MetadataUsage.instance.usage[p[0]]
-        ]
-      end
+      detail_list = work_attributes.properties.sort.map { |p| definition_hash_for(p, validators) }
+      detail_list << visibility_definition
+      detail_list << file_definition
     end
 
     def to_csv(work_attributes:)
@@ -63,6 +53,48 @@ module Zizia
         else
           'No validation present in the model.'
         end
+      end
+
+      def definition_hash_for(field_properties, validators)
+        Hash[
+          attribute: field_properties[0],
+          predicate: field_properties[1].predicate.to_s,
+          multiple: field_properties[1].try(:multiple?).to_s,
+          type: type_to_s(field_properties[1].type),
+          validator: validator_to_string(validator: validators[field_properties[0].to_sym][0]),
+          label: I18n.t("simple_form.labels.defaults.#{field_properties[0]}"),
+          csv_header: csv_header(field_properties[0]),
+          required_on_form: required_on_form_to_s(field_properties[0]),
+          usage: MetadataUsage.instance.usage[field_properties[0]]
+        ]
+      end
+
+      def file_definition
+        {
+          attribute:  'files',
+          predicate:  'n/a',
+          multiple: 	'true',
+          type:       'String',
+          validator: 	'Required, must name a file on the server',
+          label: 	    'Items (listed at bottom of page)',
+          csv_header: 'files',
+          required_on_form: 	'true',
+          usage: MetadataUsage.instance.usage['files']
+        }
+      end
+
+      def visibility_definition
+        {
+          attribute:  'visibility',
+          predicate:  'n/a',
+          multiple: 	'false',
+          type:       'String',
+          validator: 	'Required, must exist in the application\'s controlled vocabulary for visiblity levels.',
+          label: 	    'Visibility',
+          csv_header: 'visibility',
+          required_on_form: 	'true',
+          usage: MetadataUsage.instance.usage['visibility']
+        }
       end
   end
 end
