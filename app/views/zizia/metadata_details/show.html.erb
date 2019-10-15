@@ -1,3 +1,16 @@
+<h2>Metadata Field Guide</h2>
+<div class="field-guide-intro">
+  <p>
+  This is a dynamically generated guide to the metadata used in this application.
+  Many fields are multi-valued. To include multiple values in a single CSV cell,
+  separate them with the delimiter that has been configured for this application:
+  <span class="delimiter"><%= @delimiter %></span>
+  </p>
+  <p>
+  Example:   <span class="delimiter">Value 1<%= @delimiter %>Value 2</span>
+  </p>
+</div>
+
 <% content_for :title, 'Importer Field Guide' %>
 <div class="guide-container">
   <a class="btn btn-primary" href="/importer_documentation/profile">Download as CSV</a>
