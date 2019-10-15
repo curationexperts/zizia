@@ -1,14 +1,12 @@
 <% content_for :title, 'Importer Field Guide' %>
 <div class="guide-container">
   <a class="btn btn-primary" href="/importer_documentation/profile">Download as CSV</a>
-  <dl>
+  <div class="metadata-field-guide">
     <% @details.each do |detail| %>
-      <h2>
-        <dt>
+      <div class="metadata-field <%= system_field(detail) %>" <%= hide_system_field(detail) %>>
+        <h2 class="field-label">
           <%= detail[:attribute] %>
-        </dt>
-      </h2>
-      <dd>
+        </h2>
         <div>
           <b>Predicate:</b>
           <a href="<%= detail[:predicate] %>"><%= detail[:predicate] %></a>
@@ -43,7 +41,7 @@
           <b>Usage:</b>
           <%= detail[:usage] %>
         </div>
-      </dd>
+      </div>
     <% end  %>
-  </dl>
+  </div>
 </div>
