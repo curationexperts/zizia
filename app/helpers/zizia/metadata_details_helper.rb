@@ -21,5 +21,11 @@ module Zizia
       # rubocop: enable Rails/OutputSafety
       ""
     end
+
+    def true_false_to_yes_no(value)
+      return "" if value.nil?
+      return "yes" if value == "true"
+      "no"
+    end
   end
 end
