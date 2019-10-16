@@ -5,10 +5,7 @@
 <img alt="Zizia image" src="https://camo.githubusercontent.com/87eafa4a5b6a84802eab583e532bb33881b8a7ab/68747470733a2f2f7777772e706572766572646f6e6b2e636f6d2f77696c64253230666c6f776572732f506172736e69702f476f6c64656e253230416c6578616e646572732f323030383038253230476f6c64656e253230416c6578616e646572253230285a697a69612532306175726561292532302d2532304e47532532302d253230746865253230426f6f6b2532306f6625323057696c64253230466c6f776572732e6a7067" width="500px">
 </td><td>
 
-Object import for Hyrax. See the <a href="https://www.rubydoc.info/gems/zizia">API documentation</a> for more
-information. See the <a href="https://curationexperts.github.io/zizia/">Getting Started</a> guide for a gentle introduction.
-<br/><br/>
-
+Object import for Hyrax.
 
 [![Gem Version](https://badge.fury.io/rb/zizia.svg)](https://badge.fury.io/rb/zizia)
 [![CircleCI](https://circleci.com/gh/curationexperts/zizia.svg?style=svg)](https://circleci.com/gh/curationexperts/zizia)
