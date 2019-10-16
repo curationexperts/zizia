@@ -1,3 +1,5 @@
 <%= javascript_include_tag 'zizia/application' %>
-<h2><span class="glyphicon glyphicon-cloud-upload"></span> Begin Your CSV Import </h2>
-<%= render 'form', csv_import: @csv_import %>
+<div id="zizia_new" class="zizia">
+  <h2><span class="glyphicon glyphicon-cloud-upload"></span> Batch Import </h2>
+  <%= render 'form', csv_import: @csv_import %>
+</div>
