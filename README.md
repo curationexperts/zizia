@@ -21,6 +21,30 @@ information. See the <a href="https://curationexperts.github.io/zizia/">Getting 
 
 In your project's `Gemfile`, add: `gem 'zizia'`, then run `bundle install`.
 
+1. Add the engine to `routes.rb`:
+```
+  mount Zizia::Engine => '/'
+```
+
+2. Add the helpers to the `ApplicationController`
+
+```
+helper Zizia::Engine.helpers
+```
+
+3. Give admin users permission to import in your `Ability.custom_permissions`:
+
+```
+    can :manage, Zizia::CsvImport if current_user.admin?
+    can :manage, Zizia::CsvImportDetail if current_user.admin?
+```
+
+4. Add links to `/csv_imports/new` and `/importer_documentation/csv` in the Hyrax dashboard. 
+
+The `spec/dummy` folder in this application is a complete Hyrax application with Zizia installed. 
+You can use that as an example for adding this to your current Hyrax application or copy that
+to create a new application with Zizia installed. 
+
 To do a basic Hyrax import, first ensure that a [work type is registered](http://www.rubydoc.info/github/samvera/hyrax/Hyrax/Configuration#register_curation_concern-instance_method)
 with your `Hyrax` application. Then write a class like this:
 
@@ -57,35 +81,6 @@ environment variables called `IMPORT_PATH`. If `IMPORT_PATH` is not set, `HyraxR
 To input any kind of file other than CSV, you need to provide a `Parser` (out of the box, we support simple CSV import with `CsvParser`). We will be writing guides about
 how to support custom mappers (for metadata outside of Hyrax's core and basic metadata fields).
 
-## Hyrax User Interface
-
-Zizia can be installed as a Rails Engine in a Hyrax application. To use the Zizia UI in Hyrax:
-
-1. Add the engine to `routes.rb`:
-```
-  mount Zizia::Engine => '/'
-```
-
-2. Add the helpers to the `ApplicationController`
-
-```
-helper Zizia::Engine.helpers
-```
-
-3. Give admin users permission to import in your `Ability.custom_permissions`:
-
-```
-    can :manage, Zizia::CsvImport if current_user.admin?
-    can :manage, Zizia::CsvImportDetail if current_user.admin?
-```
-
-4. Add links to `/csv_imports/new` and `/importer_documentation/csv` in the Hyrax dashboard. 
-
-The `spec/dummy` folder in this application is a complete Hyrax application with Zizia installed. 
-You can use that as an example for adding this to your current Hyrax application or copy that
-to create a new application with Zizia installed. 
-
-
 ## Development
 
 ```sh
@@ -95,9 +90,3 @@ cd zizia
 bundle install
 bundle exec rake ci
 ```
-
-### RSpec Support
-
-This gem ships with RSpec shared examples and other support tools intended to ease testing and ensure
-interoperability of client code. These can be included by adding `require 'zizia/spec'` to a
-`spec_helper.rb` or `rails_helper.rb` file in your application's test suite.
