@@ -31,7 +31,7 @@ module Zizia
     ##
     # @return [Enumerable<Symbol>] The fields the mapper can process.
     def fields
-      core_fields + basic_fields + [:visibility]
+      core_fields + basic_fields + [:visibility, :files]
     end
 
     # Properties defined with `multiple: false` in
@@ -131,18 +131,21 @@ module Zizia
       end
 
       # Properties defined in Hyrax::CoreMetadata
-      # Note that date_uploaded is NOT set here, even though it is defined in
-      # Hyrax::CoreMetadata. Hyrax expects to set date_uploaded itself, and
-      # sending a metadata value for that field interferes with Hyrax expected
-      # behavior.
+      # Note that depositor, date_uploaded and date_modified are NOT set here,
+      # even though they are defined in Hyrax::CoreMetadata.
+      # Hyrax expects to set these fields itself, and
+      # sending a metadata value for these fields interferes with
+      # Hyrax expected behavior.
       def core_fields
-        [:depositor, :title, :date_modified]
+        [:title]
       end
 
       # Properties defined in Hyrax::BasicMetadata
+      # System related fields like :relative_path, and :import_url
+      # are not included here because we don't expect users to directly
+      # import them.
       def basic_fields
-        [:label, :relative_path, :import_url,
-         :resource_type, :creator, :contributor,
+        [:resource_type, :creator, :contributor,
          :description, :keyword, :license,
          :rights_statement, :publisher, :date_created,
          :subject, :language, :identifier,
