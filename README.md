@@ -38,6 +38,8 @@ helper Zizia::Engine.helpers
 
 4. Add links to `/csv_imports/new` and `/importer_documentation/csv` in the Hyrax dashboard. 
 
+5. Run `rake db:migrate`
+
 The `spec/dummy` folder in this application is a complete Hyrax application with Zizia installed. 
 You can use that as an example for adding this to your current Hyrax application or copy that
 to create a new application with Zizia installed. 
