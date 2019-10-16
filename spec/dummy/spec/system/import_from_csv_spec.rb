@@ -41,8 +41,10 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
       visit '/csv_imports/new'
       expect(page).to have_content 'Testing Collection'
       expect(page).not_to have_content '["Testing Collection"]'
-      select 'Testing Collection', from: "csv_import[fedora_collection_id]"
+
       # Fill in and submit the form
+      select 'Testing Collection', from: "csv_import[fedora_collection_id]"
+      select 'Update Existing Metadata, create new works', from: "csv_import[update_actor_stack]"
       attach_file('csv_import[manifest]', csv_file, make_visible: true)
 
       expect(page).to have_content('You sucessfully uploaded this CSV: all_fields.csv')
@@ -104,6 +106,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
       expect(page).to have_content 'Testing Collection'
       expect(page).not_to have_content '["Testing Collection"]'
       select 'Testing Collection', from: "csv_import[fedora_collection_id]"
+      select 'Update Existing Metadata, create new works', from: "csv_import[update_actor_stack]"
 
       # Fill in and submit the form
       attach_file('csv_import[manifest]', csv_metadata_update_file, make_visible: true)
@@ -159,7 +162,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
       expect(page).not_to have_content '["Testing Collection"]'
       select 'Testing Collection', from: "csv_import[fedora_collection_id]"
 
-      select 'Only create works for new IDs', from: 'csv_import[update_actor_stack]'
+      select 'Ignore Existing Works, new works only', from: 'csv_import[update_actor_stack]'
       # Fill in and submit the form
       attach_file('csv_import[manifest]', csv_only_new_file, make_visible: true)
 
@@ -206,7 +209,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
       expect(page).not_to have_content '["Testing Collection"]'
       select 'Testing Collection', from: "csv_import[fedora_collection_id]"
 
-      select 'Update metadata and files or create new works as required', from: 'csv_import[update_actor_stack]'
+      select 'Overwrite All Files & Metadata', from: 'csv_import[update_actor_stack]'
       # Fill in and submit the form
       attach_file('csv_import[manifest]', csv_complete_update_file, make_visible: true)
 
