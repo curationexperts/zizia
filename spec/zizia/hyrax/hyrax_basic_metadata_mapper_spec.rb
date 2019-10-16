@@ -7,13 +7,12 @@ describe Zizia::HyraxBasicMetadataMapper do
 
   # Properties defined in Hyrax::CoreMetadata
   let(:core_fields) do
-    [:depositor, :title, :date_modified]
+    [:title]
   end
 
   # Properties defined in Hyrax::BasicMetadata
   let(:basic_fields) do
-    [:label, :relative_path, :import_url,
-     :resource_type, :creator, :contributor,
+    [:resource_type, :creator, :contributor,
      :description, :keyword, :license,
      :rights_statement, :publisher, :date_created,
      :subject, :language, :identifier, :based_near,
@@ -21,7 +20,7 @@ describe Zizia::HyraxBasicMetadataMapper do
   end
 
   let(:tenejo_fields) do
-    [:visibility]
+    [:visibility, :files]
   end
 
   it_behaves_like 'a Zizia::Mapper' do
@@ -35,8 +34,7 @@ describe Zizia::HyraxBasicMetadataMapper do
   context 'with metadata, but some missing fields' do
     before { mapper.metadata = metadata }
     let(:metadata) do
-      { 'depositor' => 'someone@example.org',
-        'title' => 'A Title',
+      { 'title' => 'A Title',
         'language' => 'English' }
     end
 
@@ -44,16 +42,12 @@ describe Zizia::HyraxBasicMetadataMapper do
       expect(metadata).to include('title')
       expect(mapper).to respond_to(:title)
 
-      expect(metadata).not_to include('label')
-      expect(mapper).to respond_to(:label)
+      expect(metadata).not_to include('source')
+      expect(mapper).to respond_to(:source)
     end
 
     it 'returns single values for single-value fields' do
-      expect(mapper.depositor).to eq 'someone@example.org'
-      expect(mapper.date_modified).to eq nil
-      expect(mapper.label).to eq nil
-      expect(mapper.relative_path).to eq nil
-      expect(mapper.import_url).to eq nil
+      expect(mapper.visibility).to eq 'restricted'
     end
 
     it 'returns array values for multi-value fields' do
@@ -91,12 +85,7 @@ describe Zizia::HyraxBasicMetadataMapper do
         { 'Title' => 'A Title',
           'Related URL' => 'http://example.com',
           'Abstract or Summary' => 'desc1|~|desc2',
-          'visiBILITY' => 'open',
-          'Depositor' => 'someone@example.org',
-          'DATE_modified' => 'mod date',
-          'laBel' => 'label',
-          'relative_PATH' => 'rel path',
-          'import_URL' => 'imp url' }
+          'visiBILITY' => 'open' }
       end
 
       it 'matches the correct fields' do
@@ -105,11 +94,6 @@ describe Zizia::HyraxBasicMetadataMapper do
         expect(mapper.description).to eq ['desc1', 'desc2']
         expect(mapper.creator).to eq []
         expect(mapper.visibility).to eq 'open'
-        expect(mapper.depositor).to eq 'someone@example.org'
-        expect(mapper.date_modified).to eq 'mod date'
-        expect(mapper.label).to eq 'label'
-        expect(mapper.relative_path).to eq 'rel path'
-        expect(mapper.import_url).to eq 'imp url'
       end
     end
 
@@ -184,7 +168,7 @@ describe Zizia::HyraxBasicMetadataMapper do
       end
 
       it 'doesn\'t raise an error for missing fields' do
-        expect(mapper.depositor).to eq nil
+        expect(mapper.source).to eq []
       end
     end
   end
