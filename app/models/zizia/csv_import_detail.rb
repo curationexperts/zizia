@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Zizia
   class CsvImportDetail < ::ApplicationRecord
+    paginates_per 10
+
     after_initialize :set_defaults, unless: :persisted?
 
     belongs_to :csv_import
