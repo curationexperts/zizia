@@ -82,6 +82,19 @@ You can find [an example csv file for import to Hyrax](https://github.com/curati
 with a heading of `files`, and the location of the files should be specified via an
 environment variables called `IMPORT_PATH`. If `IMPORT_PATH` is not set, `HyraxRecordImporter` will look in `/opt/data` by default.
 
+## Testing
+
+To run Solr and Fedora for testing purposes: 
+
+`solr_wrapper --config spec/dummy/config/solr_wrapper_test.yml`
+`fcrepo_wrapper --config spec/dummy/config/fcrepo_wrapper_test.yml -p 8986`
+
+After this you can run the whole suite, or individual specs. System specs are located
+in the `spec/dummy/spec/system` folder:
+
+`bundle exec rspec spec/dummy/spec/system/csv_import_details_page_spec.rb`
+
+
 ## Customizing
 To input any kind of file other than CSV, you need to provide a `Parser` (out of the box, we support simple CSV import with `CsvParser`). We will be writing guides about
 how to support custom mappers (for metadata outside of Hyrax's core and basic metadata fields).
