@@ -18,7 +18,7 @@
     <% @csv_import_detail.pre_ingest_files.each do |pre_ingest_file| %>
       <tr>
         <td>
-          <%= pre_ingest_file.filename %>
+          <%= pre_ingest_file.basename %>
         </td>
         <td>
           <%= number_to_human_size(pre_ingest_file.size) %>
