@@ -87,7 +87,7 @@ environment variables called `IMPORT_PATH`. If `IMPORT_PATH` is not set, `HyraxR
 To run Solr and Fedora for testing purposes: 
 
 `solr_wrapper --config spec/dummy/config/solr_wrapper_test.yml`
-`fcrepo_wrapper --config spec/dummy/config/fcrepo_wrapper_test.yml -p 8986`
+`fcrepo_wrapper --config spec/dummy/config/fcrepo_wrapper_test.yml`
 
 After this you can run the whole suite, or individual specs. System specs are located
 in the `spec/dummy/spec/system` folder:
