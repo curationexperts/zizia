@@ -1,6 +1,10 @@
 .desc::after {
-   content: ' ▾'
+  content: ' ▾'
 }
 .asc::after {
-   content: ' ▴'
+  content: ' ▴'
+}
+
+.toggle-imports {
+  margin-bottom: 1em;
 }

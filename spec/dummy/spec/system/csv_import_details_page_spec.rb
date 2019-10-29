@@ -2,23 +2,33 @@ require 'rails_helper'
 include Warden::Test::Helpers
 
 RSpec.describe 'viewing the csv import detail page' do
+  let(:user) { FactoryBot.create(:admin, email: 'systems@curationexperts.com')}
+  let(:second_user) { FactoryBot.create(:user, email: 'user@curationexperts.com') }
   let(:csv_import) { FactoryBot.create(:csv_import) }
-  let(:csv_import_detail) { FactoryBot.create_list(:csv_import_detail, 12, created_at: Time.parse('Tue, 29 Oct 2019 14:20:02 UTC +00:00').utc) }
-  let(:csv_import_detail_second) { FactoryBot.create(:csv_import_detail, created_at: Time.parse('Thur, 31 Oct 2019 14:20:02 UTC +00:00').utc, status: 'zippy', update_actor_stack: 'ZiziaTesting')  }
-  let(:user) { FactoryBot.create(:admin) }
+  let(:second_csv_import) { FactoryBot.create(:csv_import, id: 2, user_id: 2) }
+  let(:csv_import_detail) { FactoryBot.create_list(:csv_import_detail, 12, created_at: Time.parse('Tue, 29 Oct 2019 14:20:02 UTC +00:00').utc, depositor_id: user.id) }
+  let(:csv_import_detail_second) { FactoryBot.create(:csv_import_detail, created_at: Time.parse('Thur, 31 Oct 2019 14:20:02 UTC +00:00').utc, status: 'zippy', update_actor_stack: 'ZiziaTesting', depositor_id: user.id)  }
+  let(:csv_import_detail_third) { FactoryBot.create(:csv_import_detail, created_at: Time.parse('Wed, 30 Oct 2019 14:20:02 UTC +00:00').utc, depositor_id: second_user.id, csv_import_id: 2) }
 
   before do
     user.save
+    second_user.save
+
     csv_import.user_id = user.id
     csv_import.save
+
+    second_csv_import.user_id = second_user.id
+    second_csv_import.save
+
     csv_import_detail.each(&:save)
     csv_import_detail_second.save
+    csv_import_detail_third.save
     login_as user
   end
 
   it 'displays the metadata when you visit the page' do
     visit ('/csv_import_details/index')
-    expect(page).to have_content('CSV Imports ID')
+    expect(page).to have_content('ID')
     expect(page).to have_content('Status')
     expect(page).to have_content('undetermined')
     click_on '1'
@@ -53,7 +63,7 @@ RSpec.describe 'viewing the csv import detail page' do
 
   it 'displays the metadata when you visit the page' do
     visit ('/csv_import_details/index')
-    expect(page).to have_content('CSV Imports ID')
+    expect(page).to have_content('ID')
     click_on '1'
     expect(page).to have_content('Total Size')
   end
@@ -85,6 +95,7 @@ RSpec.describe 'viewing the csv import detail page' do
 
     visit('/csv_import_details/index')
     expect(page).to have_content('Next')
+
   end
 
   it 'has pagination at 10' do
@@ -92,5 +103,13 @@ RSpec.describe 'viewing the csv import detail page' do
     expect(page).to have_content('Next')
     click_on 'Next'
     expect(page).to have_content('Previous')
+  end
+
+  it 'allows you to view only your imports' do
+    visit('/csv_import_details/index')
+    click_on 'View My Imports'
+    expect(page).not_to have_content('user@curationexperts.com')
+    click_on 'View All Imports'
+    expect(page).to have_content('user@curationexperts.com')
   end
 end
