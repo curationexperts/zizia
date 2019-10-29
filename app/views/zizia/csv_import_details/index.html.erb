@@ -3,6 +3,7 @@
   <tr>
     <th>ID</th>
     <th>Associated User</th>
+    <th>Date</th>
     <th>CSV File</th>
     <th>Number of Works</th>
     <th>Number of Files</th>
@@ -15,6 +16,9 @@
       </td>
       <td>
         <%= User.find(csv_import_detail.csv_import.user_id).email %>
+      </td>
+      <td>
+        <%= csv_import_detail.created_at.strftime("%B %-d, %Y %H:%M") %>
       </td>
       <td>
         <%= csv_import_detail.csv_import.manifest %>
