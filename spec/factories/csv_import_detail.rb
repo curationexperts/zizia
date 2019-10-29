@@ -11,6 +11,6 @@ FactoryBot.define do
     success_count { 1 }
     failure_count { 0 }
     deduplication_field { 'identifier' }
-    update_actor_stack { 'HyraxDefault' }
+    update_actor_stack { 'HyraxMetadataOnly' }
   end
 end

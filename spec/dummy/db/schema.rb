@@ -573,6 +573,7 @@ ActiveRecord::Schema.define(version: 201901241536542) do
     t.integer "failure_count"
     t.string "deduplication_field"
     t.string "update_actor_stack"
+    t.string "status"
     t.index ["csv_import_id"], name: "index_zizia_csv_import_details_on_csv_import_id"
   end
 
