@@ -1,0 +1,7 @@
+<div class="btn-group" role="group" aria-label="Table Visibility Controls">
+  <% if request.params[:user] %>
+    <%= link_to 'View All Imports', request.params.except(:user), class: 'btn btn-default toggle-imports view-all-imports' %>
+  <% else %>
+    <%= link_to 'View My Imports', request.params.merge(user: current_user.email), class: 'btn btn-default toggle-imports view-my-imports' %>
+  <% end %>
+</div>
