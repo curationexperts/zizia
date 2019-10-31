@@ -17,6 +17,8 @@ RSpec.describe 'viewing the csv import detail page' do
   it 'displays the metadata when you visit the page' do
     visit ('/csv_import_details/index')
     expect(page).to have_content('CSV Imports ID')
+    expect(page).to have_content('Status')
+    expect(page).to have_content('undetermined')
     click_on '1'
     expect(page).to have_content('Total Size')
   end
@@ -32,6 +34,18 @@ RSpec.describe 'viewing the csv import detail page' do
     visit ('/csv_import_details/index')
     expect(page).to have_content('Date')
     expect(page).to have_content('October 29, 2019 14:20')
+  end
+
+  it 'displays undetermined for the status' do
+    visit ('/csv_import_details/index')
+    expect(page).to have_content('Status')
+    expect(page).to have_content('undetermined')
+  end
+
+  it 'displays the overwrite behavior type' do
+    visit ('/csv_import_details/index')
+    expect(page).to have_content('Overwrite Behavior Type')
+    expect(page).to have_content('HyraxMetadataOnly')
   end
 
   it 'has the dashboard layout' do

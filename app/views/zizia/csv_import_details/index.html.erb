@@ -8,6 +8,8 @@
     <th>Number of Works</th>
     <th>Number of Files</th>
     <th>Total Size</th>
+    <th>Status</th>
+    <th>Overwrite Behavior Type</th>
   </tr>
   <% @csv_import_details.each do |csv_import_detail| %>
     <tr>
@@ -31,6 +33,12 @@
       </td>
       <td>
         <%= number_to_human_size(csv_import_detail.total_size) %>
+      </td>
+      <td>
+        <%= csv_import_detail.status %>
+      </td>
+      <td>
+        <%= csv_import_detail.update_actor_stack %>
       </td>
     </tr>
   <% end %>
