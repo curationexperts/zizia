@@ -246,7 +246,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
       # Viewing additional details after an import
       visit "/csv_import_details/index"
       expect(page).to have_content('Total Size')
-      find(:xpath, '//*[@id="content-wrapper"]/div[2]/table/tbody/tr[2]/td[1]/a').click
+      find(:xpath, '//*[@id="content-wrapper"]/div[2]/table/tbody/tr[3]/td[1]/a').click
       expect(page).to have_content('dog.jpg')
       expect(page).to have_content('5.74 MB')
     end

@@ -1,9 +1,9 @@
 <h3>CSV Imports</h3>
 <table class="table table-striped">
   <tr>
-    <th>ID</th>
+    <th><%= sortable 'id', 'ID' %></th>
     <th>Associated User</th>
-    <th>Date</th>
+    <th><%= sortable 'created_at', 'Date' %></th>
     <th>CSV File</th>
     <th>Number of Works</th>
     <th>Number of Files</th>
@@ -23,7 +23,7 @@
         <%= csv_import_detail.created_at.strftime("%B %-d, %Y %H:%M") %>
       </td>
       <td>
-        <%= csv_import_detail.csv_import.manifest %>
+        <%= File.basename(csv_import_detail.csv_import.manifest.to_s) %>
       </td>
       <td>
         <%= csv_import_detail.pre_ingest_works.count  %>
@@ -38,7 +38,7 @@
         <%= csv_import_detail.status %>
       </td>
       <td>
-        <%= csv_import_detail.update_actor_stack %>
+        <%= human_update_actor_stack(csv_import_detail.update_actor_stack) %>
       </td>
     </tr>
   <% end %>
