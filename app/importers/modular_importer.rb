@@ -35,7 +35,7 @@ class ModularImporter
     importer = Zizia::Importer.new(parser: Zizia::CsvParser.new(file: file), record_importer: Zizia::HyraxRecordImporter.new(attributes: attrs))
 
     importer.records.each_with_index do |record, index|
-      pre_ingest_work = Zizia::PreIngestWork.new(csv_import_detail_id: csv_import_detail.id)
+      pre_ingest_work = Zizia::PreIngestWork.new(csv_import_detail_id: csv_import_detail.id, deduplication_key: record.mapper.metadata["deduplication_key"])
 
       record.mapper.files.each do |child_file|
         full_path = Dir.glob("#{ENV['IMPORT_PATH']}/**/#{child_file}").first

@@ -6,5 +6,6 @@ FactoryBot.define do
     created_at { Time.current }
     updated_at { Time.current }
     csv_import_detail_id { 1 }
+    sequence(:deduplication_key) { |n| "zyx321cba#{n}" }
   end
 end
