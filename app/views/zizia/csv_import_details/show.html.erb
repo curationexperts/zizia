@@ -7,26 +7,30 @@
     <li>Total Size: <%= number_to_human_size(@csv_import_detail.total_size) %></li>
   </ul>
 
-  <h3>Files</h3>
-  <table id="files-table" class="dataTable display responsive nowrap table table-striped works-list" style="width:100%">
-    <tr>
-      <th>Filename</th>
-      <th>Size</th>
-      <th>Row Number</th>
-    </tr>
+  <h3>Works & Files</h3>
 
-    <% @csv_import_detail.pre_ingest_files.each do |pre_ingest_file| %>
-      <tr>
-        <td>
-          <%= pre_ingest_file.basename %>
-        </td>
-        <td>
-          <%= number_to_human_size(pre_ingest_file.size) %>
-        </td>
-        <td>
-          <%= pre_ingest_file.row_number %>
-        </td>
-      </tr>
-    <% end %>
+  <table id="works-table" class="table works-list">
+    <tr>
+      <th>Deduplication Key</th>
+      <th>Title</th>
+      <th>Files</th>
+      <th>Date</th>
+    </tr>
+  <% @csv_import_detail.pre_ingest_works.each do |pre_ingest_work| %>
+    <tr>
+      <td>
+        <%= pre_ingest_work.deduplication_key%>
+      </td>
+      <td>
+        <%= pre_ingest_work.title %>
+      </td>
+      <td>
+        <%= render 'pre_ingest_files_table', pre_ingest_work: pre_ingest_work %>
+      </td>
+      <td>
+        <%= pre_ingest_work.created_at.strftime("%B %-d, %Y %H:%M") %>
+      </td>
+    </tr>
+  <% end %>
   </table>
 </div>

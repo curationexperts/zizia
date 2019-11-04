@@ -33,6 +33,7 @@ RSpec.describe 'viewing the csv import detail page' do
     expect(page).to have_content('undetermined')
     click_on '1'
     expect(page).to have_content('Total Size')
+    expect(page).to have_content('Deduplication Key')
   end
 
   it 'has links to sort' do

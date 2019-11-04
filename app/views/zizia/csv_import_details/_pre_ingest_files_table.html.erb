@@ -1,0 +1,20 @@
+<table id="files-table" class="dataTable display responsive nowrap table table-striped works-list" style="width:100%">
+  <tr>
+    <th>Filename</th>
+    <th>Size</th>
+    <th>Row Number</th>
+  </tr>
+  <% pre_ingest_work.pre_ingest_files.each do |pre_ingest_file| %>
+    <tr>
+      <td>
+        <%= pre_ingest_file.basename %>
+      </td>
+      <td>
+        <%= number_to_human_size(pre_ingest_file.size) %>
+      </td>
+      <td>
+        <%= pre_ingest_file.row_number %>
+      </td>
+    </tr>
+  <% end %>
+</table>
