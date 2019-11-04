@@ -84,9 +84,9 @@ environment variables called `IMPORT_PATH`. If `IMPORT_PATH` is not set, `HyraxR
 
 ## Testing
 
-To run Solr and Fedora for testing purposes: 
+To run Solr and Fedora for testing purposes, open a new terminal session for each and run the following commads: 
 
-`solr_wrapper --config spec/dummy/config/solr_wrapper_test.yml`
+`solr_wrapper --config spec/dummy/config/solr_wrapper_test.yml`  
 `fcrepo_wrapper --config spec/dummy/config/fcrepo_wrapper_test.yml`
 
 After this you can run the whole suite, or individual specs. System specs are located
