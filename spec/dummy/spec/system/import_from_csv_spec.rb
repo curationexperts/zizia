@@ -246,9 +246,13 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
       # Viewing additional details after an import
       visit "/csv_import_details/index"
       expect(page).to have_content('Total Size')
-      find(:xpath, '//*[@id="content-wrapper"]/div[2]/table/tbody/tr[3]/td[1]/a').click
+      click_on '4'
       expect(page).to have_content('dog.jpg')
+      expect(page).to have_content('cat.jpg')
       expect(page).to have_content('5.74 MB')
+      expect(page).to have_content('abc/123')
+      expect(page).to have_content('This work\'s metadata has not been indexed yet.')
+      expect(page).to have_content('Date Created')
     end
   end
 end
