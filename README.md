@@ -17,40 +17,58 @@ Object import for Hyrax.
 ## Usage
 
 In your project's `Gemfile`, add: `gem 'zizia'`, then run `bundle install`.
+1. Require 'zizia' in your `config/application.rb` file: 
 
-1. Add the engine to `routes.rb`:
+```
+module MyApplication
+  class Application < Rails::Application
+    require 'zizia'
+```
+
+2. Add the engine to `routes.rb`:
 ```
   mount Zizia::Engine => '/'
 ```
 
-2. Add the helpers to the `ApplicationController`
+3. Add the helpers to the `ApplicationController`
 
 ```
 helper Zizia::Engine.helpers
 ```
 
-3. Give admin users permission to import in your `Ability.custom_permissions`:
+4. Give admin users permission to import in your `Ability.custom_permissions`:
 
 ```
     can :manage, Zizia::CsvImport if current_user.admin?
     can :manage, Zizia::CsvImportDetail if current_user.admin?
 ```
 
-4. Add links to `/csv_imports/new` and `/importer_documentation/csv` in the Hyrax dashboard. 
+5. Add links to `/csv_imports/new` and `/importer_documentation/csv` in the Hyrax dashboard. 
 
-5. In your Rails application's `application.css` and `application.js` include Zizia's assets:
+6. In your Rails application's `application.css` and `application.js` include Zizia's assets:
 
 ```
  *= require zizia/application
 ```
 
-6. Run `rake db:migrate`
+7. Run `rake db:migrate`
 
 The `spec/dummy` folder in this application is a complete Hyrax application with Zizia installed. 
 You can use that as an example for adding this to your current Hyrax application or copy that
 to create a new application with Zizia installed. 
 
-To do a basic Hyrax import, first ensure that a [work type is registered](http://www.rubydoc.info/github/samvera/hyrax/Hyrax/Configuration#register_curation_concern-instance_method)
+8. Add a deduplication_key to your default work type's medata:
+
+```
+  property :deduplication_key, predicate: "http://curationexperts.com/vocab/predicates#deduplicationKey", multiple: false do |index|
+    index.as :stored_searchable
+  end
+```
+
+9. If you are using the default [Hyrax metadata profile](https://samvera.github.io/metadata_application_profile.html) aka `Hyrax::BasicMetadata`, you are ready to download a sample CSV and start importing. 
+
+
+If you aren't using `Hyrax::BasicMedata` you'll need to create a custom `importer` and `mapper` class. First ensure that a [work type is registered](http://www.rubydoc.info/github/samvera/hyrax/Hyrax/Configuration#register_curation_concern-instance_method)
 with your `Hyrax` application. Then write a class like this:
 
 ```ruby
