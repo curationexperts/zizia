@@ -605,7 +605,7 @@ ActiveRecord::Schema.define(version: 201901241536542) do
     t.datetime "updated_at", null: false
     t.string "deduplication_key"
     t.index ["csv_import_detail_id"], name: "index_zizia_pre_ingest_works_on_csv_import_detail_id"
-    t.index ["deduplication_key"], name: "index_zizia_pre_ingest_works_on_deduplication_key"
+    t.index ["deduplication_key"], name: "index_zizia_pre_ingest_works_on_deduplication_key", unique: true
   end
 
 end

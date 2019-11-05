@@ -3,6 +3,7 @@
     <th>Filename</th>
     <th>Size</th>
     <th>Row Number</th>
+    <th>Date Created</th>
   </tr>
   <% pre_ingest_work.pre_ingest_files.each do |pre_ingest_file| %>
     <tr>
@@ -14,6 +15,9 @@
       </td>
       <td>
         <%= pre_ingest_file.row_number %>
+      </td>
+      <td>
+        <%= pre_ingest_file.created_at.strftime("%B %-d, %Y %H:%M") %>
       </td>
     </tr>
   <% end %>
