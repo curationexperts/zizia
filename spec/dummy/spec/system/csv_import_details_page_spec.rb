@@ -11,6 +11,14 @@ RSpec.describe 'viewing the csv import detail page', js: true do
   let(:csv_import_detail_third) { FactoryBot.create(:csv_import_detail, created_at: Time.parse('Wed, 30 Oct 2019 14:20:02 UTC +00:00').utc, depositor_id: second_user.id, csv_import_id: 2) }
   let(:csv_pre_ingest_works) { FactoryBot.create_list(:pre_ingest_work, 12, csv_import_detail_id: 4) }
   let(:csv_pre_ingest_work_second) { FactoryBot.create(:pre_ingest_work, csv_import_detail_id: 5, created_at: Time.parse('Thur, 31 Oct 2019 14:20:02 UTC +00:00').utc) }
+  let(:pre_ingest_file) { FactoryBot.create(:pre_ingest_file, pre_ingest_work_id: csv_pre_ingest_work_second.id) }
+  let(:pre_ingest_file_without_file) { FactoryBot.create(:pre_ingest_file, pre_ingest_work_id: csv_pre_ingest_work_second.id, filename: File.open([Zizia::Engine.root, '/', 'spec/fixtures/dog.jpg'].join)) }
+  let(:file_set) do
+    FactoryBot.create(:file_set,
+                      title: ['zizia.png'],
+                      content: File.open([Zizia::Engine.root, '/', 'spec/fixtures/zizia.png'].join))
+  end
+
 
   before do
     user.save
@@ -27,6 +35,8 @@ RSpec.describe 'viewing the csv import detail page', js: true do
     csv_import_detail_third.save
     csv_pre_ingest_works.each(&:save)
     csv_pre_ingest_work_second.save
+    pre_ingest_file.save
+    pre_ingest_file_without_file.save
     login_as user
   end
 
@@ -133,5 +143,16 @@ RSpec.describe 'viewing the csv import detail page', js: true do
     expect(page).not_to have_content 'Row Number'
     click_on 'View Files'
     expect(page).to have_content 'Row Number'
+  end
+
+  it 'can show a status for a file' do
+    file_set
+    visit('/csv_import_details/index')
+    click_on '5'
+    expect(page).to have_content 'View Files'
+    expect(page).not_to have_content 'Status'
+    click_on 'View Files'
+    expect(page.html).to match(/glyphicon-ok-sign status-success/)
+    expect(page.html).to match(/glyphicon-question-sign/)
   end
 end

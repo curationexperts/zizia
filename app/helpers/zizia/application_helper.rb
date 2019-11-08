@@ -30,5 +30,11 @@ module Zizia
     def collections?
       !ActiveFedora::SolrService.query('has_model_ssim:Collection').empty?
     end
+
+    def status(pre_ingest_file)
+      # rubocop:disable Rails/OutputSafety
+      return '<span class="text-success glyphicon glyphicon-ok-sign status-success"></span>'.html_safe if pre_ingest_file.indexed?
+      '<span class="glyphicon glyphicon-question-sign status-unknown"></span>'.html_safe
+    end
   end
 end

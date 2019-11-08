@@ -8,6 +8,7 @@
       <th>Size</th>
       <th>Row Number</th>
       <th>Date Created</th>
+      <th>Status</th>
     </tr>
     <% pre_ingest_work.pre_ingest_files.each do |pre_ingest_file| %>
       <tr>
@@ -22,6 +23,9 @@
         </td>
         <td>
           <%= pre_ingest_file.created_at.strftime("%B %-d, %Y %H:%M") %>
+        </td>
+        <td>
+          <%= status(pre_ingest_file) %>
         </td>
       </tr>
     <% end %>
