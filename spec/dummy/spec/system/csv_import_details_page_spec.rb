@@ -1,7 +1,7 @@
 require 'rails_helper'
 include Warden::Test::Helpers
 
-RSpec.describe 'viewing the csv import detail page' do
+RSpec.describe 'viewing the csv import detail page', js: true do
   let(:user) { FactoryBot.create(:admin, email: 'systems@curationexperts.com')}
   let(:second_user) { FactoryBot.create(:user, email: 'user@curationexperts.com') }
   let(:csv_import) { FactoryBot.create(:csv_import) }
@@ -10,6 +10,7 @@ RSpec.describe 'viewing the csv import detail page' do
   let(:csv_import_detail_second) { FactoryBot.create(:csv_import_detail, created_at: Time.parse('Thur, 31 Oct 2019 14:20:02 UTC +00:00').utc, status: 'zippy', update_actor_stack: 'ZiziaTesting', depositor_id: user.id)  }
   let(:csv_import_detail_third) { FactoryBot.create(:csv_import_detail, created_at: Time.parse('Wed, 30 Oct 2019 14:20:02 UTC +00:00').utc, depositor_id: second_user.id, csv_import_id: 2) }
   let(:csv_pre_ingest_works) { FactoryBot.create_list(:pre_ingest_work, 12, csv_import_detail_id: 4) }
+  let(:csv_pre_ingest_work_second) { FactoryBot.create(:pre_ingest_work, csv_import_detail_id: 5, created_at: Time.parse('Thur, 31 Oct 2019 14:20:02 UTC +00:00').utc) }
 
   before do
     user.save
@@ -25,6 +26,7 @@ RSpec.describe 'viewing the csv import detail page' do
     csv_import_detail_second.save
     csv_import_detail_third.save
     csv_pre_ingest_works.each(&:save)
+    csv_pre_ingest_work_second.save
     login_as user
   end
 
@@ -122,5 +124,14 @@ RSpec.describe 'viewing the csv import detail page' do
     expect(page).to have_content 'Next'
     click_on 'Next'
     expect(page).to have_content 'Previous'
+  end
+
+  it 'can hide/show a PreIngestFiles table' do
+    visit('/csv_import_details/index')
+    click_on '5'
+    expect(page).to have_content 'View Files'
+    expect(page).not_to have_content 'Row Number'
+    click_on 'View Files'
+    expect(page).to have_content 'Row Number'
   end
 end
