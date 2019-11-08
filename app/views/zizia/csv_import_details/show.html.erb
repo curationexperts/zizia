@@ -15,6 +15,7 @@
       <th>Title</th>
       <th>Files</th>
       <th>Date</th>
+      <th>Status</th>
     </tr>
   <% @pre_ingest_works.each do |pre_ingest_work| %>
     <tr>
@@ -30,8 +31,16 @@
       <td>
         <%= pre_ingest_work.created_at.strftime("%B %-d, %Y %H:%M") %>
       </td>
+      <td id="<%= "work-status-#{pre_ingest_work.deduplication_key}" %>">
+        <span class="glyphicon glyphicon-question-sign status-unknown"></span>
+      </td>
     </tr>
   <% end %>
   </table>
   <%= paginate @pre_ingest_works %>
 </div>
+<script>
+ $(document).on('turbolinks:load', function() {
+   Zizia.displayWorkStatus()
+ })
+</script>
