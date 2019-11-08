@@ -16,7 +16,7 @@
       <th>Files</th>
       <th>Date</th>
     </tr>
-  <% @csv_import_detail.pre_ingest_works.each do |pre_ingest_work| %>
+  <% @pre_ingest_works.each do |pre_ingest_work| %>
     <tr>
       <td>
         <%= pre_ingest_work.deduplication_key%>
@@ -33,4 +33,5 @@
     </tr>
   <% end %>
   </table>
+  <%= paginate @pre_ingest_works %>
 </div>

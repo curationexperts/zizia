@@ -2,7 +2,6 @@
 module Zizia
   class CsvImportDetailsController < ApplicationController
     helper_method :sort_column, :sort_direction, :user
-
     load_and_authorize_resource
     with_themed_layout 'dashboard'
 
@@ -20,6 +19,7 @@ module Zizia
     def show
       @csv_import_detail = Zizia::CsvImportDetail
                            .find(csv_import_detail_params[:id])
+      @pre_ingest_works = Kaminari.paginate_array(@csv_import_detail.pre_ingest_works, total_count: @csv_import_detail.pre_ingest_works.count).page(csv_import_detail_params[:page]).per(10)
     end
 
     private
