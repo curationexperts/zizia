@@ -10,4 +10,5 @@ Zizia::Engine.routes.draw do
 
   get 'csv_import_details/index'
   get 'csv_import_details/show/:id', to: 'csv_import_details#show', as: 'csv_import_detail'
+  get 'pre_ingest_works/thumbnails/:deduplication_key', to: 'pre_ingest_works#thumbnails'
 end

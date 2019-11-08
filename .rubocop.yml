@@ -62,6 +62,7 @@ RSpec/DescribeClass:
 
 RSpec/ExampleLength:
   Exclude:
+    - 'spec/controllers/pre_ingest_works_controller_spec.rb'
     - 'spec/zizia/hyrax/hyrax_basic_metadata_mapper_spec.rb'
     - 'spec/integration/import_hyrax_csv.rb'
     - 'spec/integration/csv_import_detail_spec.rb'
