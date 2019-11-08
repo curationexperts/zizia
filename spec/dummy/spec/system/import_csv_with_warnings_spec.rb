@@ -31,7 +31,7 @@ RSpec.describe 'Importing records from a CSV file', type: :system, js: true do
       # We expect to see the title of the collection on the page
       expect(page).to have_content 'Testing Collection'
 
-      expect(page).to have_content 'This import will create or update 3 records.'
+      expect(page).to have_content 'This import will process 3 row(s).'
 
       # There is a link so the user can cancel.
       expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
