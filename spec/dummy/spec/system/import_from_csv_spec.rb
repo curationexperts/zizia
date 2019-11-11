@@ -246,6 +246,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
       visit "/csv_import_details/index"
       expect(page).to have_content('Total Size')
       click_on '4'
+      click_on 'View Files'
       expect(page).to have_content('dog.jpg')
       expect(page).to have_content('cat.jpg')
       expect(page).to have_content('5.74 MB')
