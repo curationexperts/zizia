@@ -595,6 +595,8 @@ ActiveRecord::Schema.define(version: 201901241536542) do
     t.integer "pre_ingest_work_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status", default: "preingest"
+    t.string "access_control_id"
     t.index ["pre_ingest_work_id"], name: "index_zizia_pre_ingest_files_on_pre_ingest_work_id"
   end
 
@@ -604,6 +606,7 @@ ActiveRecord::Schema.define(version: 201901241536542) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "deduplication_key"
+    t.string "status", default: "preingest"
     t.index ["csv_import_detail_id"], name: "index_zizia_pre_ingest_works_on_csv_import_detail_id"
     t.index ["deduplication_key"], name: "index_zizia_pre_ingest_works_on_deduplication_key"
   end

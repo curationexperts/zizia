@@ -31,7 +31,7 @@ module Zizia
     ##
     # @return [Enumerable<Symbol>] The fields the mapper can process.
     def fields
-      core_fields + basic_fields + [:visibility, :files]
+      core_fields + basic_fields + [:visibility, :files] + zizia_fields
     end
 
     # Properties defined with `multiple: false` in
@@ -55,6 +55,10 @@ module Zizia
 
     def import_url
       single_value('import_url')
+    end
+
+    def deduplication_key
+      single_value('deduplication_key')
     end
 
     # We should accept visibility values that match the UI and transform them into
@@ -151,6 +155,11 @@ module Zizia
          :subject, :language, :identifier,
          :based_near, :related_url,
          :bibliographic_citation, :source]
+      end
+
+      # Properties requires for zizia
+      def zizia_fields
+        [:deduplication_key]
       end
   end
 end

@@ -63,7 +63,7 @@ module Zizia
          'publisher', 'date created', 'subject',
          'language', 'identifier', 'location',
          'related url', 'bibliographic_citation',
-         'source', 'visibility']
+         'source', 'visibility', 'deduplication_key', 'type']
       end
 
       def parse_csv
@@ -82,7 +82,7 @@ module Zizia
       end
 
       def required_headers
-        ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files']
+        ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key']
       end
 
       def duplicate_headers

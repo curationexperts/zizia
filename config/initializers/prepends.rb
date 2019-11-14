@@ -1,0 +1,2 @@
+ContentDepositEventJob.prepend(ContentDepositEventJobPrepends)
+FileSetAttachedEventJob.prepend(FileSetAttachedEventJobPrepends)

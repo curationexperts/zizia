@@ -23,12 +23,16 @@ describe Zizia::HyraxBasicMetadataMapper do
     [:visibility, :files]
   end
 
+  let(:zizia_fields) do
+    [:deduplication_key]
+  end
+
   it_behaves_like 'a Zizia::Mapper' do
     let(:metadata) do
       { title: ['A Title for a Record'],
         my_custom_field: ['This gets ignored'] }
     end
-    let(:expected_fields) { core_fields + basic_fields + tenejo_fields }
+    let(:expected_fields) { core_fields + basic_fields + tenejo_fields + zizia_fields }
   end
 
   context 'with metadata, but some missing fields' do
