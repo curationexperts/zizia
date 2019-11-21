@@ -7,7 +7,7 @@ FactoryBot.define do
     updated_at { Time.current }
     row_number { 1 }
     row { 'sample,row' }
-    filename { [Zizia::Engine.root, '/', 'spec/fixtures/zizia.png'].join }
+    filename { '/a/path/to/my.csv' }
     size { 100_203_424 }
   end
 end
