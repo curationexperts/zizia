@@ -12,7 +12,6 @@ jobs:
                 default: 2.0.1
             rails_version:
                 type: string
-                default: 5.1
         executor:
             name: samvera/ruby_fcrepo_solr_redis
             ruby_version: << parameters.ruby_version >>
