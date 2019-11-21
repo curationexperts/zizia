@@ -17,7 +17,7 @@ Object import for Hyrax.
 ## Usage
 
 In your project's `Gemfile`, add: `gem 'zizia'`, then run `bundle install`.
-1. Require 'zizia' in your `config/application.rb` file: 
+1. Require 'zizia' in your `config/application.rb` file:
 
 ```
 module MyApplication
@@ -43,7 +43,7 @@ helper Zizia::Engine.helpers
     can :manage, Zizia::CsvImportDetail if current_user.admin?
 ```
 
-5. Add links to `/csv_imports/new` and `/importer_documentation/csv` in the Hyrax dashboard. 
+5. Add links to `/csv_imports/new` and `/importer_documentation/csv` in the Hyrax dashboard.
 
 6. In your Rails application's `application.css` and `application.js` include Zizia's assets:
 
@@ -53,9 +53,9 @@ helper Zizia::Engine.helpers
 
 7. Run `rake db:migrate`
 
-The `spec/dummy` folder in this application is a complete Hyrax application with Zizia installed. 
+The `spec/dummy` folder in this application is a complete Hyrax application with Zizia installed.
 You can use that as an example for adding this to your current Hyrax application or copy that
-to create a new application with Zizia installed. 
+to create a new application with Zizia installed.
 
 8. Add a deduplication_key to your default work type's medata:
 
@@ -65,7 +65,7 @@ to create a new application with Zizia installed.
   end
 ```
 
-9. If you are using the default [Hyrax metadata profile](https://samvera.github.io/metadata_application_profile.html) aka `Hyrax::BasicMetadata`, you are ready to download a sample CSV and start importing. 
+9. If you are using the default [Hyrax metadata profile](https://samvera.github.io/metadata_application_profile.html) aka `Hyrax::BasicMetadata`, you are ready to download a sample CSV and start importing.
 
 
 If you aren't using `Hyrax::BasicMedata` you'll need to create a custom `importer` and `mapper` class. First ensure that a [work type is registered](http://www.rubydoc.info/github/samvera/hyrax/Hyrax/Configuration#register_curation_concern-instance_method)
@@ -102,7 +102,7 @@ environment variables called `IMPORT_PATH`. If `IMPORT_PATH` is not set, `HyraxR
 
 ## Testing
 
-To run Solr and Fedora for testing purposes, open a new terminal session for each and run the following commads: 
+To run Solr and Fedora for testing purposes, open a new terminal session for each and run the following commads:
 
 `solr_wrapper --config spec/dummy/config/solr_wrapper_test.yml`  
 `fcrepo_wrapper --config spec/dummy/config/fcrepo_wrapper_test.yml`
@@ -126,3 +126,15 @@ cd zizia
 bundle install
 bundle exec rake ci
 ```
+
+## Releasing
+
+To make a new release:
+1. Increase the version number in `lib/zizia/version.rb`
+1. Increase the same version number in `.github_changelog_generator`
+1. Update CHANGELOG.md by running this command:
+  ```ruby
+  github_changelog_generator --user curationexperts --project zizia --token YOUR_GITHUB_TOKEN_HERE
+  ```
+1. Commit these changes to the master branch
+1. Run `rake release`

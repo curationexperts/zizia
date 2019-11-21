@@ -1,15 +1,54 @@
 # Changelog
 
-## [5.1.0](https://github.com/curationexperts/zizia/tree/5.1.0) (2019-11-04)
+## [5.5.0](https://github.com/curationexperts/zizia/tree/5.5.0) (2019-11-21)
 
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v5.0.1...5.1.0)
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v5.4.0...5.5.0)
+
+**Merged pull requests:**
+
+- Add ID as secondary sort order [\#69](https://github.com/curationexperts/zizia/pull/69) ([little9](https://github.com/little9))
+- Add rails 5.2 support [\#67](https://github.com/curationexperts/zizia/pull/67) ([bess](https://github.com/bess))
+
+## [v5.4.0](https://github.com/curationexperts/zizia/tree/v5.4.0) (2019-11-14)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v5.3.0...v5.4.0)
+
+**Merged pull requests:**
+
+- Basic file status [\#65](https://github.com/curationexperts/zizia/pull/65) ([little9](https://github.com/little9))
+
+## [v5.3.0](https://github.com/curationexperts/zizia/tree/v5.3.0) (2019-11-11)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v5.2.0...v5.3.0)
+
+**Merged pull requests:**
+
+- Toggle files table [\#63](https://github.com/curationexperts/zizia/pull/63) ([little9](https://github.com/little9))
+- Paginate PreIngestWorks [\#62](https://github.com/curationexperts/zizia/pull/62) ([little9](https://github.com/little9))
+- Change count language on preview screen [\#61](https://github.com/curationexperts/zizia/pull/61) ([little9](https://github.com/little9))
+
+## [v5.2.0](https://github.com/curationexperts/zizia/tree/v5.2.0) (2019-11-06)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v5.1.0...v5.2.0)
+
+**Merged pull requests:**
+
+- Update README to include requiring zizia in the application.rb file [\#60](https://github.com/curationexperts/zizia/pull/60) ([little9](https://github.com/little9))
+- Remove contrainst from dedupekey [\#59](https://github.com/curationexperts/zizia/pull/59) ([little9](https://github.com/little9))
+- Make deduplication\_key a unique field in the database [\#57](https://github.com/curationexperts/zizia/pull/57) ([little9](https://github.com/little9))
+- Add works to batch UI [\#56](https://github.com/curationexperts/zizia/pull/56) ([little9](https://github.com/little9))
+- Update test solr & fedora to latest known good versions [\#55](https://github.com/curationexperts/zizia/pull/55) ([mark-dce](https://github.com/mark-dce))
+
+## [v5.1.0](https://github.com/curationexperts/zizia/tree/v5.1.0) (2019-11-04)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v5.0.1...v5.1.0)
 
 **Merged pull requests:**
 
 - Add ability to toggle your imports [\#54](https://github.com/curationexperts/zizia/pull/54) ([little9](https://github.com/little9))
 - Add deduplication\_key to Zizia::PreIngestWork model [\#53](https://github.com/curationexperts/zizia/pull/53) ([bess](https://github.com/bess))
-- Initial batch sorting [\#52](https://github.com/curationexperts/zizia/pull/52) ([little9](https://github.com/little9))
-- Show more info on batch page [\#51](https://github.com/curationexperts/zizia/pull/51) ([little9](https://github.com/little9))
+- WIP: Initial batch sorting [\#52](https://github.com/curationexperts/zizia/pull/52) ([little9](https://github.com/little9))
+-  Show more info on batch page [\#51](https://github.com/curationexperts/zizia/pull/51) ([little9](https://github.com/little9))
 - Only show the basename for PreIngestFile [\#50](https://github.com/curationexperts/zizia/pull/50) ([little9](https://github.com/little9))
 - Add Date to details page [\#49](https://github.com/curationexperts/zizia/pull/49) ([little9](https://github.com/little9))
 - Set import details pagination to 10 [\#48](https://github.com/curationexperts/zizia/pull/48) ([little9](https://github.com/little9))
