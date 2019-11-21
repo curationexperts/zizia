@@ -1,7 +1,7 @@
 require 'rails_helper'
 include Warden::Test::Helpers
 
-RSpec.describe 'viewing the csv import detail page', :clean, js: true do
+RSpec.describe 'viewing the csv import detail page', js: true do
   let(:user) { FactoryBot.create(:admin, email: 'systems@curationexperts.com')}
   let(:second_user) { FactoryBot.create(:user, email: 'user@curationexperts.com') }
   let(:csv_import) { FactoryBot.create(:csv_import) }
@@ -11,14 +11,6 @@ RSpec.describe 'viewing the csv import detail page', :clean, js: true do
   let(:csv_import_detail_third) { FactoryBot.create(:csv_import_detail, created_at: Time.parse('Wed, 30 Oct 2019 14:20:02 UTC +00:00').utc, depositor_id: second_user.id, csv_import_id: 2) }
   let(:csv_pre_ingest_works) { FactoryBot.create_list(:pre_ingest_work, 12, csv_import_detail_id: 4) }
   let(:csv_pre_ingest_work_second) { FactoryBot.create(:pre_ingest_work, csv_import_detail_id: 5, created_at: Time.parse('Thur, 31 Oct 2019 14:20:02 UTC +00:00').utc) }
-  let(:pre_ingest_file) { FactoryBot.create(:pre_ingest_file, pre_ingest_work_id: csv_pre_ingest_work_second.id) }
-  let(:file_set) do
-    FactoryBot.create(:file_set,
-                      title: ['zizia.png'],
-                      content: File.open([Zizia::Engine.root, '/', 'spec/fixtures/zizia.png'].join))
-  end
-  let(:work) { Work.new(title: ['a title'], deduplication_key: csv_pre_ingest_work_second.deduplication_key) }
-
 
   before do
     user.save
@@ -35,10 +27,6 @@ RSpec.describe 'viewing the csv import detail page', :clean, js: true do
     csv_import_detail_third.save
     csv_pre_ingest_works.each(&:save)
     csv_pre_ingest_work_second.save
-    pre_ingest_file.save
-
-    work.ordered_members << file_set
-    work.save
     login_as user
   end
 
@@ -46,6 +34,7 @@ RSpec.describe 'viewing the csv import detail page', :clean, js: true do
     visit ('/csv_import_details/index')
     expect(page).to have_content('ID')
     click_on '13'
+    expect(page).to have_content('Status')
     expect(page).to have_content('Total Size')
     expect(page).to have_content('Deduplication Key')
   end
@@ -63,6 +52,12 @@ RSpec.describe 'viewing the csv import detail page', :clean, js: true do
   it 'has a sortable id' do
     visit('/csv_import_details/index?direction=desc&locale=en&sort=id')
     expect(page).to have_link '13'
+  end
+
+  it 'has a sortable status' do
+    pending 'status is always undetermined currently'
+    visit('/csv_import_details/index?direction=asc&locale=en&sort=status')
+    expect(page).to have_content 'zippy'
   end
 
   it 'has a sortable date' do
@@ -83,6 +78,12 @@ RSpec.describe 'viewing the csv import detail page', :clean, js: true do
     expect(page).to have_content('October 29, 2019 14:20')
   end
 
+  it 'displays undetermined for the status' do
+    visit ('/csv_import_details/index')
+    expect(page).to have_content('Status')
+    expect(page).to have_content('undetermined')
+  end
+
   it 'displays the overwrite behavior type' do
     visit ('/csv_import_details/index')
     expect(page).to have_content('Overwrite Behavior Type')
@@ -98,6 +99,7 @@ RSpec.describe 'viewing the csv import detail page', :clean, js: true do
 
     visit('/csv_import_details/index')
     expect(page).to have_content('Next')
+
   end
 
   it 'has pagination at 10' do
@@ -131,16 +133,5 @@ RSpec.describe 'viewing the csv import detail page', :clean, js: true do
     expect(page).not_to have_content 'Row Number'
     click_on 'View Files'
     expect(page).to have_content 'Row Number'
-  end
-
-  it 'can show a status for a file' do
-    file_set
-    visit('/csv_import_details/index')
-    click_on '5'
-    expect(page).to have_content 'View Files'
-    expect(page).to have_content 'Status'
-    expect(page.html).to match(/glyphicon-question-sign/)
-    click_on 'View Files'
-    expect(page).to have_content('Filename')
   end
 end
