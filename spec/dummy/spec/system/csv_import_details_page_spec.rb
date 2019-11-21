@@ -45,7 +45,7 @@ RSpec.describe 'viewing the csv import detail page', :clean, js: true do
   it 'displays the metadata when you visit the page' do
     visit ('/csv_import_details/index')
     expect(page).to have_content('ID')
-    click_on '1'
+    click_on '13'
     expect(page).to have_content('Total Size')
     expect(page).to have_content('Deduplication Key')
   end
@@ -73,7 +73,7 @@ RSpec.describe 'viewing the csv import detail page', :clean, js: true do
   it 'displays the metadata when you visit the page' do
     visit ('/csv_import_details/index')
     expect(page).to have_content('ID')
-    click_on '1'
+    click_on '13'
     expect(page).to have_content('Total Size')
   end
 
@@ -117,6 +117,7 @@ RSpec.describe 'viewing the csv import detail page', :clean, js: true do
 
   it 'has pagination for PreIngestWorks at 10' do
     visit('/csv_import_details/index')
+    click_on 'Next'
     click_on '4'
     expect(page).to have_content 'Next'
     click_on 'Next'

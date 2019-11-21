@@ -8,11 +8,11 @@ module Zizia
     def index
       @csv_import_details = if csv_import_detail_params[:user] && user_id
                               Zizia::CsvImportDetail
-                                .order(sort_column + ' ' + sort_direction)
+                                .order("#{sort_column} #{sort_direction}, id DESC")
                                 .where(depositor_id: user_id).page csv_import_detail_params[:page]
                             else
                               Zizia::CsvImportDetail
-                                .order(sort_column + ' ' + sort_direction).page csv_import_detail_params[:page]
+                                .order("#{sort_column} #{sort_direction}, id DESC").page csv_import_detail_params[:page]
                             end
     end
 
