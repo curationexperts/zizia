@@ -4,6 +4,7 @@ include Warden::Test::Helpers
 
 RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type: :system, js: true do
   before do
+    allow(CharacterizeJob).to receive(:perform_later)
     ENV['IMPORT_PATH'] = File.join(fixture_path, 'images')
   end
 
@@ -32,7 +33,6 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
         access: 'deposit'
       )
 
-      allow(CharacterizeJob).to receive(:perform_later) # There is no fits installed on travis-ci
       collection.save!
       login_as admin_user
     end
@@ -251,7 +251,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
       expect(page).to have_content('cat.jpg')
       expect(page).to have_content('5.74 MB')
       expect(page).to have_content('abc/123')
-      expect(page).to have_content('This work\'s metadata has not been indexed yet.')
+      expect(page).to have_content('haberdashery')
       expect(page).to have_content('Date Created')
     end
   end

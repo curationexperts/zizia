@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+Capybara.default_max_wait_time = 20
 
 # Setup chrome headless driver
 Capybara.server = :puma, { Silent: true }

@@ -9,7 +9,7 @@ class Work < ActiveFedora::Base
   validates :title, presence: { message: 'Your work must have a title.' }
 
 
-  property :deduplication_key, predicate: 'http://metadata.example.com/vocab/predicates#deduplicationKey', multiple: false do |index|
+  property :deduplication_key, predicate: ::RDF::Vocab::BF2::identifiedBy, multiple: false do |index|
     index.as :stored_searchable
   end
   # This must be included at the end, because it finalizes the metadata

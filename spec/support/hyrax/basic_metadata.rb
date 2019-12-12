@@ -25,6 +25,9 @@ module Hyrax
       work.property :related_url, predicate: ::RDF::RDFS.seeAlso
       work.property :bibliographic_citation, predicate: ::RDF::Vocab::DC.bibliographicCitation
       work.property :source, predicate: ::RDF::Vocab::DC.source
+
+      # From Zizia
+      work.property :deduplication_key, predicate: ::RDF::Vocab::BF2.identifiedBy
     end
   end
 end

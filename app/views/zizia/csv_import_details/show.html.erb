@@ -30,6 +30,9 @@
       <td>
         <%= pre_ingest_work.created_at.strftime("%B %-d, %Y %H:%M") %>
       </td>
+      <td>
+        <%= status_icon(pre_ingest_work.status) %>
+      </td>
     </tr>
   <% end %>
   </table>

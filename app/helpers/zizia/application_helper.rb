@@ -30,5 +30,11 @@ module Zizia
     def collections?
       !ActiveFedora::SolrService.query('has_model_ssim:Collection').empty?
     end
+
+    def status_icon(status)
+      # rubocop:disable Rails/OutputSafety
+      return "<span class='glyphicon glyphicon-ok-sign text-success' aria-label='Status: Complete'></span>".html_safe if status == 'attached'
+      "<span class='glyphicon glyphicon-question-sign' aria-label='Status: Unknown'></span>".html_safe
+    end
   end
 end

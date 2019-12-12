@@ -60,7 +60,7 @@ to create a new application with Zizia installed.
 8. Add a deduplication_key to your default work type's medata:
 
 ```
-  property :deduplication_key, predicate: "http://curationexperts.com/vocab/predicates#deduplicationKey", multiple: false do |index|
+  property :deduplication_key, predicate: ::RDF::Vocab::BF2::identifiedBy, multiple: false do |index|
     index.as :stored_searchable
   end
 ```
@@ -104,7 +104,7 @@ environment variables called `IMPORT_PATH`. If `IMPORT_PATH` is not set, `HyraxR
 
 To run Solr and Fedora for testing purposes, open a new terminal session for each and run the following commads:
 
-`solr_wrapper --config spec/dummy/config/solr_wrapper_test.yml`  
+`solr_wrapper --config spec/dummy/config/solr_wrapper_test.yml`
 `fcrepo_wrapper --config spec/dummy/config/fcrepo_wrapper_test.yml`
 
 After this you can run the whole suite, or individual specs. System specs are located
