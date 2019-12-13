@@ -34,6 +34,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'fcrepo_wrapper'
   gem.add_development_dependency 'ffaker'
   gem.add_development_dependency 'font-awesome-rails'
+  gem.add_development_dependency 'github_changelog_generator'
   gem.add_development_dependency 'hydra-role-management'
   gem.add_development_dependency 'hyrax', '~> 2.5.1'
   gem.add_development_dependency 'hyrax-spec'

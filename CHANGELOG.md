@@ -1,8 +1,17 @@
 # Changelog
 
-## [5.5.0](https://github.com/curationexperts/zizia/tree/5.5.0) (2019-11-21)
+## [6.0.0](https://github.com/curationexperts/zizia/tree/6.0.0) (2019-12-13)
 
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v5.4.0...5.5.0)
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v5.5.0...6.0.0)
+
+**Merged pull requests:**
+
+- Revert "Basic file status" [\#68](https://github.com/curationexperts/zizia/pull/68) ([little9](https://github.com/little9))
+- More detailed file status [\#66](https://github.com/curationexperts/zizia/pull/66) ([little9](https://github.com/little9))
+
+## [v5.5.0](https://github.com/curationexperts/zizia/tree/v5.5.0) (2019-11-21)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v5.4.0...v5.5.0)
 
 **Merged pull requests:**
 
@@ -87,6 +96,7 @@
 - Add intro header for metadata field guide [\#36](https://github.com/curationexperts/zizia/pull/36) ([bess](https://github.com/bess))
 - Add field definitions for 'files' and 'visibility' to the field guide [\#35](https://github.com/curationexperts/zizia/pull/35) ([mark-dce](https://github.com/mark-dce))
 - Label and hide system fields [\#34](https://github.com/curationexperts/zizia/pull/34) ([bess](https://github.com/bess))
+- Add files count to import details page [\#32](https://github.com/curationexperts/zizia/pull/32) ([little9](https://github.com/little9))
 
 ## [v4.5.4.alpha.01](https://github.com/curationexperts/zizia/tree/v4.5.4.alpha.01) (2019-10-04)
 
@@ -99,10 +109,6 @@
 ## [v4.5.3.alpha.01](https://github.com/curationexperts/zizia/tree/v4.5.3.alpha.01) (2019-10-03)
 
 [Full Changelog](https://github.com/curationexperts/zizia/compare/v4.5.2.alpha.01...v4.5.3.alpha.01)
-
-**Merged pull requests:**
-
-- Add files count to import details page [\#32](https://github.com/curationexperts/zizia/pull/32) ([little9](https://github.com/little9))
 
 ## [v4.5.2.alpha.01](https://github.com/curationexperts/zizia/tree/v4.5.2.alpha.01) (2019-10-03)
 
