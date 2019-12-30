@@ -83,12 +83,12 @@ module Zizia
 
       private
 
-      ##
-      # @private Register a new class when inherited
-      def inherited(subclass)
-        @@subclasses.unshift subclass
-        super
-      end
+        ##
+        # @private Register a new class when inherited
+        def inherited(subclass)
+          @@subclasses.unshift subclass
+          super
+        end
     end
 
     ##

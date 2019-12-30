@@ -71,28 +71,28 @@ module Zizia
 
       def file_definition
         {
-          attribute:  'files',
-          predicate:  'n/a',
-          multiple: 	'true',
-          type:       'String',
-          validator: 	'Required, must name a file on the server',
-          label: 	    'Items (listed at bottom of page)',
+          attribute: 'files',
+          predicate: 'n/a',
+          multiple: 'true',
+          type: 'String',
+          validator: 'Required, must name a file on the server',
+          label: 'Items (listed at bottom of page)',
           csv_header: 'files',
-          required_on_form: 	'true',
+          required_on_form: 'true',
           usage: MetadataUsage.instance.usage['files']
         }
       end
 
       def visibility_definition
         {
-          attribute:  'visibility',
-          predicate:  'n/a',
-          multiple: 	'false',
-          type:       'String',
-          validator: 	'Required, must exist in the application\'s controlled vocabulary for visiblity levels.',
-          label: 	    'Visibility',
+          attribute: 'visibility',
+          predicate: 'n/a',
+          multiple: 'false',
+          type: 'String',
+          validator: 'Required, must exist in the application\'s controlled vocabulary for visiblity levels.',
+          label: 'Visibility',
           csv_header: 'visibility',
-          required_on_form: 	'true',
+          required_on_form: 'true',
           usage: MetadataUsage.instance.usage['visibility']
         }
       end

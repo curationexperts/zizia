@@ -22,7 +22,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'carrierwave'
   gem.add_dependency 'rails-controller-testing'
 
-  gem.add_development_dependency 'bixby'
+  gem.add_development_dependency 'bixby', '~> 2.0'
   gem.add_development_dependency 'bootstrap-sass', '~> 3.0'
   gem.add_development_dependency 'byebug'
   gem.add_development_dependency 'capybara', '~> 2.13'
