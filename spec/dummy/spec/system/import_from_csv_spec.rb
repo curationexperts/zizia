@@ -93,8 +93,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
       visit "/concern/works/#{work.id}"
       expect(page).to have_content work.title.first
       # Controlled vocabulary location should have been resolved to its label name
-      expect(page).to have_content "Montana"
-      expect(page).to have_content "United States"
+      expect(page).to have_content "Los Angeles"
 
       # The license value resolves to a controlled field from creative commons
       expect(page).to have_link "Attribution 4.0"

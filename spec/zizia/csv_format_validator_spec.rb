@@ -32,7 +32,7 @@ describe Zizia::CsvFormatValidator do
       expect(validator.validate(parser: invalid_parser))
         .to contain_exactly a_validator_error
         .with(validator: validator.class,
-              name:      CSV::MalformedCSVError)
+              name: CSV::MalformedCSVError)
     end
   end
 end
