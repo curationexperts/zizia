@@ -1,0 +1,10 @@
+/* In general we want buttons to use work wrap in the UI */
+.btn {
+  white-space: normal !important;
+  word-wrap: break-word;
+}
+
+/* This is for the Go button */
+#search-submit-header {
+  white-space: unset !important;
+}
