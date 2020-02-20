@@ -45,6 +45,8 @@ class ModularImporter
                                                    filename: child_file,
                                                    size: File.size(full_path))
         pre_ingest_file.save
+      rescue
+        Rails.logger.error "Error: Could not create Zizia::PreIngestFile for #{child_file}"
       end
       pre_ingest_work.save
     end
