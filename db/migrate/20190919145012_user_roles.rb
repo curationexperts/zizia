@@ -1,4 +1,4 @@
-class UserRoles < ActiveRecord::Migration[5.0]
+class ZiziaUserRoles < ActiveRecord::Migration[5.0]
   def up
     unless table_exists?(:roles)
       create_table :roles do |t|
