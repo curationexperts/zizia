@@ -57,7 +57,7 @@ The `spec/dummy` folder in this application is a complete Hyrax application with
 You can use that as an example for adding this to your current Hyrax application or copy that
 to create a new application with Zizia installed.
 
-8. Add a deduplication_key to your default work type's medata:
+8. Add a deduplication_key to your default work type's metadata:
 
 ```
   property :deduplication_key, predicate: ::RDF::Vocab::BF2::identifiedBy, multiple: false do |index|
