@@ -49,7 +49,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'rspec-rails'
   gem.add_development_dependency 'rspec_junit_formatter'
-  gem.add_development_dependency "sass-rails", "~> 5.0.4"
+  gem.add_development_dependency 'sass-rails', '~> 6.0.0'
   gem.add_development_dependency 'selenium-webdriver'
   gem.add_development_dependency 'solr_wrapper', '>= 0.3'
   gem.add_development_dependency 'spring'
