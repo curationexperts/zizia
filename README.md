@@ -114,6 +114,8 @@ To run Solr and Fedora for testing purposes, open a new terminal session for eac
 `solr_wrapper --config spec/dummy/config/solr_wrapper_test.yml`  
 `fcrepo_wrapper --config spec/dummy/config/fcrepo_wrapper_test.yml`
 
+>NOTE: You will also need the appropriate version of [ChromeDriver](https://chromedriver.chromium.org/home) installed to run the test suite
+
 After this you can run the whole suite:
 ```bash
 bundle exec rspec spec
