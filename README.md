@@ -109,9 +109,9 @@ cd zizia
 bundle install
 ```
 
-To run Solr and Fedora for testing purposes, open a new terminal session for each and run the following commands:
+To run Solr and Fedora for testing purposes, open a new terminal session for each of the following commands and run each in it's own terminal session:
 
-`solr_wrapper --config spec/dummy/config/solr_wrapper_test.yml`
+`solr_wrapper --config spec/dummy/config/solr_wrapper_test.yml`  
 `fcrepo_wrapper --config spec/dummy/config/fcrepo_wrapper_test.yml`
 
 After this you can run the whole suite:
