@@ -596,7 +596,6 @@ ActiveRecord::Schema.define(version: 201901241536542) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "status", default: "preingest"
-    t.string "access_control_id"
     t.index ["pre_ingest_work_id"], name: "index_zizia_pre_ingest_files_on_pre_ingest_work_id"
   end
 

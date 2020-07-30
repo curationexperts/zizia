@@ -68,7 +68,7 @@ to create a new application with Zizia installed.
 9. If you are using the default [Hyrax metadata profile](https://samvera.github.io/metadata_application_profile.html) aka `Hyrax::BasicMetadata`, you are ready to download a sample CSV and start importing.
 
 
-If you aren't using `Hyrax::BasicMedata` you'll need to create a custom `importer` and `mapper` class. First ensure that a [work type is registered](http://www.rubydoc.info/github/samvera/hyrax/Hyrax/Configuration#register_curation_concern-instance_method)
+If you aren't using `Hyrax::BasicMetadata` you'll need to create a custom `importer` and `mapper` class. First ensure that a [work type is registered](http://www.rubydoc.info/github/samvera/hyrax/Hyrax/Configuration#register_curation_concern-instance_method)
 with your `Hyrax` application. Then write a class like this:
 
 ```ruby
@@ -100,15 +100,26 @@ You can find [an example csv file for import to Hyrax](https://github.com/curati
 with a heading of `files`, and the location of the files should be specified via an
 environment variables called `IMPORT_PATH`. If `IMPORT_PATH` is not set, `HyraxRecordImporter` will look in `/opt/data` by default.
 
-## Testing
+## Local Development
 
-To run Solr and Fedora for testing purposes, open a new terminal session for each and run the following commads:
+```sh
+git clone https://github.com/curationexperts/zizia
+cd zizia
+
+bundle install
+```
+
+To run Solr and Fedora for testing purposes, open a new terminal session for each and run the following commands:
 
 `solr_wrapper --config spec/dummy/config/solr_wrapper_test.yml`
 `fcrepo_wrapper --config spec/dummy/config/fcrepo_wrapper_test.yml`
 
-After this you can run the whole suite, or individual specs. System specs are located
-in the `spec/dummy/spec/system` folder:
+After this you can run the whole suite:
+```bash
+bundle exec rspec spec
+```
+
+System specs are located in the `spec/dummy/spec/system` folder:
 
 `bundle exec rspec spec/dummy/spec/system/csv_import_details_page_spec.rb`
 
@@ -116,16 +127,6 @@ in the `spec/dummy/spec/system` folder:
 ## Customizing
 To input any kind of file other than CSV, you need to provide a `Parser` (out of the box, we support simple CSV import with `CsvParser`). We will be writing guides about
 how to support custom mappers (for metadata outside of Hyrax's core and basic metadata fields).
-
-## Development
-
-```sh
-git clone https://github.com/curationexperts/zizia
-cd zizia
-
-bundle install
-bundle exec rake ci
-```
 
 ## Releasing
 
