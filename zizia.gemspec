@@ -24,6 +24,7 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency 'bixby', '~> 2.0'
   gem.add_development_dependency 'bootstrap-sass', '~> 3.0'
+  gem.add_development_dependency 'bundler', '~> 2'
   gem.add_development_dependency 'byebug'
   gem.add_development_dependency 'capybara', '~> 2.13'
   gem.add_development_dependency 'coffee-rails', '~> 4.2'
