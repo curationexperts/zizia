@@ -47,8 +47,9 @@ workflows:
         jobs:
             - build:
                 name: ruby2-5-8_with_rails_5_2
-                ruby_version: "2.5.8"
-                rails_version: "5.2.4.3"
+                ruby_version: 2.5.8
+                rails_version: 5.2.4.3
             - build:
-                name: ruby2-5-3_with_rails_5_2
-                rails_version: 5.2.3
+                name: ruby2-6-6_with_rails_5_2
+                ruby_version: 2.6.6
+                rails_version: 5.2.4.3
