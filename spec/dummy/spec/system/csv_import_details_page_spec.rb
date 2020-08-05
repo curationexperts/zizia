@@ -117,12 +117,16 @@ RSpec.describe 'viewing the csv import detail page', js: true do
     expect(page).to have_content('user@curationexperts.com')
   end
 
-  xit 'has pagination for PreIngestWorks at 10' do
+  it 'has pagination for PreIngestWorks at 10' do
     visit('/csv_import_details/index')
+    sleep(2)
     click_on 'Next'
+    sleep(2)
     click_on '4'
+    sleep(2)
     expect(page).to have_content 'Next'
     click_on 'Next'
+    sleep(2)
     expect(page).to have_content 'Previous'
   end
 
