@@ -24,9 +24,7 @@ jobs:
         steps:
             - checkout
 
-            - run:
-                name: install sqlite3
-                command: sudo apt-get update && sudo apt-get install -y sqlite3 libsqlite3-dev
+            - run: sudo apt-get update && sudo apt-get install -y sqlite3 libsqlite3-dev || true
 
             - samvera/bundle:
                 ruby_version: << parameters.ruby_version >>
