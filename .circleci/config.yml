@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-    samvera: samvera/circleci-orb@0
+    samvera: samvera/circleci-orb@0.3.2
 jobs:
     build:
         parameters:
@@ -21,12 +21,11 @@ jobs:
         environment:
           COVERALLS_PARALLEL: true
           RAILS_VERSION: << parameters.rails_version >>
+          SOLR_URL: http://127.0.0.1:8985/solr/hydra-test
         steps:
             - checkout
 
-            - run:
-                name: install sqlite3
-                command: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
+            - run: sudo apt-get update && sudo apt-get install -y sqlite3 libsqlite3-dev || true
 
             - samvera/bundle:
                 ruby_version: << parameters.ruby_version >>
