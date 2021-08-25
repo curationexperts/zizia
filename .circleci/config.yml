@@ -14,19 +14,21 @@ jobs:
                 type: string
                 default: 5.1.7
         executor:
-            name: samvera/ruby_fcrepo_solr_redis
+            name: samvera/ruby_fcrepo_solr_redis_postgres
             ruby_version: << parameters.ruby_version >>
         working_directory: ~/project
         parallelism: 1
         environment:
+          DATABASE_URL: postgresql://postgres@127.0.0.1/circle_test
+          DATABASE_NAME: circle_test
+          POSTGRES_DB: circle_test
+          DATABASE_USERNAME: postgres
+          POSTGRES_HOST: 127.0.0.1
+          POSTGRES_USER: postgres
           COVERALLS_PARALLEL: true
           RAILS_VERSION: << parameters.rails_version >>
         steps:
             - checkout
-
-            - run:
-                name: install sqlite3
-                command: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
 
             - samvera/bundle:
                 ruby_version: << parameters.ruby_version >>
@@ -35,10 +37,6 @@ jobs:
             - samvera/rubocop
 
             - samvera/install_solr_core
-
-            - run:
-                name: install sqlite3
-                command: bundle exec rake db:migrate
 
             - samvera/parallel_rspec
 workflows:
