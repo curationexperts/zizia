@@ -42,7 +42,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'jbuilder', '~> 2.5'
   gem.add_development_dependency 'jquery-rails'
   gem.add_development_dependency 'listen', '>= 3.0.5', '~> 3'
-  gem.add_development_dependency 'puma', '~> 3.7'
+  gem.add_development_dependency 'puma', '~> 4.3'
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'riiif', '~> 2.0'
   gem.add_development_dependency 'rsolr', '>= 1.0'
