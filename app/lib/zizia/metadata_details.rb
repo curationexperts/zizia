@@ -10,6 +10,7 @@ module Zizia
       detail_list = work_attributes.properties.sort.map { |p| definition_hash_for(p, validators) }
       detail_list << visibility_definition
       detail_list << file_definition
+      detail_list.sort_by { |prop| prop[:label] }
     end
 
     def to_csv(work_attributes:)
@@ -57,12 +58,12 @@ module Zizia
 
       def definition_hash_for(field_properties, validators)
         Hash[
+          label: I18n.t("simple_form.labels.defaults.#{field_properties[0]}"),
           attribute: field_properties[0],
           predicate: field_properties[1].predicate.to_s,
           multiple: field_properties[1].try(:multiple?).to_s,
           type: type_to_s(field_properties[1].type),
           validator: validator_to_string(validator: validators[field_properties[0].to_sym][0]),
-          label: I18n.t("simple_form.labels.defaults.#{field_properties[0]}"),
           csv_header: csv_header(field_properties[0]),
           required_on_form: required_on_form_to_s(field_properties[0]),
           usage: MetadataUsage.instance.usage[field_properties[0]]
@@ -76,7 +77,7 @@ module Zizia
           multiple: 'true',
           type: 'String',
           validator: 'Required, must name a file on the server',
-          label: 'Items (listed at bottom of page)',
+          label: 'Files',
           csv_header: 'files',
           required_on_form: 'true',
           usage: MetadataUsage.instance.usage['files']
