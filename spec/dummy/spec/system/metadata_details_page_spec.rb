@@ -3,6 +3,12 @@ require 'rails_helper'
 include Warden::Test::Helpers
 
 RSpec.describe 'Viewing the field guide' do
+  let(:admin_user) { FactoryBot.create(:admin) }
+
+  before do
+    login_as admin_user
+  end
+
   it 'renders correctly' do
     visit('/importer_documentation/guide')
     expect(page).to have_content('title')
