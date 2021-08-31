@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Zizia
   class MetadataDetailsController < ::ApplicationController
+    with_themed_layout 'dashboard'
+
     def show
       @details = MetadataDetails.instance.details(work_attributes:
                                                      WorkAttributes.instance)
