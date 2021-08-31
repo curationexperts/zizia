@@ -54,16 +54,7 @@ module Zizia
       end
 
       def valid_headers
-        ['title', 'files', 'representative media',
-         'thumbnail', 'rendering', 'depositor',
-         'date_uploaded', 'date_modified', 'label',
-         'relative_path', 'import url', 'resource type',
-         'creator', 'contributor', 'abstract or summary',
-         'keyword', 'license', 'rights statement',
-         'publisher', 'date created', 'subject',
-         'language', 'identifier', 'location',
-         'related url', 'bibliographic_citation',
-         'source', 'visibility', 'deduplication_key', 'type']
+        Zizia::HyraxBasicMetadataMapper.new.headers.map(&:to_s)
       end
 
       def parse_csv
