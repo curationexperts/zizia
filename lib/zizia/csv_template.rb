@@ -3,7 +3,7 @@
 module Zizia
   class CsvTemplate
     def to_s
-      Zizia.config.metadata_mapper_class.new.fields.join(',')
+      Zizia.config.metadata_mapper_class.new.headers.join(',')
     end
   end
 end

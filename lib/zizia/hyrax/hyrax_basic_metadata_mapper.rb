@@ -34,6 +34,12 @@ module Zizia
       core_fields + basic_fields + [:visibility, :files] + zizia_fields
     end
 
+    def headers
+      fields.map do |field|
+        Zizia::HyraxBasicMetadataMapper.csv_header(field)
+      end
+    end
+
     # Properties defined with `multiple: false` in
     # Hyrax should return a single value instead of
     # an Array of values.
@@ -112,7 +118,9 @@ module Zizia
     end
 
     def self.csv_header(field)
-      CSV_HEADERS[field.to_sym]
+      header = CSV_HEADERS[field.to_sym]
+      return header if header
+      field
     end
 
     protected

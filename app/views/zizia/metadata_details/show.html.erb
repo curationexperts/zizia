@@ -18,8 +18,12 @@
     <% @details.each do |detail| %>
       <div class="metadata-field <%= system_field(detail) %>" <%= hide_system_field(detail) %>>
         <h2 class="field-label">
-          <%= detail[:attribute] %>
+          <%= detail[:label] %>
         </h2>
+        <div>
+          <b>Attribute:</b>
+          <%= detail[:attribute] %>
+        </div>
         <div>
           <b>Predicate:</b>
           <a href="<%= detail[:predicate] %>"><%= detail[:predicate] %></a>
