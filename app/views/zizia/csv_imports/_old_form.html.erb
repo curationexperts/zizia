@@ -1,0 +1,101 @@
+<%= form_with(model: csv_import, local: true, html: { multipart: true }, url: preview_csv_import_path) do |form| %>
+  <%= form.hidden_field :manifest_cache %>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-4">
+          <h3><span class="bullet">1</span> Prepare Your Content</h3>
+          <div class="well well-sm">
+            <h4><span class="bullet">A</span></h4>
+            <div class="step">
+              <b>Read the Metadata Field Guide</b> to learn what fields are available for import.
+            </div>
+            <div class="text-center">
+              <a href="/importer_documentation/guide" class="btn btn-default btn-lg"><i class="glyphicon glyphicon-book"></i> Field Guide</a>
+            </div>
+          </div>
+          <div class="well well-sm">
+            <h4><span class="bullet">B</span></h4>
+            <div class="step">
+              <b>Download a CSV template</b> and start filling in your metadata.
+            </div>
+            <div class="text-center">
+              <a href="/importer_documentation/csv" data-turbolinks="false" class="btn btn-default btn-lg"><i class="glyphicon glyphicon-list-alt"></i> Import Template</a>
+            </div>
+          </div>
+            <div class="well well-sm">
+              <h4><span class="bullet">C</span></h4>
+              <div class="step">
+                <b>Upload your files</b> over SFTP, using a tool like <a href="https://filezilla-project.org">FileZilla</a> to transfer files.
+              </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+          <h3><span class="bullet">2</span> Upload Your Files</h3>
+          <% if collections? %>
+            <div class="well well-sm">
+              <h4><span class="bullet">A</span></h4>
+              <div class="step">
+                <b>Upload a CSV</b> that lists the metadata and files you want to import.
+              </div>
+                <div class="text-center">
+                  <%= render "file_upload", form: form  %>
+                </div>
+            </div>
+            <div class="well well-sm">
+              <h4><span class="bullet">B</span></h4>
+              <div class="step">
+                <b>Choose a collection</b> that you'd like your new works to be associated with.
+              </div>
+                <div class="text-center">
+                  <%= render "collection_selection", form: form %>
+                </div>
+            </div>
+            <div class="well well-sm">
+              <h4><span class="bullet">C</span></h4>
+              <div class="step">
+                <b>Select update behavior.</b> New works will always be added to the repository. Existing works can be overwritten, updated,
+                or ignored.
+              </div>
+                <div class="text-center">
+                  <%= render "update_actor_stack", form: form %>
+                </div>
+            </div>
+            <div class="well well-sm">
+              <h4><span class="bullet">D</span></h4>
+              <div class="step">
+                <b>Preview your import</b> and start the import if everything looks good.
+                or overwritten
+              </div>
+                <div class="text-center">
+                  <%= render "actions", form: form %>
+                </div>
+            </div>
+          <% else %>
+            <div class="well well-sm no-collection ">
+              <h4><span class="bullet">A</span></h4>
+              <div class="step">
+                You must <a href="/dashboard/collections">create a collection</a> before importing content.
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div class="col-md-4">
+          <h3><span class="bullet">3</span> Monitor Your Progress</h3>
+          <div class="well well-sm">
+            <h4><span class="bullet">A</span></h4>
+            <div class="step">
+              <b>Check the status</b> of batches that have been submitted for import.
+            </div>
+            <div class="text-center">
+              <a href="/csv_import_details/index" class="btn btn-default btn-lg"><i class="glyphicon glyphicon-list"></i> Import History</a>
+            </div>
+          </div>
+        </div>
+      </div> <!-- row -->
+      <div class="row">
+        <%= render "error", csv_import: csv_import %>
+      </div>  <!-- row -->
+    </div> <!-- panel-body -->
+  </div> <!-- panel -->
+<% end %>
