@@ -1,3 +1,4 @@
+vendor/
 pkg
 tmp
 Gemfile.lock
