@@ -4,6 +4,16 @@
   margin-top: 1em;
   margin-bottom: 1em;
   font-size: large;
+  width: 50em;
+  border-bottom: 5px solid lightgray;
+
+  p {
+    margin-bottom: 1em;
+  };
+}
+
+.guide-container {
+  width: 50em;
 }
 
 .delimiter {
