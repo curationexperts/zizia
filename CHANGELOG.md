@@ -1,5 +1,25 @@
 # Changelog
 
+## [v6.0.2](https://github.com/curationexperts/zizia/tree/v6.0.2) (2021-08-31)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v6.0.1...v6.0.2)
+
+**Closed issues:**
+
+- Rename Zizia main branch [\#107](https://github.com/curationexperts/zizia/issues/107)
+- Refine release instructions [\#105](https://github.com/curationexperts/zizia/issues/105)
+- Mint a new release of Zizia and publish to Rubygems [\#95](https://github.com/curationexperts/zizia/issues/95)
+- Update Zizia to run against \(Hyrax\) supported versions of Ruby & Rails [\#93](https://github.com/curationexperts/zizia/issues/93)
+- Zizia: Remove Travis config from Zizia \(using CircleCI\) [\#92](https://github.com/curationexperts/zizia/issues/92)
+- Zizia: CircleCI bundler version should match zizia.gemspec version [\#91](https://github.com/curationexperts/zizia/issues/91)
+- Zizia: error running test suite when following readme [\#90](https://github.com/curationexperts/zizia/issues/90)
+
+**Merged pull requests:**
+
+- Location [\#110](https://github.com/curationexperts/zizia/pull/110) ([maxkadel](https://github.com/maxkadel))
+- Upgrade Puma for development dependency - security fix [\#109](https://github.com/curationexperts/zizia/pull/109) ([maxkadel](https://github.com/maxkadel))
+- Green ci [\#108](https://github.com/curationexperts/zizia/pull/108) ([maxkadel](https://github.com/maxkadel))
+
 ## [v6.0.1](https://github.com/curationexperts/zizia/tree/v6.0.1) (2020-08-07)
 
 [Full Changelog](https://github.com/curationexperts/zizia/compare/v6.0.0...v6.0.1)
@@ -111,6 +131,7 @@
 - Update headers for the downloadable CSV template [\#43](https://github.com/curationexperts/zizia/pull/43) ([mark-dce](https://github.com/mark-dce))
 - Update design of new CSV import page [\#42](https://github.com/curationexperts/zizia/pull/42) ([mark-dce](https://github.com/mark-dce))
 - Update to correct spelling for keyword field [\#41](https://github.com/curationexperts/zizia/pull/41) ([mark-dce](https://github.com/mark-dce))
+- Use yes/no language in the metadata guide [\#40](https://github.com/curationexperts/zizia/pull/40) ([bess](https://github.com/bess))
 
 ## [v4.6.0.alpha01](https://github.com/curationexperts/zizia/tree/v4.6.0.alpha01) (2019-10-15)
 
@@ -118,7 +139,6 @@
 
 **Merged pull requests:**
 
-- Use yes/no language in the metadata guide [\#40](https://github.com/curationexperts/zizia/pull/40) ([bess](https://github.com/bess))
 - Add dashboard layout to csv import screens [\#39](https://github.com/curationexperts/zizia/pull/39) ([bess](https://github.com/bess))
 - Update Usage data for the metadata field guide [\#38](https://github.com/curationexperts/zizia/pull/38) ([mark-dce](https://github.com/mark-dce))
 - Update language for multiple values on metadata field guide [\#37](https://github.com/curationexperts/zizia/pull/37) ([bess](https://github.com/bess))
@@ -176,20 +196,20 @@
 
 ## [v4.3.1.alpha.01](https://github.com/curationexperts/zizia/tree/v4.3.1.alpha.01) (2019-10-02)
 
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v4.2.0.alpha.01...v4.3.1.alpha.01)
+[Full Changelog](https://github.com/curationexperts/zizia/compare/vv4.2.0.alpha.01...v4.3.1.alpha.01)
 
 **Merged pull requests:**
 
 - Return attrs from process\_attrs method [\#27](https://github.com/curationexperts/zizia/pull/27) ([little9](https://github.com/little9))
 - Add create\_date usage and remove erroneous pre-import message [\#26](https://github.com/curationexperts/zizia/pull/26) ([little9](https://github.com/little9))
 
-## [v4.2.0.alpha.01](https://github.com/curationexperts/zizia/tree/v4.2.0.alpha.01) (2019-10-01)
-
-[Full Changelog](https://github.com/curationexperts/zizia/compare/vv4.2.0.alpha.01...v4.2.0.alpha.01)
-
 ## [vv4.2.0.alpha.01](https://github.com/curationexperts/zizia/tree/vv4.2.0.alpha.01) (2019-10-01)
 
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v4.1.0.alpha.01...vv4.2.0.alpha.01)
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v4.2.0.alpha.01...vv4.2.0.alpha.01)
+
+## [v4.2.0.alpha.01](https://github.com/curationexperts/zizia/tree/v4.2.0.alpha.01) (2019-10-01)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v4.1.0.alpha.01...v4.2.0.alpha.01)
 
 **Merged pull requests:**
 
@@ -293,19 +313,19 @@
 
 ## [v2.1.0.alpha.02](https://github.com/curationexperts/zizia/tree/v2.1.0.alpha.02) (2019-07-30)
 
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v2...v2.1.0.alpha.02)
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.1.0.alpha.01...v2.1.0.alpha.02)
 
 **Merged pull requests:**
 
 - Rename database migrations [\#6](https://github.com/curationexperts/zizia/pull/6) ([little9](https://github.com/little9))
 
-## [v2](https://github.com/curationexperts/zizia/tree/v2) (2019-07-29)
-
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.1.0.alpha.01...v2)
-
 ## [v2.1.0.alpha.01](https://github.com/curationexperts/zizia/tree/v2.1.0.alpha.01) (2019-07-29)
 
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.0.0.alpha.01...v2.1.0.alpha.01)
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v2...v2.1.0.alpha.01)
+
+## [v2](https://github.com/curationexperts/zizia/tree/v2) (2019-07-29)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.0.0.alpha.01...v2)
 
 **Merged pull requests:**
 
