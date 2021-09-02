@@ -1,6 +1,7 @@
 Identifier,Object Type,Parent ID,Files,Title,Resource Type,Creator,Contributor,Description,Keyword,License,Rights Statement,Publisher,Date Created,Subject,Language,Location,Related Url,Bibliographic Citation,Source,Visibility,deduplication_key,Admin notes
 TPC-000,Collection,,,Turkish Playing Cards,,,,,,,,,,,,,,,,,,
 TPC-H-000,Work,TPC-000,,Turkish Playing Cards - Hearts,Image,Turkish Republic Playing Cards Monopoly,"Bussey, Mark H.",Hearts from a Turkish playing card set circa 1960-1963,playing card|~|heart,http://creativecommons.org/publicdomain/mark/1.0/,http://rightsstatements.org/vocab/NoC-OKLR/1.0/,T. C. Oyun Kagitlari Monopolu,ca.  1963,Playing cards,Non-linguistic-materials,,,,,open,,
+TPC-H-NAKED,Work,,,Turkish Playing Cards - Hearts,Image,Turkish Republic Playing Cards Monopoly,"Bussey, Mark H.",Hearts from a Turkish playing card set circa 1960-1963,playing card|~|heart,http://creativecommons.org/publicdomain/mark/1.0/,http://rightsstatements.org/vocab/NoC-OKLR/1.0/,T. C. Oyun Kagitlari Monopolu,ca.  1963,Playing cards,Non-linguistic-materials,,,,,open,,
 TPC-H-001,File,TPC-H-000,As-Cœurs-Recto.tiff,,,,,,,,,,,,,,,,,,,
 TPC-H-002,File,TPC-H-000,2-Cœurs-Recto.tiff,,,,,,,,,,,,,,,,,,,
 TPC-H-003,File,TPC-H-000,3-Cœurs-Recto.tiff,,,,,,,,,,,,,,,,,,,
@@ -67,4 +68,8 @@ TPC-C-014,File,TPC-C-000,As-Trèfles-Verso.tiff,,,,,,,,,,,,,,,,,,,
 TPC-J-000,Work,TPC-000,,Turkish Playing Cards - Jokers,Image,Turkish Republic Playing Cards Monopoly,"Bussey, Mark H.",Jokers from a Turkish playing card set circa 1960-1963,playing card|~|joker,http://creativecommons.org/publicdomain/mark/1.0/,http://rightsstatements.org/vocab/NoC-OKLR/1.0/,T. C. Oyun Kagitlari Monopolu,ca.  1963,Playing cards,Non-linguistic-materials,,,,,open,TCOKM-J,
 TPC-J-001,File,TPC-J-000,Joker1-Recto.tiff,,,,,,,,,,,,,,,,,,,
 TPC-J-002,File,TPC-J-000,Joker2-Recto.tiff,,,,,,,,,,,,,,,,,,,
+
 TPC-J-003,File,TPC-J-000,Joker1-Verso.tiff,,,,,,,,,,,,,,,,,,,
+
+
+

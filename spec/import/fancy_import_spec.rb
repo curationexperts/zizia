@@ -6,8 +6,19 @@ RSpec.describe FancyImport, clean: true do
     @output = FancyImport.from(File.open("spec/fixtures/fancy.csv"))
   end
 
+  it "can connect works to collections" do
+    collections, _ = FancyImport.connect(@output)
+    expect(collections.size).to eq(1)
+    expect(collections.first.children.size).to eq(5)
+  end
+
+  it "can recognize unconnected works" do
+    _, works = FancyImport.connect(@output)
+    expect(works.size).to eq(1)
+  end
+
   it "understands collections" do
-    expect(@output.size).to eq(69)
+    expect(@output.size).to eq(67)
     f = @output.first
     expect(f.identifier).to eq("TPC-000")
     expect(f.class.to_s).to eq("Struct::Collection")
@@ -22,7 +33,7 @@ RSpec.describe FancyImport, clean: true do
     expect(l.parent_id).to eq("TPC-J-000")
     expect(l.identifier).to eq("TPC-J-003")
     expect(l.files).to eq(["Joker1-Verso.tiff"])
-    expect(l.line_number).to eq(70)
+    expect(l.line_number).to eq(72)
   end
 
   it "understands type work" do
