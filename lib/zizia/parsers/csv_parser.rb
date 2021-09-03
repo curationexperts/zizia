@@ -36,7 +36,6 @@ module Zizia
       file.rewind
 
       CSV.parse(file.read, headers: true).each do |row|
-        
         yield InputRecord.from(metadata: row)
       end
     rescue CSV::MalformedCSVError => e
