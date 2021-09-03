@@ -8,7 +8,7 @@ class ModularImporter
   def initialize(csv_import)
     @csv_import = csv_import
     @csv_file = csv_import.manifest.to_s
-    @collection_id = csv_import.fedora_collection_id
+    @collection_id = csv_import.fedora_collection_id if csv_import.fedora_collection_id.present?
     @user_id = csv_import.user_id
     @user_email = User.find(csv_import.user_id).email
     @row = 0 # Row number doesn't seem to be recorded in the mappper -- there is an attribute for it. record.mapper.row_number is always nil

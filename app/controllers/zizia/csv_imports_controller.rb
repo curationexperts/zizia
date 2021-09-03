@@ -47,7 +47,7 @@ module Zizia
       def preserve_cache
         return unless params['csv_import']
         @csv_import.manifest_cache = params['csv_import']['manifest_cache']
-        @csv_import.fedora_collection_id = params['csv_import']['fedora_collection_id']
+        @csv_import.fedora_collection_id = params['csv_import']['fedora_collection_id'] if params['csv_import']['fedora_collection_id'].present?
         @csv_import.update_actor_stack = params['csv_import']['update_actor_stack']
       end
   end

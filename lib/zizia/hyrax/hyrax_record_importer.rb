@@ -49,7 +49,7 @@ module Zizia
       # These attributes are persisted in the CsvImportDetail model
       @csv_import_detail = attributes[:csv_import_detail]
       @deduplication_field = csv_import_detail.deduplication_field
-      @collection_id = csv_import_detail.collection_id
+      @collection_id = csv_import_detail.collection_id if csv_import_detail.collection_id.present?
       @batch_id = csv_import_detail.batch_id
       @success_count = csv_import_detail.success_count
       @failure_count = csv_import_detail.failure_count

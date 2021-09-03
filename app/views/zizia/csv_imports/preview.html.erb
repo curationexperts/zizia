@@ -8,10 +8,12 @@
             <label> CSV Manifest: </label>
             <%= File.basename(@csv_import.manifest.to_s) %>
           </div>
+          <% unless Flipflop.new_zizia_ui? %>
           <div class="col-md-4">
             <label> Collection: </label>
             <%= ActiveFedora::SolrService.query("id:#{@csv_import.fedora_collection_id}")[0]['title_tesim'][0] %>
           </div>
+          <% end %>
         </div>
       <% end %>
 
