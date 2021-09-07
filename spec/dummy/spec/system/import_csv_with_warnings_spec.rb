@@ -32,7 +32,6 @@ RSpec.describe 'Importing records from a CSV file', type: :system, js: true do
         expect(page).to have_content 'The field name "another_header_2" is not supported'
 
         expect(page).to have_content 'This import will process 3 row(s).'
-
         # There is a link so the user can cancel.
         expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
 

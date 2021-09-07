@@ -170,10 +170,14 @@ module Zizia
         @rows.each_with_index do |row, i|
           next if i.zero? # Skip the header row
           next unless row[column_number]
-
-          values = row[column_number].split(delimiter)
+          values = ""
+          if header_name == "object type"
+            values = row[column_number].split(delimiter).map(&:downcase)
+          else
+            values = row[column_number].split(delimiter)
+          end
           valid_values = method(valid_values_method).call
-          invalid_values = values.select { |value| !valid_values.include?(value.downcase) }
+          invalid_values = values.select { |value| !valid_values.include?(value) }
 
           invalid_values.each do |value|
             @errors << "Invalid #{header_name.titleize} in row #{i + 1}: #{value}"
