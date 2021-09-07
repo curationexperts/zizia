@@ -1,5 +1,13 @@
 # Changelog
 
+## [v6.2.0](https://github.com/curationexperts/zizia/tree/v6.2.0) (2021-09-07)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v6.1.0...v6.2.0)
+
+**Merged pull requests:**
+
+- Csv collection creation [\#118](https://github.com/curationexperts/zizia/pull/118) ([maxkadel](https://github.com/maxkadel))
+
 ## [v6.1.0](https://github.com/curationexperts/zizia/tree/v6.1.0) (2021-09-07)
 
 [Full Changelog](https://github.com/curationexperts/zizia/compare/v6.0.2...v6.1.0)
