@@ -96,11 +96,11 @@ module Zizia
     end
 
     # TODO: You should be able to specify the import type in the import
-    def import_type(record="")
+    def import_type(record)
       raise 'No curation_concern found for import' unless
         defined?(Hyrax) && Hyrax&.config&.curation_concerns&.any?
       if record.object_type
-        case record.object_type.first.downcase
+        case record.object_type.first&.downcase
         when "c"
           Collection
         else
@@ -202,20 +202,23 @@ module Zizia
 
         created = import_type(record).new
         attrs = process_attrs(record: record)
-        actor_env = Hyrax::Actors::Environment.new(created,
-                                                   ::Ability.new(depositor),
-                                                   attrs)
-        if Hyrax::CurationConcern.actor.create(actor_env)
-          Rails.logger.info "[zizia] event: record_created, batch_id: #{batch_id}, record_id: #{created.id}, collection_id: #{collection_id}, record_title: #{attrs[:title]&.first}"
-          csv_import_detail.success_count += 1
+        if import_type(record) == Collection
+          true
         else
-          created.errors.each do |attr, msg|
-            Rails.logger.error "[zizia] event: validation_failed, batch_id: #{batch_id}, collection_id: #{collection_id}, attribute: #{attr.capitalize}, message: #{msg}, record_title: record_title: #{attrs[:title] ? attrs[:title] : attrs}"
+          actor_env = Hyrax::Actors::Environment.new(created,
+                                                     ::Ability.new(depositor),
+                                                     attrs)
+          if Hyrax::CurationConcern.actor.create(actor_env)
+            Rails.logger.info "[zizia] event: record_created, batch_id: #{batch_id}, record_id: #{created.id}, collection_id: #{collection_id}, record_title: #{attrs[:title]&.first}"
+            csv_import_detail.success_count += 1
+          else
+            created.errors.each do |attr, msg|
+              Rails.logger.error "[zizia] event: validation_failed, batch_id: #{batch_id}, collection_id: #{collection_id}, attribute: #{attr.capitalize}, message: #{msg}, record_title: record_title: #{attrs[:title] ? attrs[:title] : attrs}"
+            end
+            csv_import_detail.failure_count += 1
           end
-          csv_import_detail.failure_count += 1
         end
         csv_import_detail.save
       end
-
   end
 end

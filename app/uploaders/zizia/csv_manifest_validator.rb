@@ -109,6 +109,14 @@ module Zizia
       end
 
       def required_column_numbers(row)
+        if @transformed_headers.include?("object type")
+          required_columns_by_object_type(row)
+        else
+          required_headers.map { |header| @transformed_headers.find_index(header) }.compact
+        end
+      end
+
+      def required_columns_by_object_type(row)
         object_type = row[@transformed_headers.find_index("object type")]&.downcase
         # if object_type == "object type" we don't really care...
         case object_type
