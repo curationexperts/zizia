@@ -96,13 +96,26 @@ module Zizia
       end
 
       def missing_values
-        column_numbers = required_headers.map { |header| @transformed_headers.find_index(header) }.compact
-
         @rows.each_with_index do |row, i|
-          column_numbers.each_with_index do |column_number, j|
-            next unless row[column_number].blank?
+          required_column_numbers(row).each_with_index do |required_column_number, j|
+            next unless row[required_column_number].blank?
             @errors << "Missing required metadata in row #{i + 1}: \"#{required_headers[j].titleize}\" field cannot be blank"
           end
+        end
+      end
+
+      def required_collection_headers
+        ['title', 'visibility']
+      end
+
+      def required_column_numbers(row)
+        object_type = row[@transformed_headers.find_index("object type")]&.downcase
+        # if object_type == "object type" we don't really care...
+        case object_type
+        when "c"
+          required_collection_headers.map { |header| @transformed_headers.find_index(header) }.compact
+        else
+          required_headers.map { |header| @transformed_headers.find_index(header) }.compact
         end
       end
 
