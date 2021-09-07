@@ -183,15 +183,28 @@ module Zizia
 
         attrs = record.attributes.merge(additional_attrs)
         attrs = attrs.merge(member_of_collections_attributes: { '0' => { id: collection_id } }) if collection_id
-
         # Ensure nothing is passed in the files field,
         # since this is reserved for Hyrax and is where uploaded_files will be attached
         attrs.delete(:files)
         # Ensure nothing is passed in the object_type field, since this is internal to Zizia
         # and will eventually determine what type of object is created
         attrs.delete(:object_type)
+
         based_near = attrs.delete(:based_near)
         attrs = attrs.merge(based_near_attributes: Zizia::BasedNearAttributes.new(based_near).to_h) unless based_near.nil? || based_near.empty?
+        attrs
+      end
+
+      def process_collection_attrs(record:)
+        additional_attrs = {
+          depositor: depositor.user_key,
+          collection_type_gid: Hyrax::CollectionType.find_or_create_default_collection_type.gid
+        }
+        attrs = record.attributes.merge(additional_attrs)
+        # Remove attributes that are not part of Collections
+        attrs.delete(:deduplication_key)
+        attrs.delete(:files)
+        attrs.delete(:object_type)
         attrs
       end
 
@@ -199,12 +212,14 @@ module Zizia
       # We assume the object was created as expected if the actor stack returns true.
       def create_for(record:)
         Rails.logger.info "[zizia] event: record_import_started, batch_id: #{batch_id}, collection_id: #{collection_id}, record_title: #{record.respond_to?(:title) ? record.title : record}"
-
-        created = import_type(record).new
-        attrs = process_attrs(record: record)
-        if import_type(record) == Collection
-          true
+        import_type = import_type(record)
+        created = import_type.new
+        if import_type == Collection
+          attrs = process_collection_attrs(record: record)
+          created.update(attrs)
+          created.save!
         else
+          attrs = process_attrs(record: record)
           actor_env = Hyrax::Actors::Environment.new(created,
                                                      ::Ability.new(depositor),
                                                      attrs)

@@ -74,6 +74,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
         expect(page).to have_content 'Start time'
 
         expect(Work.count).to eq 1
+        expect(Collection.count).to eq 1
 
         # Ensure that all the fields got assigned as expected
         work = Work.where(title: "*haberdashery*").first
