@@ -34,6 +34,7 @@ module Zizia
       invalid_license
       invalid_resource_type
       invalid_rights_statement
+      invalid_object_type
     end
 
     # One record per row
@@ -141,6 +142,10 @@ module Zizia
         validate_values('rights statement', :valid_rights_statements)
       end
 
+      def invalid_object_type
+        validate_values('object type', :valid_object_types)
+      end
+
       def valid_licenses
         @valid_license_ids ||= Hyrax::LicenseService.new.authority.all.select { |license| license[:active] }.map { |license| license[:id] }
       end
@@ -151,6 +156,10 @@ module Zizia
 
       def valid_rights_statements
         @valid_rights_statement_ids ||= Qa::Authorities::Local.subauthority_for('rights_statements').all.select { |term| term[:active] }.map { |term| term[:id] }
+      end
+
+      def valid_object_types
+        @valid_object_types ||= ['c', 'w']
       end
 
       # Make sure this column contains only valid values
@@ -164,7 +173,7 @@ module Zizia
 
           values = row[column_number].split(delimiter)
           valid_values = method(valid_values_method).call
-          invalid_values = values.select { |value| !valid_values.include?(value) }
+          invalid_values = values.select { |value| !valid_values.include?(value.downcase) }
 
           invalid_values.each do |value|
             @errors << "Invalid #{header_name.titleize} in row #{i + 1}: #{value}"

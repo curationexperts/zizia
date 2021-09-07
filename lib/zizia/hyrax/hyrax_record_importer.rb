@@ -99,12 +99,14 @@ module Zizia
     def import_type(record)
       raise 'No curation_concern found for import' unless
         defined?(Hyrax) && Hyrax&.config&.curation_concerns&.any?
-      if record.object_type
+      if record.object_type.present?
         case record.object_type.first&.downcase
         when "c"
           Collection
-        else
+        when "w"
           Hyrax.config.curation_concerns.first
+        else
+          Rails.logger.error "[zizia] Unrecognized object_type: #{record.object_type.first&.downcase}"
         end
       else
         Hyrax.config.curation_concerns.first
