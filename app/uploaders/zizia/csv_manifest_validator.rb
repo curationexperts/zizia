@@ -159,15 +159,7 @@ module Zizia
       end
 
       def valid_object_types
-        @valid_object_types ||= ['c', 'w']
-      end
-
-      def parse_values_from_csv
-        if header_name == "object type"
-          row[column_number].split(delimiter).map(&:downcase)
-        else
-          row[column_number].split(delimiter)
-        end
+        @valid_object_types ||= ['c', 'w', 'C', 'W']
       end
 
       # Make sure this column contains only valid values
@@ -178,7 +170,7 @@ module Zizia
         @rows.each_with_index do |row, i|
           next if i.zero? # Skip the header row
           next unless row[column_number]
-          values = parse_values_from_csv
+          values = row[column_number].split(delimiter)
           valid_values = method(valid_values_method).call
           invalid_values = values.select { |value| !valid_values.include?(value) }
 
