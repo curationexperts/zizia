@@ -34,6 +34,7 @@ module Zizia
       invalid_license
       invalid_resource_type
       invalid_rights_statement
+      invalid_object_type
     end
 
     # One record per row
@@ -96,13 +97,34 @@ module Zizia
       end
 
       def missing_values
-        column_numbers = required_headers.map { |header| @transformed_headers.find_index(header) }.compact
-
         @rows.each_with_index do |row, i|
-          column_numbers.each_with_index do |column_number, j|
-            next unless row[column_number].blank?
+          required_column_numbers(row).each_with_index do |required_column_number, j|
+            next unless row[required_column_number].blank?
             @errors << "Missing required metadata in row #{i + 1}: \"#{required_headers[j].titleize}\" field cannot be blank"
           end
+        end
+      end
+
+      def required_collection_headers
+        ['title', 'visibility']
+      end
+
+      def required_column_numbers(row)
+        if @transformed_headers.include?("object type")
+          required_columns_by_object_type(row)
+        else
+          required_headers.map { |header| @transformed_headers.find_index(header) }.compact
+        end
+      end
+
+      def required_columns_by_object_type(row)
+        object_type = row[@transformed_headers.find_index("object type")]&.downcase
+        # if object_type == "object type" we don't really care...
+        case object_type
+        when "c"
+          required_collection_headers.map { |header| @transformed_headers.find_index(header) }.compact
+        else
+          required_headers.map { |header| @transformed_headers.find_index(header) }.compact
         end
       end
 
@@ -120,6 +142,10 @@ module Zizia
         validate_values('rights statement', :valid_rights_statements)
       end
 
+      def invalid_object_type
+        validate_values('object type', :valid_object_types)
+      end
+
       def valid_licenses
         @valid_license_ids ||= Hyrax::LicenseService.new.authority.all.select { |license| license[:active] }.map { |license| license[:id] }
       end
@@ -132,6 +158,10 @@ module Zizia
         @valid_rights_statement_ids ||= Qa::Authorities::Local.subauthority_for('rights_statements').all.select { |term| term[:active] }.map { |term| term[:id] }
       end
 
+      def valid_object_types
+        @valid_object_types ||= ['c', 'w', 'C', 'W']
+      end
+
       # Make sure this column contains only valid values
       def validate_values(header_name, valid_values_method)
         column_number = @transformed_headers.find_index(header_name)
@@ -140,7 +170,6 @@ module Zizia
         @rows.each_with_index do |row, i|
           next if i.zero? # Skip the header row
           next unless row[column_number]
-
           values = row[column_number].split(delimiter)
           valid_values = method(valid_values_method).call
           invalid_values = values.select { |value| !valid_values.include?(value) }

@@ -75,7 +75,7 @@ module Zizia
       return unless record.respond_to?(deduplication_field)
       return if record.mapper.send(deduplication_field).nil?
       return if record.mapper.send(deduplication_field).empty?
-      existing_records = import_type.where("#{deduplication_field}": record.mapper.send(deduplication_field).to_s)
+      existing_records = import_type(record).where("#{deduplication_field}": record.mapper.send(deduplication_field).to_s)
       raise "More than one record matches deduplication_field #{deduplication_field} with value #{record.mapper.send(deduplication_field)}" if existing_records.count > 1
       existing_records&.first
     end
@@ -96,11 +96,21 @@ module Zizia
     end
 
     # TODO: You should be able to specify the import type in the import
-    def import_type
+    def import_type(record)
       raise 'No curation_concern found for import' unless
         defined?(Hyrax) && Hyrax&.config&.curation_concerns&.any?
-
-      Hyrax.config.curation_concerns.first
+      if record.object_type.present?
+        case record.object_type.first&.downcase
+        when "c"
+          Collection
+        when "w"
+          Hyrax.config.curation_concerns.first
+        else
+          Rails.logger.error "[zizia] Unrecognized object_type: #{record.object_type.first&.downcase}"
+        end
+      else
+        Hyrax.config.curation_concerns.first
+      end
     end
 
     # The path on disk where file attachments can be found
@@ -175,12 +185,28 @@ module Zizia
 
         attrs = record.attributes.merge(additional_attrs)
         attrs = attrs.merge(member_of_collections_attributes: { '0' => { id: collection_id } }) if collection_id
-
         # Ensure nothing is passed in the files field,
         # since this is reserved for Hyrax and is where uploaded_files will be attached
         attrs.delete(:files)
+        # Ensure nothing is passed in the object_type field, since this is internal to Zizia
+        # and will eventually determine what type of object is created
+        attrs.delete(:object_type)
+
         based_near = attrs.delete(:based_near)
         attrs = attrs.merge(based_near_attributes: Zizia::BasedNearAttributes.new(based_near).to_h) unless based_near.nil? || based_near.empty?
+        attrs
+      end
+
+      def process_collection_attrs(record:)
+        additional_attrs = {
+          depositor: depositor.user_key,
+          collection_type_gid: Hyrax::CollectionType.find_or_create_default_collection_type.gid
+        }
+        attrs = record.attributes.merge(additional_attrs)
+        # Remove attributes that are not part of Collections
+        attrs.delete(:deduplication_key)
+        attrs.delete(:files)
+        attrs.delete(:object_type)
         attrs
       end
 
@@ -188,21 +214,26 @@ module Zizia
       # We assume the object was created as expected if the actor stack returns true.
       def create_for(record:)
         Rails.logger.info "[zizia] event: record_import_started, batch_id: #{batch_id}, collection_id: #{collection_id}, record_title: #{record.respond_to?(:title) ? record.title : record}"
-
+        import_type = import_type(record)
         created = import_type.new
-        attrs = process_attrs(record: record)
-        actor_env = Hyrax::Actors::Environment.new(created,
-                                                   ::Ability.new(depositor),
-                                                   attrs)
-
-        if Hyrax::CurationConcern.actor.create(actor_env)
-          Rails.logger.info "[zizia] event: record_created, batch_id: #{batch_id}, record_id: #{created.id}, collection_id: #{collection_id}, record_title: #{attrs[:title]&.first}"
-          csv_import_detail.success_count += 1
+        if import_type == Collection
+          attrs = process_collection_attrs(record: record)
+          created.update(attrs)
+          created.save!
         else
-          created.errors.each do |attr, msg|
-            Rails.logger.error "[zizia] event: validation_failed, batch_id: #{batch_id}, collection_id: #{collection_id}, attribute: #{attr.capitalize}, message: #{msg}, record_title: record_title: #{attrs[:title] ? attrs[:title] : attrs}"
+          attrs = process_attrs(record: record)
+          actor_env = Hyrax::Actors::Environment.new(created,
+                                                     ::Ability.new(depositor),
+                                                     attrs)
+          if Hyrax::CurationConcern.actor.create(actor_env)
+            Rails.logger.info "[zizia] event: record_created, batch_id: #{batch_id}, record_id: #{created.id}, collection_id: #{collection_id}, record_title: #{attrs[:title]&.first}"
+            csv_import_detail.success_count += 1
+          else
+            created.errors.each do |attr, msg|
+              Rails.logger.error "[zizia] event: validation_failed, batch_id: #{batch_id}, collection_id: #{collection_id}, attribute: #{attr.capitalize}, message: #{msg}, record_title: record_title: #{attrs[:title] ? attrs[:title] : attrs}"
+            end
+            csv_import_detail.failure_count += 1
           end
-          csv_import_detail.failure_count += 1
         end
         csv_import_detail.save
       end

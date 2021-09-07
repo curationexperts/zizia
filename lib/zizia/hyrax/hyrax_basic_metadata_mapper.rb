@@ -25,7 +25,8 @@ module Zizia
       rights_statement: 'rights statement',
       date_created: 'date created',
       based_near: 'location',
-      related_url: 'related url'
+      related_url: 'related url',
+      object_type: 'object type'
     }.freeze
 
     ##
@@ -167,7 +168,7 @@ module Zizia
 
       # Properties requires for zizia
       def zizia_fields
-        [:deduplication_key]
+        [:deduplication_key, :object_type]
       end
   end
 end
