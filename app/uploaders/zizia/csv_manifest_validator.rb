@@ -48,8 +48,6 @@ module Zizia
     end
     attr_writer :delimiter
 
-    # private
-
     def default_delimiter
       Zizia::HyraxBasicMetadataMapper.new.delimiter
     end
@@ -118,60 +116,62 @@ module Zizia
       end
     end
 
-    def object_type(row)
-      row[@transformed_headers.find_index("object type")]&.downcase
-    end
+    private
 
-    # Only allow valid license values expected by Hyrax.
-    # Otherwise the app throws an error when it displays the work.
-    def invalid_license
-      validate_values('license', :valid_licenses)
-    end
+      def object_type(row)
+        row[@transformed_headers.find_index("object type")]&.downcase
+      end
 
-    def invalid_resource_type
-      validate_values('resource type', :valid_resource_types)
-    end
+      # Only allow valid license values expected by Hyrax.
+      # Otherwise the app throws an error when it displays the work.
+      def invalid_license
+        validate_values('license', :valid_licenses)
+      end
 
-    def invalid_rights_statement
-      validate_values('rights statement', :valid_rights_statements)
-    end
+      def invalid_resource_type
+        validate_values('resource type', :valid_resource_types)
+      end
 
-    def invalid_object_type
-      validate_values('object type', :valid_object_types)
-    end
+      def invalid_rights_statement
+        validate_values('rights statement', :valid_rights_statements)
+      end
 
-    def valid_licenses
-      @valid_license_ids ||= Hyrax::LicenseService.new.authority.all.select { |license| license[:active] }.map { |license| license[:id] }
-    end
+      def invalid_object_type
+        validate_values('object type', :valid_object_types)
+      end
 
-    def valid_resource_types
-      @valid_resource_type_ids ||= Qa::Authorities::Local.subauthority_for('resource_types').all.select { |term| term[:active] }.map { |term| term[:id] }
-    end
+      def valid_licenses
+        @valid_license_ids ||= Hyrax::LicenseService.new.authority.all.select { |license| license[:active] }.map { |license| license[:id] }
+      end
 
-    def valid_rights_statements
-      @valid_rights_statement_ids ||= Qa::Authorities::Local.subauthority_for('rights_statements').all.select { |term| term[:active] }.map { |term| term[:id] }
-    end
+      def valid_resource_types
+        @valid_resource_type_ids ||= Qa::Authorities::Local.subauthority_for('resource_types').all.select { |term| term[:active] }.map { |term| term[:id] }
+      end
 
-    def valid_object_types
-      @valid_object_types ||= ['c', 'w', 'C', 'W']
-    end
+      def valid_rights_statements
+        @valid_rights_statement_ids ||= Qa::Authorities::Local.subauthority_for('rights_statements').all.select { |term| term[:active] }.map { |term| term[:id] }
+      end
 
-    # Make sure this column contains only valid values
-    def validate_values(header_name, valid_values_method)
-      column_number = @transformed_headers.find_index(header_name)
-      return unless column_number
+      def valid_object_types
+        @valid_object_types ||= ['c', 'w', 'C', 'W']
+      end
 
-      @rows.each_with_index do |row, i|
-        next if i.zero? # Skip the header row
-        next unless row[column_number]
-        values = row[column_number].split(delimiter)
-        valid_values = method(valid_values_method).call
-        invalid_values = values.select { |value| !valid_values.include?(value) }
+      # Make sure this column contains only valid values
+      def validate_values(header_name, valid_values_method)
+        column_number = @transformed_headers.find_index(header_name)
+        return unless column_number
 
-        invalid_values.each do |value|
-          @errors << "Invalid #{header_name.titleize} in row #{i + 1}: #{value}"
+        @rows.each_with_index do |row, i|
+          next if i.zero? # Skip the header row
+          next unless row[column_number]
+          values = row[column_number].split(delimiter)
+          valid_values = method(valid_values_method).call
+          invalid_values = values.select { |value| !valid_values.include?(value) }
+
+          invalid_values.each do |value|
+            @errors << "Invalid #{header_name.titleize} in row #{i + 1}: #{value}"
+          end
         end
       end
-    end
   end
 end
