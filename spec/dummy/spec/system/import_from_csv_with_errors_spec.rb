@@ -61,6 +61,35 @@ RSpec.describe 'Importing records from a CSV file with fatal errors', :clean, ty
         # There is a link so the user can start over with a new CSV file.
         click_on 'Try Again'
       end
+      context "with a csv with a missing required row" do
+        let(:csv_file) { File.join(fixture_path, 'csv_import', 'csv_files_with_problems', 'row_missing_required_field.csv') }
+        it 'aborts the import' do
+          visit '/csv_imports/new'
+          # Fill in and submit the form
+          attach_file('csv_import[manifest]', csv_file, make_visible: true)
+          click_on 'Preview Import'
+
+          # We expect to see errors for this CSV file.
+          expect(page).to have_content 'Missing required metadata in row 3: "Creator" field cannot be blank'
+        end
+      end
+
+      context "with a more complex csv file" do
+        let(:csv_file) { File.join(fixture_path, 'csv_import', 'good', 'Postcards_Minneapolis_w_collection.csv') }
+
+        it 'does not require creator for collections' do
+          visit '/csv_imports/new'
+          # Fill in and submit the form
+          select 'Update Existing Metadata, create new works', from: "csv_import[update_actor_stack]"
+          attach_file('csv_import[manifest]', csv_file, make_visible: true)
+          click_on 'Preview Import'
+
+          expect(page).to have_content 'This import will process 13 row(s).'
+          expect(page).to have_content 'Missing required metadata in row 14: "Visibility" field cannot be blank'
+
+          expect(page).not_to have_content 'Missing required metadata in row 14: "Creator" field cannot be blank'
+        end
+      end
       context "with a csv with an unrecognized object_type" do
         let(:csv_file) { File.join(fixture_path, 'csv_import', 'csv_files_with_problems', 'wrong_object_type.csv') }
 

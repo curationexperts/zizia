@@ -71,11 +71,7 @@ RSpec/MessageSpies:
     - spec/integration/import_csv_spec.rb
 
 RSpec/MultipleExpectations:
-  Exclude:
-    - 'spec/zizia/hyrax/hyrax_basic_metadata_mapper_spec.rb'
-    - 'spec/integration/import_hyrax_csv.rb'
-    - 'spec/controllers/importer_documentation_controller_spec.rb'
-    - 'spec/integration/csv_import_detail_spec.rb'
-    - 'spec/controllers/**/*'
+  Enabled: false
+
 Style/StructInheritance:
   Enabled: false
