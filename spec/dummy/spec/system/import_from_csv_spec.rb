@@ -45,6 +45,24 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
         Collection.destroy_all
       end
 
+      context "with a more complex csv file" do
+        let(:csv_file) { File.join(fixture_path, 'csv_import', 'good', 'Postcards_Minneapolis_w_collection.csv') }
+
+        it 'does not require creator for collections' do
+          visit '/csv_imports/new'
+          # Fill in and submit the form
+          select 'Update Existing Metadata, create new works', from: "csv_import[update_actor_stack]"
+          attach_file('csv_import[manifest]', csv_file, make_visible: true)
+          click_on 'Preview Import'
+
+          expect(page).to have_content 'This import will process 13 row(s).'
+          expect(page).to have_content 'Missing required metadata in row 14: "Visibility" field cannot be blank'
+
+          expect(page).not_to have_content 'Missing required metadata in row 14: "Creator" field cannot be blank'
+        end
+      end
+
+
       it 'starts the import' do
         visit '/csv_imports/new'
         expect(page).not_to have_content 'Testing Collection'
@@ -62,6 +80,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
 
         # There is a link so the user can cancel.
         expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
+
 
         expect(page).not_to have_content('The field name "object type" is not supported.')
 
