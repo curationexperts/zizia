@@ -63,7 +63,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
         # There is a link so the user can cancel.
         expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
 
-
+        expect(page).not_to have_content('The field name "parent" is not supported.')
         expect(page).not_to have_content('The field name "object type" is not supported.')
 
         # After reading the warnings, the user decides
