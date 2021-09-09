@@ -24,7 +24,7 @@ describe Zizia::HyraxBasicMetadataMapper do
   end
 
   let(:zizia_fields) do
-    [:deduplication_key, :object_type]
+    [:deduplication_key, :object_type, :parent]
   end
 
   it_behaves_like 'a Zizia::Mapper' do
