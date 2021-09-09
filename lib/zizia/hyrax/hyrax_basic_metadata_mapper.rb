@@ -168,7 +168,7 @@ module Zizia
 
       # Properties requires for zizia
       def zizia_fields
-        [:deduplication_key, :object_type, :parent]
+        [:deduplication_key, :object_type]
       end
   end
 end

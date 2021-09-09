@@ -192,9 +192,6 @@ module Zizia
         # and will eventually determine what type of object is created
         attrs.delete(:object_type)
 
-        # TODO: in the future we will want to use this identifier to indicate a parent object
-        attrs.delete(:parent)
-
         based_near = attrs.delete(:based_near)
         attrs = attrs.merge(based_near_attributes: Zizia::BasedNearAttributes.new(based_near).to_h) unless based_near.nil? || based_near.empty?
         attrs
@@ -210,8 +207,6 @@ module Zizia
         attrs.delete(:deduplication_key)
         attrs.delete(:files)
         attrs.delete(:object_type)
-        # TODO: in the future we will want to use this identifier to indicate a parent object
-        attrs.delete(:parent)
         attrs
       end
 
