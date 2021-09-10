@@ -2,7 +2,7 @@
 require 'rails_helper'
 include Warden::Test::Helpers
 
-RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type: :system, js: true do
+RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, type: :system, js: true do
   before do
     allow(CharacterizeJob).to receive(:perform_later)
     ENV['IMPORT_PATH'] = File.join(fixture_path, 'images')
@@ -43,6 +43,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
       before do
         test_strategy.switch!(:new_zizia_ui, true)
         Collection.destroy_all
+        Work.destroy_all
       end
 
       it 'starts the import' do
@@ -224,6 +225,29 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
         expect(page).to have_content('abc/123')
         expect(page).to have_content('haberdashery')
         expect(page).to have_content('Date Created')
+      end
+
+      context 'with an existing collection' do
+        let(:collection) { FactoryBot.build(:collection, title: ['Testing Collection'], deduplication_key: 'def/123') }
+        before do
+          collection.save!
+        end
+
+        it 'adds the work to the parent collection' do
+          visit '/csv_imports/new'
+          select 'Update Existing Metadata, create new works', from: "csv_import[update_actor_stack]"
+
+          attach_file('csv_import[manifest]', csv_file, make_visible: true)
+          click_on 'Preview Import'
+          click_on 'Start Import'
+
+          # Let the background jobs run, and check that the expected number of records got created.
+          expect(Work.count).to eq 1
+          # Ensure that all the fields got assigned as expected
+          work = Work.where(title: "*haberdashery*").first
+          expect(collection.deduplication_key).to eq 'def/123'
+          expect(work.member_of_collection_ids).to eq [collection.id]
+        end
       end
     end
     context 'using the old UI' do
