@@ -49,11 +49,19 @@ module Zizia
       # These attributes are persisted in the CsvImportDetail model
       @csv_import_detail = attributes[:csv_import_detail]
       @deduplication_field = csv_import_detail.deduplication_field
-      @collection_id = csv_import_detail.collection_id if csv_import_detail.collection_id.present?
+      @collection_id = find_collection_id(csv_import_detail: csv_import_detail, record: nil)
       @batch_id = csv_import_detail.batch_id
       @success_count = csv_import_detail.success_count
       @failure_count = csv_import_detail.failure_count
       find_depositor(csv_import_detail.depositor_id)
+    end
+
+    def find_collection_id(csv_import_detail:, record:)
+      if csv_import_detail&.collection_id&.present?
+        csv_import_detail.collection_id
+      elsif record&.parent&.first
+        Collection.where(deduplication_key: "def/123")&.first&.id
+      end
     end
 
     # "depositor" is a required field for Hyrax.  If
@@ -184,7 +192,12 @@ module Zizia
         }
 
         attrs = record.attributes.merge(additional_attrs)
-        attrs = attrs.merge(member_of_collections_attributes: { '0' => { id: collection_id } }) if collection_id
+        if collection_id
+          attrs = attrs.merge(member_of_collections_attributes: { '0' => { id: collection_id } })
+        elsif find_collection_id(csv_import_detail: nil, record: record)
+          attrs = attrs.merge(member_of_collections_attributes: { '0' => { id: find_collection_id(csv_import_detail: nil, record: record) } })
+        end
+
         # Ensure nothing is passed in the files field,
         # since this is reserved for Hyrax and is where uploaded_files will be attached
         attrs.delete(:files)
