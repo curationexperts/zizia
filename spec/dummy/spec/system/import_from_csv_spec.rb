@@ -12,6 +12,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
   let(:csv_metadata_update_file) { File.join(fixture_path, 'csv_import', 'good', 'all_fields_metadata_update.csv') }
   let(:csv_complete_update_file) { File.join(fixture_path, 'csv_import', 'good', 'all_fields_complete_update.csv') }
   let(:csv_only_new_file) { File.join(fixture_path, 'csv_import', 'good', 'all_fields_only_new.csv') }
+  let(:csv_rearranged_headers_file) { File.join(fixture_path, 'csv_import', 'good', 'csv_rearranged_headers_new.csv') }
   let(:test_strategy) { Flipflop::FeatureSet.current.test! }
 
   context 'logged in as an admin user' do

@@ -6,9 +6,15 @@ describe Zizia::HyraxBasicMetadataMapper do
   let(:mapper) { described_class.new }
 
   # Properties defined in Hyrax::CoreMetadata
-  let(:core_fields) do
-    [:title]
+  let(:required_fields) do
+    [:title, :creator, :keyword, :rights_statement, :files]
   end
+
+  let(:core_fields) do
+    required_fields
+  end
+
+
 
   # Properties defined in Hyrax::BasicMetadata
   let(:basic_fields) do

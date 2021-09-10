@@ -29,6 +29,13 @@ module Zizia
       object_type: 'object type'
     }.freeze
 
+     REQUIRED_CSV_HEADERS = {
+      title:            'title',
+      creator:          'creator',
+      keyword:          'keyword',
+      rights_statement: 'rights statement'
+    }.freeze
+
     ##
     # @return [Enumerable<Symbol>] The fields the mapper can process.
     def fields
@@ -150,7 +157,13 @@ module Zizia
       # sending a metadata value for these fields interferes with
       # Hyrax expected behavior.
       def core_fields
-        [:title]
+        #[:title]
+        required_fields
+      end
+
+      def required_fields
+        #['title*', 'creator*', 'keyword*', 'rights_statement*', 'files*']
+        [:title, :creator, :keyword, :rights_statement, :files]
       end
 
       # Properties defined in Hyrax::BasicMetadata
