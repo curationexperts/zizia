@@ -38,7 +38,7 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
     end
 
     it "returns different required column numbers based on the row" do
-      expect(validator.required_column_numbers(work_row)).to eq([1, 3, 6, 8, 18, 19, 20])
+      expect(validator.required_column_numbers(work_row)).to eq([1, 3, 6, 18, 19, 20])
       expect(validator.required_column_numbers(collection_row)).to eq([1, 18])
     end
   end

@@ -33,7 +33,8 @@ module Zizia
       title:            'title',
       creator:          'creator',
       keyword:          'keyword',
-      rights_statement: 'rights statement'
+      rights_statement: 'rights statement',
+      deduplication_key: 'deduplication_key'
     }.freeze
 
     ##
