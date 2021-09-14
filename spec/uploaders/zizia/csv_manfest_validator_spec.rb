@@ -18,7 +18,8 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
     uploader.remove!
   end
 
-  context "with a object type column" do
+  context "with an object type column" do
+    #spec/dummy/spec/fixtures/csv_import/csv_rearranged_headers_new.csv
     let(:path_to_file) { Rails.root.join('spec', 'fixtures', 'csv_import', 'good', 'Postcards_Minneapolis_w_collection.csv') }
     let(:work_row) do
       'w,abc/123,work,https://creativecommons.org/licenses/by/4.0/,abc/123,PUBlic,http://www.geonames.org/5667009/montana.html|~|http://www.geonames.org/6252001/united-states.html,Clothing stores $z California $z Los Angeles|~|Interior design $z California $z Los Angeles,http://rightsstatements.org/vocab/InC/1.0/,"Connell, Will, $d 1898-1961","Interior view of The Bachelors haberdashery designed by Julius Ralph Davidson, Los Angeles, circa 1929",dog.jpg
@@ -31,8 +32,8 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
     end
 
     it "returns required headers based on the object type" do
-      expect(validator.required_headers).to eq(['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key'])
-      expect(validator.required_headers("w")).to eq(['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key'])
+      expect(validator.required_headers).to eq(['title', 'creator', 'keyword', 'rights_statement', 'visibility', 'files', 'deduplication_key'])
+      expect(validator.required_headers("w")).to eq(['title', 'creator', 'keyword', 'rights_statement', 'visibility', 'files', 'deduplication_key'])
       expect(validator.required_headers("c")).to eq(['title', 'visibility'])
     end
 
@@ -48,7 +49,7 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
     '
     end
     it "still gives required headers and their associated column numbers" do
-      expect(validator.required_headers).to eq(['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key'])
+      expect(validator.required_headers).to eq(['title', 'creator', 'keyword', 'rights_statement', 'visibility', 'files', 'deduplication_key'])
       expect(validator.required_column_numbers(work_row)).to eq([8, 7, 5, 6, 3, 9, 2])
     end
   end

@@ -76,7 +76,7 @@ module Zizia
       if object_type == "c"
         ['title', 'visibility']
       else
-        ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key']
+        ['title', 'creator', 'keyword', 'rights_statement', 'visibility', 'files', 'deduplication_key']
       end
     end
 
@@ -134,7 +134,7 @@ module Zizia
       end
 
       def invalid_rights_statement
-        validate_values('rights statement', :valid_rights_statements)
+        validate_values('rights_statement', :valid_rights_statements)
       end
 
       def invalid_object_type

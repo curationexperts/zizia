@@ -165,7 +165,7 @@ module Zizia
       end
 
       def required_fields
-        [:title, :creator, :keyword, :rights_statement, :files]
+        [:title, :creator, :keyword, :rights_statement, :files, :deduplication_key]
       end
 
       # Properties defined in Hyrax::BasicMetadata
@@ -183,7 +183,7 @@ module Zizia
 
       # Properties requires for zizia
       def zizia_fields
-        [:deduplication_key, :object_type, :parent]
+        [:object_type, :parent]
       end
   end
 end
