@@ -39,12 +39,16 @@ module Zizia
     ##
     # @return [Enumerable<Symbol>] The fields the mapper can process.
     def fields
-      core_fields + basic_fields + [:visibility, :files] + zizia_fields
+      core_fields + basic_fields + [:visibility] + zizia_fields
     end
 
     def headers
       fields.map do |field|
-        Zizia::HyraxBasicMetadataMapper.csv_header(field)
+        if required_fields.include?(field)
+          Zizia::HyraxBasicMetadataMapper.csv_header(field.to_s + "*")
+        else
+          Zizia::HyraxBasicMetadataMapper.csv_header(field)
+        end
       end
     end
 
@@ -169,9 +173,9 @@ module Zizia
       # are not included here because we don't expect users to directly
       # import them.
       def basic_fields
-        [:resource_type, :creator, :contributor,
-         :description, :keyword, :license,
-         :rights_statement, :publisher, :date_created,
+        [:resource_type, :contributor,
+         :description, :license,
+         :publisher, :date_created,
          :subject, :language, :identifier,
          :based_near, :related_url,
          :bibliographic_citation, :source]
