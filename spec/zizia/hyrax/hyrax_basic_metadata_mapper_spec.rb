@@ -14,8 +14,6 @@ describe Zizia::HyraxBasicMetadataMapper do
     required_fields
   end
 
-
-
   # Properties defined in Hyrax::BasicMetadata
   let(:basic_fields) do
     [:resource_type, :creator, :contributor,

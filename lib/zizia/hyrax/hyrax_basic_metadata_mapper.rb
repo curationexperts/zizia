@@ -157,12 +157,10 @@ module Zizia
       # sending a metadata value for these fields interferes with
       # Hyrax expected behavior.
       def core_fields
-        #[:title]
         required_fields
       end
 
       def required_fields
-        #['title*', 'creator*', 'keyword*', 'rights_statement*', 'files*']
         [:title, :creator, :keyword, :rights_statement, :files]
       end
 
