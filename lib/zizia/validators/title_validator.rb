@@ -16,15 +16,15 @@ module Zizia
 
     protected
 
-      ##
-      # @private
-      # @param record [InputRecord]
-      #
-      # @return [Error]
-      def error_for(record:)
-        Error.new(self,
-                  :missing_title,
-                  "Title is required; got #{record.mapper.metadata}")
-      end
+    ##
+    # @private
+    # @param record [InputRecord]
+    #
+    # @return [Error]
+    def error_for(record:)
+      Error.new(self,
+                :missing_title,
+                "Title is required; got #{record.mapper.metadata}")
+    end
   end
 end

@@ -59,7 +59,7 @@ module Zizia
     def parse_csv
       @rows = CSV.read(csv_file.path)
       @headers = @rows.first || []
-      @headers.each {|header| header.delete!'*' if /\*/.match?(header[-1]) }
+      @headers.each { |header| header.delete! '*' if /\*/.match?(header[-1]) }
       @transformed_headers = @headers.map { |header| header.downcase.strip }
     rescue
       @errors << 'We are unable to read this CSV file.'
@@ -103,7 +103,7 @@ module Zizia
       @rows.each_with_index do |row, i|
         next if i.zero? # Skip the header row
         required_column_numbers(row).each_with_index do |required_column_number, j|
-          next unless row[required_column_number].blank?
+          next if row[required_column_number].present?
           @errors << "Missing required metadata in row #{i + 1}: \"#{required_headers(object_type(row))[j].titleize}\" field cannot be blank"
         end
       end
@@ -119,60 +119,60 @@ module Zizia
 
     private
 
-      def object_type(row)
-        row[@transformed_headers.find_index("object type")]&.downcase
-      end
+    def object_type(row)
+      row[@transformed_headers.find_index("object type")]&.downcase
+    end
 
-      # Only allow valid license values expected by Hyrax.
-      # Otherwise the app throws an error when it displays the work.
-      def invalid_license
-        validate_values('license', :valid_licenses)
-      end
+    # Only allow valid license values expected by Hyrax.
+    # Otherwise the app throws an error when it displays the work.
+    def invalid_license
+      validate_values('license', :valid_licenses)
+    end
 
-      def invalid_resource_type
-        validate_values('resource type', :valid_resource_types)
-      end
+    def invalid_resource_type
+      validate_values('resource type', :valid_resource_types)
+    end
 
-      def invalid_rights_statement
-        validate_values('rights_statement', :valid_rights_statements)
-      end
+    def invalid_rights_statement
+      validate_values('rights_statement', :valid_rights_statements)
+    end
 
-      def invalid_object_type
-        validate_values('object type', :valid_object_types)
-      end
+    def invalid_object_type
+      validate_values('object type', :valid_object_types)
+    end
 
-      def valid_licenses
-        @valid_license_ids ||= Hyrax::LicenseService.new.authority.all.select { |license| license[:active] }.map { |license| license[:id] }
-      end
+    def valid_licenses
+      @valid_license_ids ||= Hyrax::LicenseService.new.authority.all.select { |license| license[:active] }.map { |license| license[:id] }
+    end
 
-      def valid_resource_types
-        @valid_resource_type_ids ||= Qa::Authorities::Local.subauthority_for('resource_types').all.select { |term| term[:active] }.map { |term| term[:id] }
-      end
+    def valid_resource_types
+      @valid_resource_type_ids ||= Qa::Authorities::Local.subauthority_for('resource_types').all.select { |term| term[:active] }.map { |term| term[:id] }
+    end
 
-      def valid_rights_statements
-        @valid_rights_statement_ids ||= Qa::Authorities::Local.subauthority_for('rights_statements').all.select { |term| term[:active] }.map { |term| term[:id] }
-      end
+    def valid_rights_statements
+      @valid_rights_statement_ids ||= Qa::Authorities::Local.subauthority_for('rights_statements').all.select { |term| term[:active] }.map { |term| term[:id] }
+    end
 
-      def valid_object_types
-        @valid_object_types ||= ['c', 'w', 'C', 'W']
-      end
+    def valid_object_types
+      @valid_object_types ||= ['c', 'w', 'C', 'W']
+    end
 
-      # Make sure this column contains only valid values
-      def validate_values(header_name, valid_values_method)
-        column_number = @transformed_headers.find_index(header_name)
-        return unless column_number
+    # Make sure this column contains only valid values
+    def validate_values(header_name, valid_values_method)
+      column_number = @transformed_headers.find_index(header_name)
+      return unless column_number
 
-        @rows.each_with_index do |row, i|
-          next if i.zero? # Skip the header row
-          next unless row[column_number]
-          values = row[column_number].split(delimiter)
-          valid_values = method(valid_values_method).call
-          invalid_values = values.select { |value| !valid_values.include?(value) }
+      @rows.each_with_index do |row, i|
+        next if i.zero? # Skip the header row
+        next unless row[column_number]
+        values = row[column_number].split(delimiter)
+        valid_values = method(valid_values_method).call
+        invalid_values = values.select { |value| !valid_values.include?(value) }
 
-          invalid_values.each do |value|
-            @errors << "Invalid #{header_name.titleize} in row #{i + 1}: #{value}"
-          end
+        invalid_values.each do |value|
+          @errors << "Invalid #{header_name.titleize} in row #{i + 1}: #{value}"
         end
       end
+    end
   end
 end

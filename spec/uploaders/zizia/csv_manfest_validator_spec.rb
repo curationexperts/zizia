@@ -19,7 +19,7 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
   end
 
   context "with an object type column" do
-    #spec/dummy/spec/fixtures/csv_import/csv_rearranged_headers_new.csv
+    # spec/dummy/spec/fixtures/csv_import/csv_rearranged_headers_new.csv
     let(:path_to_file) { Rails.root.join('spec', 'fixtures', 'csv_import', 'good', 'Postcards_Minneapolis_w_collection.csv') }
     let(:work_row) do
       'w,abc/123,work,https://creativecommons.org/licenses/by/4.0/,abc/123,PUBlic,http://www.geonames.org/5667009/montana.html|~|http://www.geonames.org/6252001/united-states.html,Clothing stores $z California $z Los Angeles|~|Interior design $z California $z Los Angeles,http://rightsstatements.org/vocab/InC/1.0/,"Connell, Will, $d 1898-1961","Interior view of The Bachelors haberdashery designed by Julius Ralph Davidson, Los Angeles, circa 1929",dog.jpg

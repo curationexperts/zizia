@@ -4,7 +4,7 @@ inherit_gem:
   bixby: bixby_default.yml
 
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.7
   Exclude:
     - 'db/**/*'
     - 'config/**/*'
@@ -13,7 +13,7 @@ AllCops:
     - 'bin/{rails,rake}'
     - 'spec/dummy/**/*'
 
-Lint/HandleExceptions:
+Lint/SuppressedException:
   Exclude:
     - 'spec/**/*'
     - 'lib/zizia/spec/**/*'

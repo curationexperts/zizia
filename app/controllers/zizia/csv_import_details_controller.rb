@@ -24,20 +24,20 @@ module Zizia
 
     private
 
-      def user_id
-        User.find_by(email: csv_import_detail_params[:user]).id
-      end
+    def user_id
+      User.find_by(email: csv_import_detail_params[:user]).id
+    end
 
-      def sort_column
-        Zizia::CsvImportDetail.column_names.include?(params[:sort]) ? params[:sort] : 'created_at'
-      end
+    def sort_column
+      Zizia::CsvImportDetail.column_names.include?(params[:sort]) ? params[:sort] : 'created_at'
+    end
 
-      def sort_direction
-        %w[asc desc].include?(params[:direction]) ? params[:direction] : 'desc'
-      end
+    def sort_direction
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : 'desc'
+    end
 
-      def csv_import_detail_params
-        params.permit(:id, :page, :sort, :direction, :user)
-      end
+    def csv_import_detail_params
+      params.permit(:id, :page, :sort, :direction, :user)
+    end
   end
 end

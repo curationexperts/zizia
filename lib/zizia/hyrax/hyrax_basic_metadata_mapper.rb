@@ -29,10 +29,10 @@ module Zizia
       object_type: 'object type'
     }.freeze
 
-     REQUIRED_CSV_HEADERS = {
-      title:            'title',
-      creator:          'creator',
-      keyword:          'keyword',
+    REQUIRED_CSV_HEADERS = {
+      title: 'title',
+      creator: 'creator',
+      keyword: 'keyword',
       rights_statement: 'rights statement',
       deduplication_key: 'deduplication_key'
     }.freeze
@@ -138,53 +138,53 @@ module Zizia
 
     protected
 
-      # Some fields should have single values instead
-      # of array values.
-      def single_value(field_name)
-        metadata[matching_header(field_name)]
-      end
+    # Some fields should have single values instead
+    # of array values.
+    def single_value(field_name)
+      metadata[matching_header(field_name)]
+    end
 
-      # Lenient matching for headers.
-      # If the user has headers like:
-      #   'Title' or 'TITLE' or 'Title  '
-      # it should match the :title field.
-      def matching_header(field_name)
-        metadata.keys.find do |key|
-          next unless key
-          key.downcase.strip == field_name
-        end
+    # Lenient matching for headers.
+    # If the user has headers like:
+    #   'Title' or 'TITLE' or 'Title  '
+    # it should match the :title field.
+    def matching_header(field_name)
+      metadata.keys.find do |key|
+        next unless key
+        key.downcase.strip == field_name
       end
+    end
 
-      # Properties defined in Hyrax::CoreMetadata
-      # Note that depositor, date_uploaded and date_modified are NOT set here,
-      # even though they are defined in Hyrax::CoreMetadata.
-      # Hyrax expects to set these fields itself, and
-      # sending a metadata value for these fields interferes with
-      # Hyrax expected behavior.
-      def core_fields
-        required_fields
-      end
+    # Properties defined in Hyrax::CoreMetadata
+    # Note that depositor, date_uploaded and date_modified are NOT set here,
+    # even though they are defined in Hyrax::CoreMetadata.
+    # Hyrax expects to set these fields itself, and
+    # sending a metadata value for these fields interferes with
+    # Hyrax expected behavior.
+    def core_fields
+      required_fields
+    end
 
-      def required_fields
-        [:title, :creator, :keyword, :rights_statement, :files, :deduplication_key]
-      end
+    def required_fields
+      [:title, :creator, :keyword, :rights_statement, :files, :deduplication_key]
+    end
 
-      # Properties defined in Hyrax::BasicMetadata
-      # System related fields like :relative_path, and :import_url
-      # are not included here because we don't expect users to directly
-      # import them.
-      def basic_fields
-        [:resource_type, :contributor,
-         :description, :license,
-         :publisher, :date_created,
-         :subject, :language, :identifier,
-         :based_near, :related_url,
-         :bibliographic_citation, :source]
-      end
+    # Properties defined in Hyrax::BasicMetadata
+    # System related fields like :relative_path, and :import_url
+    # are not included here because we don't expect users to directly
+    # import them.
+    def basic_fields
+      [:resource_type, :contributor,
+       :description, :license,
+       :publisher, :date_created,
+       :subject, :language, :identifier,
+       :based_near, :related_url,
+       :bibliographic_citation, :source]
+    end
 
-      # Properties requires for zizia
-      def zizia_fields
-        [:object_type, :parent]
-      end
+    # Properties requires for zizia
+    def zizia_fields
+      [:object_type, :parent]
+    end
   end
 end

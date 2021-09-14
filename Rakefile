@@ -24,7 +24,7 @@ desc 'Run specs'
 RSpec::Core::RakeTask.new(:spec)
 
 desc 'Run specs with Fedora & Solr servers'
-task :spec_with_server do
+task spec_with_server: :environment do
   with_test_server { Rake::Task['spec'].invoke }
 end
 

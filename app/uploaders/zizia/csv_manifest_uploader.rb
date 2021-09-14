@@ -42,21 +42,21 @@ module Zizia
 
     private
 
-      def manifests_path
-        return false if ENV['CSV_MANIFESTS_PATH'].nil?
-        return false unless File.directory?(ENV['CSV_MANIFESTS_PATH'])
-        ENV['CSV_MANIFESTS_PATH']
-      end
+    def manifests_path
+      return false if ENV['CSV_MANIFESTS_PATH'].nil?
+      return false unless File.directory?(ENV['CSV_MANIFESTS_PATH'])
+      ENV['CSV_MANIFESTS_PATH']
+    end
 
-      def manifests_cache_path
-        return false if ENV['CSV_MANIFESTS_CACHE_PATH'].nil?
-        return false unless File.directory?(ENV['CSV_MANIFESTS_CACHE_PATH'])
-        ENV['CSV_MANIFESTS_CACHE_PATH']
-      end
+    def manifests_cache_path
+      return false if ENV['CSV_MANIFESTS_CACHE_PATH'].nil?
+      return false unless File.directory?(ENV['CSV_MANIFESTS_CACHE_PATH'])
+      ENV['CSV_MANIFESTS_CACHE_PATH']
+    end
 
-      def validate_csv
-        @validator = CsvManifestValidator.new(self)
-        @validator.validate
-      end
+    def validate_csv
+      @validator = CsvManifestValidator.new(self)
+      @validator.validate
+    end
   end
 end

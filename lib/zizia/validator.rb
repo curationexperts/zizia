@@ -92,15 +92,15 @@ module Zizia
 
     private
 
-      # rubocop:disable Lint/UnusedMethodArgument
+    # rubocop:disable Lint/UnusedMethodArgument
 
-      ##
-      # @return [Enumerator<Error>]
-      #
-      def run_validation(parser:)
-        puts "\nhello, #{__method__}!\n"
-        [].to_enum
-      end
+    ##
+    # @return [Enumerator<Error>]
+    #
+    def run_validation(parser:)
+      puts "\nhello, #{__method__}!\n"
+      [].to_enum
+    end
 
     # rubocop:enable Lint/UnusedMethodArgument
   end

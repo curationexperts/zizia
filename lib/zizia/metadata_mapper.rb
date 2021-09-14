@@ -70,14 +70,14 @@ module Zizia
 
     protected
 
-      ##
-      # @private
-      #
-      # @param name [Symbol]
-      #
-      # @return [Object]
-      def map_field(_name)
-        raise NotImplementedError
-      end
+    ##
+    # @private
+    #
+    # @param name [Symbol]
+    #
+    # @return [Object]
+    def map_field(_name)
+      raise NotImplementedError
+    end
   end
 end

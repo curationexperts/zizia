@@ -16,12 +16,12 @@ describe Zizia::HyraxBasicMetadataMapper do
 
   # Properties defined in Hyrax::BasicMetadata
   let(:basic_fields) do
-   [:resource_type, :contributor,
-    :description, :license,
-    :publisher, :date_created,
-    :subject, :language, :identifier,
-    :based_near, :related_url,
-    :bibliographic_citation, :source]
+    [:resource_type, :contributor,
+     :description, :license,
+     :publisher, :date_created,
+     :subject, :language, :identifier,
+     :based_near, :related_url,
+     :bibliographic_citation, :source]
   end
 
   let(:tenejo_fields) do

@@ -10,13 +10,13 @@ module Zizia
 
     private
 
-      def default_location
-        File.join(File.dirname(__FILE__), '../../config/zizia/usage.yml')
-      end
+    def default_location
+      File.join(File.dirname(__FILE__), '../../config/zizia/usage.yml')
+    end
 
-      def config
-        return default_location unless File.exist?(Rails.root.join("config", "zizia", "usage.yml"))
-        Rails.root.join("config", "zizia", "usage.yml")
-      end
+    def config
+      return default_location unless File.exist?(Rails.root.join("config", "zizia", "usage.yml"))
+      Rails.root.join("config", "zizia", "usage.yml")
+    end
   end
 end

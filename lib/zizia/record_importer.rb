@@ -41,22 +41,22 @@ module Zizia
 
     private
 
-      # TODO: what is the relationship between this record importer and the hyrax_record_importer? They seem duplicative
-      def process_attrs(record:)
-        attrs = record.attributes
-        # Ensure nothing is passed in the object_type field, since this is internal to Zizia
-        # and will eventually determine what type of object is created
-        attrs.delete(:object_type)
-        attrs.delete(:parent)
-        attrs
-      end
+    # TODO: what is the relationship between this record importer and the hyrax_record_importer? They seem duplicative
+    def process_attrs(record:)
+      attrs = record.attributes
+      # Ensure nothing is passed in the object_type field, since this is internal to Zizia
+      # and will eventually determine what type of object is created
+      attrs.delete(:object_type)
+      attrs.delete(:parent)
+      attrs
+    end
 
-      def create_for(record:)
-        Rails.logger.info "[zizia] Creating record: #{record.respond_to?(:title) ? record.title : record}."
+    def create_for(record:)
+      Rails.logger.info "[zizia] Creating record: #{record.respond_to?(:title) ? record.title : record}."
 
-        created = import_type(record).create(process_attrs(record: record))
+      created = import_type(record).create(process_attrs(record: record))
 
-        Rails.logger.info "[zizia] Record created at: #{created.id}"
-      end
+      Rails.logger.info "[zizia] Record created at: #{created.id}"
+    end
   end
 end

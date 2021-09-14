@@ -30,25 +30,25 @@ module Zizia
 
     private
 
-      def load_and_authorize_preview
-        @csv_import = CsvImport.new(create_params)
-        authorize! :create, @csv_import
-      end
+    def load_and_authorize_preview
+      @csv_import = CsvImport.new(create_params)
+      authorize! :create, @csv_import
+    end
 
-      def create_params
-        params.fetch(:csv_import, {}).permit(:manifest, :fedora_collection_id, :update_actor_stack)
-      end
+    def create_params
+      params.fetch(:csv_import, {}).permit(:manifest, :fedora_collection_id, :update_actor_stack)
+    end
 
-      # Since we are re-rendering the form (once for
-      # :new and again for :preview), we need to
-      # manually set the cache, otherwise the record
-      # will lose the manifest file between the preview
-      # and the record save.
-      def preserve_cache
-        return unless params['csv_import']
-        @csv_import.manifest_cache = params['csv_import']['manifest_cache']
-        @csv_import.fedora_collection_id = params['csv_import']['fedora_collection_id'] if params['csv_import']['fedora_collection_id'].present?
-        @csv_import.update_actor_stack = params['csv_import']['update_actor_stack']
-      end
+    # Since we are re-rendering the form (once for
+    # :new and again for :preview), we need to
+    # manually set the cache, otherwise the record
+    # will lose the manifest file between the preview
+    # and the record save.
+    def preserve_cache
+      return unless params['csv_import']
+      @csv_import.manifest_cache = params['csv_import']['manifest_cache']
+      @csv_import.fedora_collection_id = params['csv_import']['fedora_collection_id'] if params['csv_import']['fedora_collection_id'].present?
+      @csv_import.update_actor_stack = params['csv_import']['update_actor_stack']
+    end
   end
 end
