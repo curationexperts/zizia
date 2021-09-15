@@ -59,6 +59,8 @@ Layout/IndentationWidth:
   Exclude:
     - 'lib/zizia/**/*'
     - 'app/uploaders/zizia/*'
+    - 'app/controllers/zizia/*'
+    - 'app/lib/zizia/*'
 
 Metrics/PerceivedComplexity:
   Exclude:
