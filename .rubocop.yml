@@ -43,6 +43,9 @@ Metrics/CyclomaticComplexity:
 
 Layout:
   Enabled: false
+  Exclude:
+    - 'lib/zizia/hyrax/**/*'
+    - 'spec/uploaders/zizia/**/*'
 
 Metrics/MethodLength:
   Exclude:
