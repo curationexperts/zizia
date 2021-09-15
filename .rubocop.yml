@@ -55,6 +55,11 @@ Metrics/MethodLength:
     - lib/zizia/hyrax/hyrax_record_importer.rb
     - 'app/importers/modular_importer.rb'
 
+Layout/IndentationWidth:
+  Exclude:
+    - 'lib/zizia/**/*'
+    - 'app/uploaders/zizia/*'
+
 Metrics/PerceivedComplexity:
   Exclude:
     - lib/zizia/hyrax_record_importer.rb
