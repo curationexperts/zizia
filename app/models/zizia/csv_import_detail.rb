@@ -6,7 +6,7 @@ module Zizia
     after_initialize :set_defaults, unless: :persisted?
 
     belongs_to :csv_import
-    has_many :pre_ingest_works, dependent: :nil
+    has_many :pre_ingest_works, dependent: :destroy
     has_many :pre_ingest_files, through: :pre_ingest_works
 
     def status
