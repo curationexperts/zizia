@@ -9,7 +9,8 @@ module Zizia
   #
   # The fields provided by this mapper are the same as the properties defined in `Hyrax::CoreMetadata` and `Hyrax::BasicMetadata`.
   #
-  # @note This mapper allows you to set values for all the Hyrax fields, but depending on how you create the records, some of the values might get clobbered.  For example, if you use Hyrax's actor stack to create records, it might overwrite fields like `date_modified` or `depositor`.
+  # @note This mapper allows you to set values for all the Hyrax fields, but depending on how you create the records, some of the values might get clobbered.
+  # For example, if you use Hyrax's actor stack to create records, it might overwrite fields like `date_modified` or `depositor`.
   #
   # @see HashMapper Parent class for more info and examples.
   class HyraxBasicMetadataMapper < HashMapper
