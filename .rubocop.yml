@@ -22,8 +22,8 @@ Metrics/AbcSize:
   Exclude:
     - 'spec/support/hyrax/basic_metadata.rb'
     - 'lib/zizia/hyrax/hyrax_record_importer.rb'
-    - lib/zizia/importer.rb
-    - lib/zizia/hyrax/hyrax_metadata_only_updater.rb
+    - 'lib/zizia/importer.rb'
+    - 'lib/zizia/hyrax/hyrax_metadata_only_updater.rb'
     - 'app/importers/modular_importer.rb'
     - 'app/lib/zizia/metadata_details.rb'
 
@@ -41,7 +41,7 @@ Metrics/CyclomaticComplexity:
     - lib/zizia/hyrax/hyrax_basic_metadata_mapper.rb
     - lib/zizia/hyrax/hyrax_record_importer.rb
 
-Metrics/LineLength:
+Layout:
   Enabled: false
 
 Metrics/MethodLength:

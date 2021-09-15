@@ -98,7 +98,6 @@ module Zizia
     # @return [Enumerator<Error>]
     #
     def run_validation(parser:)
-      puts "\nhello, #{__method__}!\n"
       [].to_enum
     end
 
