@@ -36,7 +36,7 @@ module Zizia
       file.rewind
 
       CSV.parse(file.read, headers: true).each do |row|
-        yield InputRecord.from(metadata: row)
+        yield InputRecord.from(metadata: row) if row.detect { |x| !x.last.nil? }
       end
     rescue CSV::MalformedCSVError => e
       Rails.logger.error "[zizia] The file #{file} could not be parsed as CSV: #{e}"
