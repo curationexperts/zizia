@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Zizia
   class PreIngestWork < ::ApplicationRecord
-    has_many :pre_ingest_files
+    has_many :pre_ingest_files, dependent: :nil
 
     # Returns the title based on the deduplication_key if the work has been indexed to solr
     # @return [String] the work's title
