@@ -33,7 +33,8 @@ RSpec.describe 'viewing the csv import detail page', js: true do
   it 'displays the metadata when you visit the page' do
     visit ('/csv_import_details/index')
     expect(page).to have_content('ID')
-    click_on '13'
+    #click_on '13'
+    click_on '11'
     expect(page).to have_content('Status')
     expect(page).to have_content('Total Size')
     expect(page).to have_content('Deduplication Key')
