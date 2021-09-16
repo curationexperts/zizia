@@ -1,5 +1,13 @@
 # Changelog
 
+## [v6.4.0](https://github.com/curationexperts/zizia/tree/v6.4.0) (2021-09-16)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v6.3.0...v6.4.0)
+
+**Merged pull requests:**
+
+- Fixes some deprecation warnings, and allows import of CSV's with blank lines [\#124](https://github.com/curationexperts/zizia/pull/124) ([mlooney](https://github.com/mlooney))
+
 ## [v6.3.0](https://github.com/curationexperts/zizia/tree/v6.3.0) (2021-09-13)
 
 [Full Changelog](https://github.com/curationexperts/zizia/compare/v6.2.0...v6.3.0)
@@ -8,6 +16,7 @@
 
 - Add work to a collection if it is already created [\#122](https://github.com/curationexperts/zizia/pull/122) ([maxkadel](https://github.com/maxkadel))
 - Add parent column to csv [\#121](https://github.com/curationexperts/zizia/pull/121) ([maxkadel](https://github.com/maxkadel))
+- Add parent column to csv [\#120](https://github.com/curationexperts/zizia/pull/120) ([maxkadel](https://github.com/maxkadel))
 - Refactor validator to return correct header name [\#119](https://github.com/curationexperts/zizia/pull/119) ([maxkadel](https://github.com/maxkadel))
 
 ## [v6.2.0](https://github.com/curationexperts/zizia/tree/v6.2.0) (2021-09-07)
