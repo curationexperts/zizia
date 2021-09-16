@@ -159,6 +159,7 @@ module Zizia
 
       # Make sure this column contains only valid values
       def validate_values(header_name, valid_values_method)
+        puts "transformed headers: #{@transformed_headers}"
         column_number = @transformed_headers.find_index(header_name)
         return unless column_number
 
