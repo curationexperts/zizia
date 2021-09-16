@@ -60,7 +60,7 @@ module Zizia
       if csv_import_detail&.collection_id&.present?
         csv_import_detail.collection_id
       elsif record&.parent&.first
-        Collection.where(deduplication_key: "def/123")&.first&.id
+        Collection.where("#{deduplication_field}": record.parent.first)&.first&.id
       end
     end
 

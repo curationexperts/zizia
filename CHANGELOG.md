@@ -1,5 +1,21 @@
 # Changelog
 
+## [v6.4.1](https://github.com/curationexperts/zizia/tree/v6.4.1) (2021-09-16)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v6.4.0...v6.4.1)
+
+**Merged pull requests:**
+
+- Use deduplication field to find Collection [\#125](https://github.com/curationexperts/zizia/pull/125) ([maxkadel](https://github.com/maxkadel))
+
+## [v6.4.0](https://github.com/curationexperts/zizia/tree/v6.4.0) (2021-09-16)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v6.3.0...v6.4.0)
+
+**Merged pull requests:**
+
+- Fixes some deprecation warnings, and allows import of CSV's with blank lines [\#124](https://github.com/curationexperts/zizia/pull/124) ([mlooney](https://github.com/mlooney))
+
 ## [v6.3.0](https://github.com/curationexperts/zizia/tree/v6.3.0) (2021-09-13)
 
 [Full Changelog](https://github.com/curationexperts/zizia/compare/v6.2.0...v6.3.0)
@@ -8,6 +24,7 @@
 
 - Add work to a collection if it is already created [\#122](https://github.com/curationexperts/zizia/pull/122) ([maxkadel](https://github.com/maxkadel))
 - Add parent column to csv [\#121](https://github.com/curationexperts/zizia/pull/121) ([maxkadel](https://github.com/maxkadel))
+- Add parent column to csv [\#120](https://github.com/curationexperts/zizia/pull/120) ([maxkadel](https://github.com/maxkadel))
 - Refactor validator to return correct header name [\#119](https://github.com/curationexperts/zizia/pull/119) ([maxkadel](https://github.com/maxkadel))
 
 ## [v6.2.0](https://github.com/curationexperts/zizia/tree/v6.2.0) (2021-09-07)
@@ -247,7 +264,7 @@
 
 ## [v4.1.0.alpha.01](https://github.com/curationexperts/zizia/tree/v4.1.0.alpha.01) (2019-09-30)
 
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v4...v4.1.0.alpha.01)
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v4.0.2.alpha.01...v4.1.0.alpha.01)
 
 **Merged pull requests:**
 
@@ -255,13 +272,13 @@
 - Revert "Update coverage formatter for CI environments" [\#23](https://github.com/curationexperts/zizia/pull/23) ([mark-dce](https://github.com/mark-dce))
 - Update coverage formatter for CI environments [\#22](https://github.com/curationexperts/zizia/pull/22) ([mark-dce](https://github.com/mark-dce))
 
-## [v4](https://github.com/curationexperts/zizia/tree/v4) (2019-09-25)
-
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v4.0.2.alpha.01...v4)
-
 ## [v4.0.2.alpha.01](https://github.com/curationexperts/zizia/tree/v4.0.2.alpha.01) (2019-09-25)
 
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v4.0.0.alpha.01...v4.0.2.alpha.01)
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v4...v4.0.2.alpha.01)
+
+## [v4](https://github.com/curationexperts/zizia/tree/v4) (2019-09-25)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v4.0.0.alpha.01...v4)
 
 ## [v4.0.0.alpha.01](https://github.com/curationexperts/zizia/tree/v4.0.0.alpha.01) (2019-09-25)
 
@@ -343,19 +360,19 @@
 
 ## [v2.1.0.alpha.02](https://github.com/curationexperts/zizia/tree/v2.1.0.alpha.02) (2019-07-30)
 
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v2...v2.1.0.alpha.02)
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.1.0.alpha.01...v2.1.0.alpha.02)
 
 **Merged pull requests:**
 
 - Rename database migrations [\#6](https://github.com/curationexperts/zizia/pull/6) ([little9](https://github.com/little9))
 
-## [v2](https://github.com/curationexperts/zizia/tree/v2) (2019-07-29)
-
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.1.0.alpha.01...v2)
-
 ## [v2.1.0.alpha.01](https://github.com/curationexperts/zizia/tree/v2.1.0.alpha.01) (2019-07-29)
 
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.0.0.alpha.01...v2.1.0.alpha.01)
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v2...v2.1.0.alpha.01)
+
+## [v2](https://github.com/curationexperts/zizia/tree/v2) (2019-07-29)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.0.0.alpha.01...v2)
 
 **Merged pull requests:**
 
