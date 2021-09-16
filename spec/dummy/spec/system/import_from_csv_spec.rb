@@ -228,7 +228,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
       end
 
       context 'with an existing collection' do
-        let(:collection) { FactoryBot.build(:collection, title: ['Testing Collection'], deduplication_key: 'def/123') }
+        let(:collection) { FactoryBot.build(:collection, title: ['Testing Collection'], identifier: ['def/123']) }
         before do
           collection.save!
         end
@@ -245,7 +245,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
           expect(Work.count).to eq 1
           # Ensure that all the fields got assigned as expected
           work = Work.where(title: "*haberdashery*").first
-          expect(collection.deduplication_key).to eq 'def/123'
+          expect(collection.identifier&.first).to eq 'def/123'
           expect(work.member_of_collection_ids).to eq [collection.id]
         end
       end
