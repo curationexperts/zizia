@@ -32,12 +32,16 @@ module Zizia
     ##
     # @return [Enumerable<Symbol>] The fields the mapper can process.
     def fields
-      core_fields + basic_fields + [:visibility, :files] + zizia_fields
+      required_fields + basic_fields + [:visibility] + zizia_fields
     end
 
     def headers
       fields.map do |field|
-        Zizia::HyraxBasicMetadataMapper.csv_header(field)
+        if required_fields.include?(field)
+          Zizia::HyraxBasicMetadataMapper.csv_header(field.to_s + "*")
+        else
+          Zizia::HyraxBasicMetadataMapper.csv_header(field)
+        end
       end
     end
 
@@ -149,26 +153,27 @@ module Zizia
       # Hyrax expects to set these fields itself, and
       # sending a metadata value for these fields interferes with
       # Hyrax expected behavior.
-      def core_fields
-        [:title]
-      end
 
       # Properties defined in Hyrax::BasicMetadata
       # System related fields like :relative_path, and :import_url
       # are not included here because we don't expect users to directly
       # import them.
       def basic_fields
-        [:resource_type, :creator, :contributor,
-         :description, :keyword, :license,
-         :rights_statement, :publisher, :date_created,
+        [:resource_type, :contributor,
+         :description, :license,
+         :publisher, :date_created,
          :subject, :language, :identifier,
          :based_near, :related_url,
          :bibliographic_citation, :source]
       end
 
+      def required_fields
+        [:title, :creator, :keyword, :rights_statement, :files, :deduplication_key]
+      end
+
       # Properties requires for zizia
       def zizia_fields
-        [:deduplication_key, :object_type, :parent]
+        [:object_type, :parent]
       end
   end
 end

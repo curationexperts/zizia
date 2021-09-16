@@ -58,6 +58,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
         # There is a link so the user can cancel.
         expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
 
+        # will come back to this. it's the only field we check for. 
         expect(page).not_to have_content 'deduplication_key'
 
         # After reading the warnings, the user decides

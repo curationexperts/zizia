@@ -36,7 +36,7 @@ module Zizia
       end
 
       def create_params
-        params.fetch(:csv_import, {}).permit(:manifest, :fedora_collection_id, :update_actor_stack)
+        params.fetch(:csv_import, {}).permit(:manifest, :manifest_cache, :fedora_collection_id, :update_actor_stack)
       end
 
       # Since we are re-rendering the form (once for

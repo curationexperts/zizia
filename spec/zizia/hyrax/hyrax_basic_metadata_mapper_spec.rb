@@ -6,25 +6,26 @@ describe Zizia::HyraxBasicMetadataMapper do
   let(:mapper) { described_class.new }
 
   # Properties defined in Hyrax::CoreMetadata
-  let(:core_fields) do
-    [:title]
+  let(:required_fields) do
+    [:title, :creator, :keyword, :rights_statement, :deduplication_key, :files]
   end
 
   # Properties defined in Hyrax::BasicMetadata
   let(:basic_fields) do
-    [:resource_type, :creator, :contributor,
-     :description, :keyword, :license,
-     :rights_statement, :publisher, :date_created,
-     :subject, :language, :identifier, :based_near,
-     :related_url, :bibliographic_citation, :source]
+    [:resource_type, :contributor,
+     :description, :license,
+     :publisher, :date_created,
+     :subject, :language, :identifier,
+     :based_near, :related_url,
+     :bibliographic_citation, :source]
   end
 
   let(:tenejo_fields) do
-    [:visibility, :files]
+    [:visibility]
   end
 
   let(:zizia_fields) do
-    [:deduplication_key, :object_type, :parent]
+    [:object_type, :parent]
   end
 
   it_behaves_like 'a Zizia::Mapper' do
@@ -32,7 +33,7 @@ describe Zizia::HyraxBasicMetadataMapper do
       { title: ['A Title for a Record'],
         my_custom_field: ['This gets ignored'] }
     end
-    let(:expected_fields) { core_fields + basic_fields + tenejo_fields + zizia_fields }
+    let(:expected_fields) { required_fields + basic_fields + tenejo_fields + zizia_fields }
   end
 
   context 'with metadata, but some missing fields' do

@@ -31,13 +31,13 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
     end
 
     it "returns required headers based on the object type" do
-      expect(validator.required_headers).to eq(['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key'])
-      expect(validator.required_headers("w")).to eq(['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key'])
+      expect(validator.required_headers).to eq(['title', 'creator', 'keyword', 'rights_statement', 'visibility', 'files', 'deduplication_key'])
+      expect(validator.required_headers("w")).to eq(['title', 'creator', 'keyword', 'rights_statement', 'visibility', 'files', 'deduplication_key'])
       expect(validator.required_headers("c")).to eq(['title', 'visibility'])
     end
 
     it "returns different required column numbers based on the row" do
-      expect(validator.required_column_numbers(work_row)).to eq([1, 3, 6, 8, 18, 19, 20])
+      expect(validator.required_column_numbers(work_row)).to eq([1, 3, 6, 18, 19, 20])
       expect(validator.required_column_numbers(collection_row)).to eq([1, 18])
     end
   end
@@ -48,7 +48,7 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
     '
     end
     it "still gives required headers and their associated column numbers" do
-      expect(validator.required_headers).to eq(['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key'])
+      expect(validator.required_headers).to eq(['title', 'creator', 'keyword', 'rights_statement', 'visibility', 'files', 'deduplication_key'])
       expect(validator.required_column_numbers(work_row)).to eq([8, 7, 5, 6, 3, 9, 2])
     end
   end

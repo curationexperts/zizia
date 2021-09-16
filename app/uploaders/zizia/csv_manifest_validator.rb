@@ -59,6 +59,7 @@ module Zizia
     def parse_csv
       @rows = CSV.read(csv_file.path)
       @headers = @rows.first || []
+      @headers.each { |header| header.delete! '*' if /\*/.match?(header[-1]) }
       @transformed_headers = @headers.map { |header| header.downcase.strip }
     rescue
       @errors << 'We are unable to read this CSV file.'
@@ -72,16 +73,22 @@ module Zizia
     end
 
     def required_headers(object_type = "w")
+      # for rspec
+      # puts "object type is #{object_type}"
       if object_type == "c"
         ['title', 'visibility']
       else
-        ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key']
+        ['title', 'creator', 'keyword', 'rights_statement', 'visibility', 'files', 'deduplication_key']
       end
     end
 
     def duplicate_headers
       duplicates = []
       sorted_headers = @transformed_headers.sort
+
+      # for rspec
+      # puts "transformed headers: #{@transformed_headers}"
+
       sorted_headers.each_with_index do |x, i|
         duplicates << x if x == sorted_headers[i + 1]
       end
@@ -92,7 +99,7 @@ module Zizia
 
     # Warn the user if we find any unexpected headers.
     def unrecognized_headers
-      extra_headers = @transformed_headers - valid_headers
+      extra_headers = @transformed_headers - (valid_headers + required_headers)
       extra_headers.each do |header|
         @warnings << "The field name \"#{header}\" is not supported.  This field will be ignored, and the metadata for this field will not be imported."
       end
@@ -102,7 +109,7 @@ module Zizia
       @rows.each_with_index do |row, i|
         next if i.zero? # Skip the header row
         required_column_numbers(row).each_with_index do |required_column_number, j|
-          next unless row[required_column_number].blank?
+          next if row[required_column_number].present?
           @errors << "Missing required metadata in row #{i + 1}: \"#{required_headers(object_type(row))[j].titleize}\" field cannot be blank"
         end
       end
@@ -133,7 +140,7 @@ module Zizia
       end
 
       def invalid_rights_statement
-        validate_values('rights statement', :valid_rights_statements)
+        validate_values('rights_statement', :valid_rights_statements)
       end
 
       def invalid_object_type
