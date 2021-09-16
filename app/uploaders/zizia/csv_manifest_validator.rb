@@ -73,8 +73,6 @@ module Zizia
     end
 
     def required_headers(object_type = "w")
-      # for rspec
-      # puts "object type is #{object_type}"
       if object_type == "c"
         ['title', 'visibility']
       else
@@ -85,10 +83,6 @@ module Zizia
     def duplicate_headers
       duplicates = []
       sorted_headers = @transformed_headers.sort
-
-      # for rspec
-      # puts "transformed headers: #{@transformed_headers}"
-
       sorted_headers.each_with_index do |x, i|
         duplicates << x if x == sorted_headers[i + 1]
       end
