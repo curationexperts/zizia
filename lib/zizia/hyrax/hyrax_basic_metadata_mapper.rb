@@ -29,6 +29,7 @@ module Zizia
       object_type: 'object type'
     }.freeze
 
+
     ##
     # @return [Enumerable<Symbol>] The fields the mapper can process.
     def fields

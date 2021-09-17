@@ -59,13 +59,14 @@ module Zizia
     def parse_csv
       @rows = CSV.read(csv_file.path)
       @headers = @rows.first || []
-      @headers.each { |header| header.delete! '*' if /\*/.match?(header[-1]) }
-      @transformed_headers = @headers.map { |header| header.downcase.strip }
+      @stripped_headers = @headers.map { |header| header.downcase.strip }
+      @transformed_headers = @stripped_headers.each { |header| header.delete!('*') if /\*/.match?(header[-1]) }
     rescue
       @errors << 'We are unable to read this CSV file.'
     end
 
     def missing_headers
+      puts "\n\ntransformed_headers: #{@transformed_headers}\n"
       required_headers.each do |header|
         next if @transformed_headers.include?(header)
         @errors << "Missing required column: \"#{header.titleize}\".  Your spreadsheet must have this column."
