@@ -247,6 +247,13 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
           work = Work.where(title: "*haberdashery*").first
           expect(collection.identifier&.first).to eq 'def/123'
           expect(work.member_of_collection_ids).to eq [collection.id]
+
+          visit "csv_import_details/show/#{Zizia::CsvImportDetail.last.id}"
+          within('#works-table') do
+            expect(page).to have_content('Files')
+            expect(page).to have_content('Collection Title')
+            expect(page).to have_content('Testing Collection')
+          end
         end
       end
     end

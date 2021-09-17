@@ -19,6 +19,7 @@ class ModularImporter
     file = File.open(@csv_file)
 
     @csv_import.save
+
     csv_import_detail = Zizia::CsvImportDetail.find_or_create_by(csv_import_id: @csv_import.id)
     csv_import_detail.collection_id = @collection_id
     csv_import_detail.depositor_id = @user_id
@@ -26,7 +27,6 @@ class ModularImporter
     csv_import_detail.deduplication_field = DEDUPLICATION_FIELD
     csv_import_detail.update_actor_stack = @csv_import.update_actor_stack
     csv_import_detail.save
-
     attrs = {
       csv_import_detail: csv_import_detail
     }
@@ -38,6 +38,7 @@ class ModularImporter
     importer.records.each_with_index do |record, index|
       pre_ingest_work = Zizia::PreIngestWork.find_or_create_by(deduplication_key: record.mapper.metadata['deduplication_key'])
       pre_ingest_work.csv_import_detail_id = csv_import_detail.id
+      pre_ingest_work.collection_id = find_collection_id(csv_import_detail: csv_import_detail, record: record)
       record.mapper.files.each do |child_file|
         begin
           full_path = Dir.glob("#{ENV['IMPORT_PATH']}/**/#{child_file}").first
@@ -56,5 +57,13 @@ class ModularImporter
     csv_import_detail.save
     importer.import
     file.close
+  end
+
+  def find_collection_id(csv_import_detail:, record:)
+    if csv_import_detail&.collection_id&.present?
+      csv_import_detail.collection_id
+    elsif record&.parent&.first
+      Collection.where("#{csv_import_detail.deduplication_field}": record.parent.first)&.first&.id
+    end
   end
 end
