@@ -1,33 +1,21 @@
-<div class="pre-ingest-file-table">
-  <a class="btn btn-primary" data-toggle="collapse" href="#files-table-<%= pre_ingest_work.id %>" role="button" aria-expanded="false" aria-controls="files-table-<%= pre_ingest_work.id %>">
-    View Files
-  </a>
-  <table id="files-table-<%= pre_ingest_work.id %>" class="responsive collapse nowrap table table-striped works-list">
-    <tr>
-      <th>Filename</th>
-      <th>Size</th>
-      <th>Row Number</th>
-      <th>Date Created</th>
-      <th>Status</th>
-    </tr>
-    <% pre_ingest_work.pre_ingest_files.each do |pre_ingest_file| %>
-      <tr>
-        <td>
-          <%= pre_ingest_file.basename %>
-        </td>
-        <td>
-          <%= number_to_human_size(pre_ingest_file.size) %>
-        </td>
-        <td>
-          <%= pre_ingest_file.row_number %>
-        </td>
-        <td>
-          <%= pre_ingest_file.created_at.strftime("%B %-d, %Y %H:%M") %>
-        </td>
-        <td>
-          <%= status_icon(pre_ingest_file.status) %>
-        </td>
-      </tr>
-    <% end %>
-  </table>
-</div>
+<% pre_ingest_work.pre_ingest_files.each do |pre_ingest_file| %>
+
+  <tr id="files-row-<%= pre_ingest_file.id %>" class="pre-ingest-file parent-work-<%= pre_ingest_work.id %> responsive collapse nowrap table table-stripedcollapse works-list">
+
+    <td class="type">F</td>
+    <td>--</td>
+    <td>
+      <%= pre_ingest_file.basename %>
+    </td>
+    <td>
+      <div class="progress">
+        <div class="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: 33%" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">33%</div>
+      </div>
+    </td>
+    <td>
+      <%= status_badge(pre_ingest_file.status) %>
+    </td>
+
+
+  </tr>
+<% end %>

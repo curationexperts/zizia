@@ -36,5 +36,19 @@ module Zizia
       return "<span class='glyphicon glyphicon-ok-sign text-success' aria-label='Status: Complete'></span>".html_safe if status == 'attached'
       "<span class='glyphicon glyphicon-question-sign' aria-label='Status: Unknown'></span>".html_safe
     end
+
+    def status_badge(status)
+      # rubocop:disable Rails/OutputSafety
+      return "<span class='label label-success' aria-label='Status: Complete'>Complete</span>".html_safe if status == 'attached'
+      "<span class='label label-warning' aria-label='Status: Unknown'>Unknown</span>".html_safe
+    end
+
+    def percent_complete()
+      "#{rand(101)}%"
+
+
+    end
+    
+    
   end
 end

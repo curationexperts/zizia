@@ -1,5 +1,9 @@
+breadcrumbs go here
+
+
 <h3>CSV Imports</h3>
 <%= render 'toggle_my_imports' %>
+<span>Filter goes here</span>
 <table class="table table-striped">
   <tr>
     <th><%= sortable 'id', 'ID' %></th>
@@ -24,7 +28,7 @@
         <%= csv_import_detail.created_at.strftime("%B %-d, %Y %H:%M") %>
       </td>
       <td>
-        <%= File.basename(csv_import_detail.csv_import.manifest.to_s) %>
+        <%= link_to File.basename(csv_import_detail.csv_import.manifest.to_s), url_for(csv_import_detail) %>
       </td>
       <td>
         <%= csv_import_detail.pre_ingest_works.count  %>

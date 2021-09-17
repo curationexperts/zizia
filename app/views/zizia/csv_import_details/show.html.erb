@@ -1,40 +1,66 @@
 <div>
+  breadcrumbs goe here
   <h3>About the Import:</h3>
   <ul>
-    <li>Import created by: <%= User.find(@csv_import_detail.csv_import.user_id) %>
+    <li>
+      Import created by:
+      <%= User.find(@csv_import_detail.csv_import.user_id) %>
     </li>
-    <li>CSV File: <%= @csv_import_detail.csv_import.manifest %></li>
-    <li>Total Size: <%= number_to_human_size(@csv_import_detail.total_size) %></li>
+    <li>
+      CSV File:
+      <%= @csv_import_detail.csv_import.manifest %>
+    </li>
+    <li>
+      Total Size:
+      <%= number_to_human_size(@csv_import_detail.total_size) %>
+    </li>
+    <li>
+      Overwrite Behavior Type:
+      <%= human_update_actor_stack(@csv_import_detail.update_actor_stack) %>
+    </li>
   </ul>
 
   <h3>Works & Files</h3>
 
   <table id="works-table" class="table works-list">
-    <tr>
-      <th>Deduplication Key</th>
-      <th>Title</th>
-      <th>Files</th>
-      <th>Date</th>
-    </tr>
-  <% @pre_ingest_works.each do |pre_ingest_work| %>
-    <tr>
-      <td>
-        <%= pre_ingest_work.deduplication_key%>
-      </td>
-      <td>
-        <%= pre_ingest_work.title %>
-      </td>
-      <td>
+    <thead>
+      <tr>
+        <th width="5%">Type</th>
+        <th width="8%">Identifier</th>
+        <th width="70%">Title</th>
+        <th width="10%">Progress</th>
+        <th width="7%">Status</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <% @pre_ingest_works.each do |pre_ingest_work| %>
+        <tr class="pre-ingest-work">
+          <td class="type">W</td>
+          <td>
+            <%= pre_ingest_work.deduplication_key%>
+          </td>
+          <td>
+            <%= pre_ingest_work.title %>
+            <br/>
+            <span class="pre-ingest-file-table">
+              <a data-toggle="collapse" data-target=".parent-work-<%= pre_ingest_work.id %>" role="button" aria-expanded="false" aria-controls="files-row-<%= pre_ingest_work.id %>">
+                View Children (<%= pre_ingest_work.pre_ingest_files.count %>)
+              </a>
+            </span>
+          </td>
+          <td>
+            <div class="progress" >
+              <div class="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: <%= rand(101) %>%" aria-valuenow="<%= percent_complete  %>" aria-valuemin="0" aria-valuemax="100"><%= percent_complete  %></div>
+            </div>
+          </td>
+          <td>
+            <%= status_badge(pre_ingest_work.status) %>
+          </td>
+
+        </tr>
         <%= render 'pre_ingest_files_table', pre_ingest_work: pre_ingest_work %>
-      </td>
-      <td>
-        <%= pre_ingest_work.created_at.strftime("%B %-d, %Y %H:%M") %>
-      </td>
-      <td>
-        <%= status_icon(pre_ingest_work.status) %>
-      </td>
-    </tr>
-  <% end %>
+      <% end %>
+    </tbody>
+    <%= paginate @pre_ingest_works %>
   </table>
-  <%= paginate @pre_ingest_works %>
-</div>
