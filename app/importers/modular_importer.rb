@@ -27,7 +27,7 @@ class ModularImporter
     csv_import_detail.deduplication_field = DEDUPLICATION_FIELD
     csv_import_detail.update_actor_stack = @csv_import.update_actor_stack
     csv_import_detail.save
-    
+
     attrs = {
       csv_import_detail: csv_import_detail
     }
