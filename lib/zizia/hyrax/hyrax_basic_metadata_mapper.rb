@@ -29,7 +29,6 @@ module Zizia
       object_type: 'object type'
     }.freeze
 
-
     ##
     # @return [Enumerable<Symbol>] The fields the mapper can process.
     def fields
@@ -133,7 +132,7 @@ module Zizia
 
       # Some fields should have single values instead
       # of array values.
-    
+
       # remove asterisk from csv header row, if present
       def header_cleaner(header)
         return if header.nil?
