@@ -133,8 +133,16 @@ module Zizia
 
       # Some fields should have single values instead
       # of array values.
+    
+      # remove asterisk from csv header row, if present
+      def header_cleaner(header)
+        return if header.nil?
+        header.delete '*' if /\*/.match?(header[-1]) || header
+      end
+
       def single_value(field_name)
-        metadata[matching_header(field_name)]
+        clean_header = header_cleaner(field_name)
+        metadata[matching_header(clean_header)]
       end
 
       # Lenient matching for headers.
@@ -142,9 +150,11 @@ module Zizia
       #   'Title' or 'TITLE' or 'Title  '
       # it should match the :title field.
       def matching_header(field_name)
+        clean_header = header_cleaner(field_name)
         metadata.keys.find do |key|
-          next unless key
-          key.downcase.strip == field_name
+          clean_key = header_cleaner(key)
+          next unless clean_key
+          clean_key.downcase.strip == clean_header
         end
       end
 
