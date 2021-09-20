@@ -13,10 +13,20 @@ module Zizia
       'This work\'s metadata has not been indexed yet.'
     end
 
+    def collection
+      @collection ||= Collection.find(collection_id) if collection_id
+    end
+
     def collection_title
-      Collection.find(collection_id).title.first if collection_id
+      collection.title.first if collection_id
     rescue Ldp::Gone
       "The associated collection has been deleted."
+    end
+
+    def collection_identifier
+      collection.identifier.first if collection_id
+    rescue Ldp::Gone
+      "deleted"
     end
   end
 end
