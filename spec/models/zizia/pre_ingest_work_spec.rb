@@ -30,4 +30,14 @@ RSpec.describe Zizia::PreIngestWork, clean: true do
     expect(pre_ingest_work_indexed.title).to eq('A Nice Title')
     expect(pre_ingest_work_indexed.collection_title).to be nil
   end
+
+  context 'when the associated collection has been deleted' do
+    before do
+      Collection.all.destroy_all
+    end
+    it 'returns that the collection has been deleted or not created' do
+      expect(Collection.count).to eq 0
+      expect(pre_ingest_work.collection_title).to eq("The associated collection has been deleted or not created yet")
+    end
+  end
 end
