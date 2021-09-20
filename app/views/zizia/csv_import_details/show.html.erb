@@ -11,6 +11,8 @@
 
   <table id="works-table" class="table works-list">
     <tr>
+      <th>Collection ID</th>
+      <th>Collection Title</th>
       <th>Deduplication Key</th>
       <th>Title</th>
       <th>Files</th>
@@ -18,6 +20,12 @@
     </tr>
   <% @pre_ingest_works.each do |pre_ingest_work| %>
     <tr>
+      <td>
+        <%= pre_ingest_work&.collection_id %>
+      </td>
+      <td>
+        <%= pre_ingest_work.collection_title %>
+      </td>
       <td>
         <%= pre_ingest_work.deduplication_key%>
       </td>
