@@ -16,7 +16,7 @@ module Zizia
     def collection_title
       Collection.find(collection_id).title.first if collection_id
     rescue Ldp::Gone
-      "The associated collection has been deleted or not created yet"
+      "The associated collection has been deleted."
     end
   end
 end

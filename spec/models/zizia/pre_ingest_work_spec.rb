@@ -35,9 +35,9 @@ RSpec.describe Zizia::PreIngestWork, clean: true do
     before do
       Collection.all.destroy_all
     end
-    it 'returns that the collection has been deleted or not created' do
+    it 'returns that the collection has been deleted' do
       expect(Collection.count).to eq 0
-      expect(pre_ingest_work.collection_title).to eq("The associated collection has been deleted or not created yet")
+      expect(pre_ingest_work.collection_title).to eq("The associated collection has been deleted.")
     end
   end
 end
