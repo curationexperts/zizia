@@ -8,7 +8,6 @@ RSpec.describe Zizia::PreIngestWork, clean: true do
   let(:work) { Work.new(title: ['A Nice Title'], deduplication_key: '43') }
 
   before do
-    # collection.save
     work.member_of_collections = [collection]
     work.save
   end
