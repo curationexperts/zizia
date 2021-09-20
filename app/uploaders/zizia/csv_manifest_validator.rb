@@ -57,7 +57,7 @@ module Zizia
     end
 
     def parse_csv
-      @rows = CSV.read(csv_file.path)
+      @rows = CSV.read(csv_file.path).reject { |x| x.empty? || x.all?(nil) }
       @headers = @rows.first || []
       @transformed_headers = @headers.map { |header| header.downcase.strip }
     rescue
