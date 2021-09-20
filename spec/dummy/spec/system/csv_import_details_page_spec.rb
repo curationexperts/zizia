@@ -30,6 +30,25 @@ RSpec.describe 'viewing the csv import detail page', js: true do
     login_as user
   end
 
+  it 'includes breadcrumbs on the index page' do
+    visit('/csv_import_details/index')
+    within('.breadcrumb') do
+      expect(page).to have_link('Home')
+      expect(page).to have_link('Dashboard')
+      expect(page).to have_content('Batch Operations - Status')
+    end
+  end
+
+  it 'includes breadcrumbs on the individual job page' do
+    visit('/csv_import_details/show/12')
+    within('.breadcrumb') do
+      expect(page).to have_link('Home')
+      expect(page).to have_link('Dashboard')
+      expect(page).to have_link('Batch Operations - Status')
+      expect(page).to have_content('Job 12')
+    end
+  end
+
   it 'displays the metadata when you visit the page' do
     visit ('/csv_import_details/index')
     expect(page).to have_content('ID')

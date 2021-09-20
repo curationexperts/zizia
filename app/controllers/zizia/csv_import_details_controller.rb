@@ -6,6 +6,9 @@ module Zizia
     with_themed_layout 'dashboard'
 
     def index
+      add_breadcrumb t(:'hyrax.controls.home'), root_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb 'Batch Operations - Status', '/csv_import_details/index'
       @csv_import_details = if csv_import_detail_params[:user] && user_id
                               Zizia::CsvImportDetail
                                 .order("#{sort_column} #{sort_direction}, id DESC")
@@ -17,6 +20,10 @@ module Zizia
     end
 
     def show
+      add_breadcrumb t(:'hyrax.controls.home'), root_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb 'Batch Operations - Status', '/csv_import_details/index'
+      add_breadcrumb "Job #{csv_import_detail_params[:id]}", "/csv_import_details/show/#{csv_import_detail_params[:id]}"
       @csv_import_detail = Zizia::CsvImportDetail
                            .find(csv_import_detail_params[:id])
       @pre_ingest_works = Kaminari.paginate_array(@csv_import_detail.pre_ingest_works, total_count: @csv_import_detail.pre_ingest_works.count).page(csv_import_detail_params[:page]).per(10)
