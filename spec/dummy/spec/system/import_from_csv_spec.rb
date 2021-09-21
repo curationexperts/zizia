@@ -103,8 +103,9 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
           visit "csv_import_details/show/#{Zizia::CsvImportDetail.last.id}"
           within('#works-table') do
             expect(page).to have_content('Files')
-            expect(page).to have_content('Collection Title')
             expect(page).to have_content('Collection of Zuccini')
+            expect(page).to have_content('Collection Identifier')
+            expect(page).to have_content('def/123')
           end
         end
       end
