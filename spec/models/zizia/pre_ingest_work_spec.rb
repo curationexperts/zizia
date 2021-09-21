@@ -19,7 +19,19 @@ RSpec.describe Zizia::PreIngestWork, clean: true do
   it 'has collection_ids' do
     expect(work.member_of_collection_ids).to eq [collection.id]
     expect(pre_ingest_work.collection_id).to eq collection.id
+    expect(pre_ingest_work.collection_identifier).to eq collection.identifier.first
     expect(pre_ingest_work.collection_title).to eq 'Testing Collection'
+  end
+
+  it 'only looks up the collection once to return both title and identifier' do
+    notifier = class_double("Collection")
+               .as_stubbed_const(transfer_nested_constants: true)
+    # rubocop: disable RSpec/MessageSpies
+    expect(notifier).to receive(:find).with(collection.id).and_return(collection)
+    pre_ingest_work.collection_id
+    pre_ingest_work.collection_identifier
+    pre_ingest_work.collection_title
+    # rubocop: enable RSpec/MessageSpies
   end
 
   it 'can return that metadata has not been indexed yet' do
@@ -38,6 +50,7 @@ RSpec.describe Zizia::PreIngestWork, clean: true do
     it 'returns that the collection has been deleted' do
       expect(Collection.count).to eq 0
       expect(pre_ingest_work.collection_title).to eq("The associated collection has been deleted.")
+      expect(pre_ingest_work.collection_identifier).to eq('deleted')
     end
   end
 end

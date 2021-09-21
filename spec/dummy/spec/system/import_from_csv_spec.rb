@@ -253,6 +253,8 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
             expect(page).to have_content('Files')
             expect(page).to have_content('Collection Title')
             expect(page).to have_content('Testing Collection')
+            expect(page).to have_content('Collection Identifier')
+            expect(page).to have_content('def/123')
           end
         end
       end
