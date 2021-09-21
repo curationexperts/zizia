@@ -42,207 +42,59 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
     context 'using the new UI' do
       before do
         test_strategy.switch!(:new_zizia_ui, true)
-        Collection.destroy_all
-        Work.destroy_all
       end
 
-      it 'starts the import' do
+      it 'creates a collection and a work via the UI' do
         visit '/csv_imports/new'
-        expect(page).not_to have_content 'Testing Collection'
-        expect(page).not_to have_content '["Testing Collection"]'
-
         # Fill in and submit the form
-        select 'Update Existing Metadata, create new works', from: "csv_import[update_actor_stack]"
-        attach_file('csv_import[manifest]', csv_file, make_visible: true)
+        expect do
+          select 'Update Existing Metadata, create new works', from: "csv_import[update_actor_stack]"
+          attach_file('csv_import[manifest]', csv_file, make_visible: true)
 
-        expect(page).to have_content('You sucessfully uploaded this CSV: all_fields.csv')
+          expect(page).to have_content('You sucessfully uploaded this CSV: all_fields.csv')
 
-        click_on 'Preview Import'
+          click_on 'Preview Import'
 
-        expect(page).to have_content 'This import will process 2 row(s).'
+          expect(page).to have_content 'This import will process 2 row(s).'
 
-        # There is a link so the user can cancel.
-        expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
+          # There is a link so the user can cancel.
+          expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
 
-        expect(page).not_to have_content('The field name "parent" is not supported.')
-        expect(page).not_to have_content('The field name "object type" is not supported.')
+          expect(page).not_to have_content('The field name "parent" is not supported.')
+          expect(page).not_to have_content('The field name "object type" is not supported.')
 
-        # After reading the warnings, the user decides
-        # to continue with the import.
-        click_on 'Start Import'
+          # After reading the warnings, the user decides
+          # to continue with the import.
+          click_on 'Start Import'
+        end.to change { Work.count }.by(1)
+            .and change { Collection.count }.by(1)
 
         # The show page for the CsvImport
         expect(page).to have_content 'all_fields.csv'
         expect(page).to have_content 'Start time'
 
-        expect(Work.count).to eq 1
-        expect(Collection.count).to eq 1
-
         # Ensure that all the fields got assigned as expected
-        work = Work.where(title: "*haberdashery*").first
-        expect(work.title.first).to match(/haberdashery/)
-
-        # Ensure location (a.k.a. based_near) gets turned into a controlled vocabulary term
-        expect(work.based_near.first.class).to eq Hyrax::ControlledVocabularies::Location
-
-        # It sets the date_uploaded field
-        expect(work.date_uploaded.class).to eq DateTime
-
-        # Ensure visibility gets turned into expected Hyrax values (e.g., 'PUBlic' becomes 'open')
-        expect(work.visibility).to eq 'open'
-
-        # Ensure work is being added to the collection as expected
-        # expect(work.member_of_collection_ids).to eq [collection.id]
-
-        visit "/concern/works/#{work.id}"
-        expect(page).to have_content work.title.first
-        # Controlled vocabulary location should have been resolved to its label name
-        expect(page).to have_content "Los Angeles"
-
-        # The license value resolves to a controlled field from creative commons
-        expect(page).to have_link "Attribution 4.0"
-
-
-        # Updating
-
-        visit '/csv_imports/new'
-        select 'Update Existing Metadata, create new works', from: "csv_import[update_actor_stack]"
-
-        # Fill in and submit the form
-        attach_file('csv_import[manifest]', csv_metadata_update_file, make_visible: true)
-
-        click_on 'Preview Import'
-
-        expect(page).to have_content 'This import will process 1 row(s).'
-        # There is a link so the user can cancel.
-        expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
-
-        # After reading the warnings, the user decides
-        # to continue with the import.
-        click_on 'Start Import'
-
-        # The show page for the CsvImport
-        expect(page).to have_content 'all_fields_metadata_update.csv'
-        expect(page).to have_content 'Start time'
-
-        # Let the background jobs run, and check that the expected number of records got created.
-        expect(Work.count).to eq 1
-
-        # Ensure that all the fields got assigned as expected
-        work = Work.where(title: "*haberdashery*").first
-        expect(work.title.first).to match(/Exterior/)
-        expect(work.file_sets.first.label).to eq('dog.jpg')
-
-        # The show page for the CsvImport
-        expect(page).to have_content 'all_fields_metadata_update.csv'
-        expect(page).to have_content 'Start time'
-
-        # Let the background jobs run, and check that the expected number of records got created.
-        expect(Work.count).to eq 1
-
-        # Ensure that all the fields got assigned as expected
-        work = Work.where(title: "*haberdashery*").first
-        expect(work.title.first).to match(/Exterior/)
-        expect(work.file_sets.first.label).to eq('dog.jpg')
-
-
-        # Update only new records
-
-        visit '/csv_imports/new'
-
-        select 'Ignore Existing Works, new works only', from: 'csv_import[update_actor_stack]'
-        # Fill in and submit the form
-        attach_file('csv_import[manifest]', csv_only_new_file, make_visible: true)
-
-        click_on 'Preview Import'
-
-        expect(page).to have_content 'This import will process 2 row(s).'
-
-        # There is a link so the user can cancel.
-        expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
-
-
-        # After reading the warnings, the user decides
-        # to continue with the import.
-        click_on 'Start Import'
-
-        # The show page for the CsvImport
-        expect(page).to have_content 'all_fields_only_new.csv'
-        expect(page).to have_content 'Start time'
-
-        # Let the background jobs run, and check that the expected number of records got created.
-        expect(Work.count).to eq 2
-
-        # Ensure that all the fields got assigned as expected
-        work = Work.where(title: "*haberdashery*").first
-        expect(work.title.first).to match(/Exterior/)
-        expect(work.file_sets.first.label).to eq('dog.jpg')
-
-        # Ensure that all the fields got assigned as expected
-        work = Work.where(title: "*patisserie*").first
-        expect(work.title.first).to match(/Interior/)
-        expect(work.file_sets.first.label).to eq('cat.jpg')
-
-
-        # Update complete
-
-        visit '/csv_imports/new'
-
-        select 'Overwrite All Files & Metadata', from: 'csv_import[update_actor_stack]'
-        # Fill in and submit the form
-        attach_file('csv_import[manifest]', csv_complete_update_file, make_visible: true)
-
-        click_on 'Preview Import'
-
-        expect(page).to have_content 'This import will process 1 row(s).'
-        # There is a link so the user can cancel.
-        expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
-
-        # After reading the warnings, the user decides
-        # to continue with the import.
-        click_on 'Start Import'
-
-        # The show page for the CsvImport
-        expect(page).to have_content 'all_fields_complete_update.csv'
-        expect(page).to have_content 'Start time'
-
-        # Let the background jobs run, and check that the expected number of records got created.
-        expect(Work.count).to eq 2
-
-        # Ensure that all the fields got assigned as expected
-        work = Work.where(title: "*haberdashery*").first
-        expect(work.title.first).to match(/Interior/)
-        expect(work.file_sets.first.label).to eq('cat.jpg')
-
-        # Viewing additional details after an import
-        visit "/csv_import_details/index"
-        expect(page).to have_content('Total Size')
-        click_on '4'
-        click_on 'View Files'
-        expect(page).to have_content('dog.jpg')
-        expect(page).to have_content('cat.jpg')
-        expect(page).to have_content('5.74 MB')
-        expect(page).to have_content('abc/123')
-        expect(page).to have_content('haberdashery')
-        expect(page).to have_content('Date Created')
+        work_one = Work.where(title: "*haberdashery*").first
+        expect(work_one.title.first).to match(/haberdashery/)
       end
 
       context 'with an existing collection' do
-        let(:collection) { FactoryBot.build(:collection, title: ['Testing Collection'], identifier: ['def/123']) }
+        let(:collection) { FactoryBot.build(:collection, title: ['Collection of Zuccini'], identifier: ['def/123']) }
         before do
           collection.save!
         end
 
         it 'adds the work to the parent collection' do
-          visit '/csv_imports/new'
-          select 'Update Existing Metadata, create new works', from: "csv_import[update_actor_stack]"
-
-          attach_file('csv_import[manifest]', csv_file, make_visible: true)
-          click_on 'Preview Import'
-          click_on 'Start Import'
-
           # Let the background jobs run, and check that the expected number of records got created.
-          expect(Work.count).to eq 1
+          expect do
+            visit '/csv_imports/new'
+            select 'Update Existing Metadata, create new works', from: "csv_import[update_actor_stack]"
+
+            attach_file('csv_import[manifest]', csv_file, make_visible: true)
+            click_on 'Preview Import'
+            click_on 'Start Import'
+          end.to change { Work.count }.by(1)
+
           # Ensure that all the fields got assigned as expected
           work = Work.where(title: "*haberdashery*").first
           expect(collection.identifier&.first).to eq 'def/123'
@@ -252,7 +104,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
           within('#works-table') do
             expect(page).to have_content('Files')
             expect(page).to have_content('Collection Title')
-            expect(page).to have_content('Testing Collection')
+            expect(page).to have_content('Collection of Zuccini')
           end
         end
       end
@@ -267,60 +119,59 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
       end
 
       it 'starts the import' do
-        visit '/csv_imports/new'
-        expect(page).to have_content 'Testing Collection'
-        expect(page).not_to have_content '["Testing Collection"]'
-
-        # Fill in and submit the form
-        select 'Testing Collection', from: "csv_import[fedora_collection_id]"
-        select 'Update Existing Metadata, create new works', from: "csv_import[update_actor_stack]"
-        attach_file('csv_import[manifest]', csv_file, make_visible: true)
-
-        expect(page).to have_content('You sucessfully uploaded this CSV: all_fields.csv')
-
-        click_on 'Preview Import'
-
-        # We expect to see the title of the collection on the page
-        expect(page).to have_content 'Testing Collection'
-
-        expect(page).to have_content 'This import will process 2 row(s).'
-
-        # There is a link so the user can cancel.
-        expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
-
-        # After reading the warnings, the user decides
-        # to continue with the import.
-        click_on 'Start Import'
-
-        # The show page for the CsvImport
-        expect(page).to have_content 'all_fields.csv'
-        expect(page).to have_content 'Start time'
-
-        # We expect to see the title of the collection on the page
-        expect(page).to have_content 'Testing Collection'
-
-        # TO-DO: Determine how to get the background jobs working with the dummy
         # Let the background jobs run, and check that the expected number of records got created.
-        expect(Work.count).to eq 1
+        expect do
+          visit '/csv_imports/new'
+          expect(page).to have_content 'Testing Collection'
+          expect(page).not_to have_content '["Testing Collection"]'
+
+          # Fill in and submit the form
+          select 'Testing Collection', from: "csv_import[fedora_collection_id]"
+          select 'Update Existing Metadata, create new works', from: "csv_import[update_actor_stack]"
+          attach_file('csv_import[manifest]', csv_file, make_visible: true)
+
+          expect(page).to have_content('You sucessfully uploaded this CSV: all_fields.csv')
+
+          click_on 'Preview Import'
+
+          # We expect to see the title of the collection on the page
+          expect(page).to have_content 'Testing Collection'
+
+          expect(page).to have_content 'This import will process 2 row(s).'
+
+          # There is a link so the user can cancel.
+          expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
+
+          # After reading the warnings, the user decides
+          # to continue with the import.
+          click_on 'Start Import'
+
+          # The show page for the CsvImport
+          expect(page).to have_content 'all_fields.csv'
+          expect(page).to have_content 'Start time'
+
+          # We expect to see the title of the collection on the page
+          expect(page).to have_content 'Testing Collection'
+        end.to change { Work.count }.by(1)
 
         # Ensure that all the fields got assigned as expected
-        work = Work.where(title: "*haberdashery*").first
-        expect(work.title.first).to match(/haberdashery/)
+        work_one = Work.where(title: "*haberdashery*").first
+        expect(work_one.title.first).to match(/haberdashery/)
 
         # Ensure location (a.k.a. based_near) gets turned into a controlled vocabulary term
-        expect(work.based_near.first.class).to eq Hyrax::ControlledVocabularies::Location
+        expect(work_one.based_near.first.class).to eq Hyrax::ControlledVocabularies::Location
 
         # It sets the date_uploaded field
-        expect(work.date_uploaded.class).to eq DateTime
+        expect(work_one.date_uploaded.class).to eq DateTime
 
         # Ensure visibility gets turned into expected Hyrax values (e.g., 'PUBlic' becomes 'open')
-        expect(work.visibility).to eq 'open'
+        expect(work_one.visibility).to eq 'open'
 
         # Ensure work is being added to the collection as expected
-        expect(work.member_of_collection_ids).to eq [collection.id]
+        expect(work_one.member_of_collection_ids).to eq [collection.id]
 
-        visit "/concern/works/#{work.id}"
-        expect(page).to have_content work.title.first
+        visit "/concern/works/#{work_one.id}"
+        expect(page).to have_content work_one.title.first
         # Controlled vocabulary location should have been resolved to its label name
         expect(page).to have_content "Los Angeles"
 
@@ -329,29 +180,31 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
 
 
         # Updating
+        # Let the background jobs run, and check that a new work was not created, but that the existing work
+        # was updated
+        expect do
+          visit '/csv_imports/new'
+          expect(page).to have_content 'Testing Collection'
+          expect(page).not_to have_content '["Testing Collection"]'
+          select 'Testing Collection', from: "csv_import[fedora_collection_id]"
+          select 'Update Existing Metadata, create new works', from: "csv_import[update_actor_stack]"
 
-        visit '/csv_imports/new'
-        expect(page).to have_content 'Testing Collection'
-        expect(page).not_to have_content '["Testing Collection"]'
-        select 'Testing Collection', from: "csv_import[fedora_collection_id]"
-        select 'Update Existing Metadata, create new works', from: "csv_import[update_actor_stack]"
+          # Fill in and submit the form
+          attach_file('csv_import[manifest]', csv_metadata_update_file, make_visible: true)
 
-        # Fill in and submit the form
-        attach_file('csv_import[manifest]', csv_metadata_update_file, make_visible: true)
+          click_on 'Preview Import'
 
-        click_on 'Preview Import'
+          # We expect to see the title of the collection on the page
+          expect(page).to have_content 'Testing Collection'
 
-        # We expect to see the title of the collection on the page
-        expect(page).to have_content 'Testing Collection'
+          expect(page).to have_content 'This import will process 1 row(s).'
+          # There is a link so the user can cancel.
+          expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
 
-        expect(page).to have_content 'This import will process 1 row(s).'
-        # There is a link so the user can cancel.
-        expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
-
-        # After reading the warnings, the user decides
-        # to continue with the import.
-        click_on 'Start Import'
-
+          # After reading the warnings, the user decides
+          # to continue with the import.
+          click_on 'Start Import'
+        end.to_not change { Work.count }
         # The show page for the CsvImport
         expect(page).to have_content 'all_fields_metadata_update.csv'
         expect(page).to have_content 'Start time'
@@ -359,13 +212,10 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
         # We expect to see the title of the collection on the page
         expect(page).to have_content 'Testing Collection'
 
-        # Let the background jobs run, and check that the expected number of records got created.
-        expect(Work.count).to eq 1
-
         # Ensure that all the fields got assigned as expected
-        work = Work.where(title: "*haberdashery*").first
-        expect(work.title.first).to match(/Exterior/)
-        expect(work.file_sets.first.label).to eq('dog.jpg')
+        work_one.reload
+        expect(work_one.title.first).to match(/Exterior/)
+        expect(work_one.file_sets.first.label).to eq('dog.jpg')
 
         # The show page for the CsvImport
         expect(page).to have_content 'all_fields_metadata_update.csv'
@@ -373,107 +223,96 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
 
         # We expect to see the title of the collection on the page
         expect(page).to have_content 'Testing Collection'
-
-        # Let the background jobs run, and check that the expected number of records got created.
-        expect(Work.count).to eq 1
-
-        # Ensure that all the fields got assigned as expected
-        work = Work.where(title: "*haberdashery*").first
-        expect(work.title.first).to match(/Exterior/)
-        expect(work.file_sets.first.label).to eq('dog.jpg')
-
 
         # Update only new records
+        # Let the background jobs run, and check that one additional record has been created
+        expect do
+          visit '/csv_imports/new'
+          expect(page).to have_content 'Testing Collection'
+          expect(page).not_to have_content '["Testing Collection"]'
+          select 'Testing Collection', from: "csv_import[fedora_collection_id]"
 
-        visit '/csv_imports/new'
-        expect(page).to have_content 'Testing Collection'
-        expect(page).not_to have_content '["Testing Collection"]'
-        select 'Testing Collection', from: "csv_import[fedora_collection_id]"
+          select 'Ignore Existing Works, new works only', from: 'csv_import[update_actor_stack]'
+          # Fill in and submit the form
+          attach_file('csv_import[manifest]', csv_only_new_file, make_visible: true)
 
-        select 'Ignore Existing Works, new works only', from: 'csv_import[update_actor_stack]'
-        # Fill in and submit the form
-        attach_file('csv_import[manifest]', csv_only_new_file, make_visible: true)
+          click_on 'Preview Import'
 
-        click_on 'Preview Import'
+          # We expect to see the title of the collection on the page
+          expect(page).to have_content 'Testing Collection'
 
-        # We expect to see the title of the collection on the page
-        expect(page).to have_content 'Testing Collection'
+          expect(page).to have_content 'This import will process 2 row(s).'
 
-        expect(page).to have_content 'This import will process 2 row(s).'
-
-        # There is a link so the user can cancel.
-        expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
+          # There is a link so the user can cancel.
+          expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
 
 
-        # After reading the warnings, the user decides
-        # to continue with the import.
-        click_on 'Start Import'
+          # After reading the warnings, the user decides
+          # to continue with the import.
+          click_on 'Start Import'
 
-        # The show page for the CsvImport
-        expect(page).to have_content 'all_fields_only_new.csv'
-        expect(page).to have_content 'Start time'
+          # The show page for the CsvImport
+          expect(page).to have_content 'all_fields_only_new.csv'
+          expect(page).to have_content 'Start time'
 
-        # We expect to see the title of the collection on the page
-        expect(page).to have_content 'Testing Collection'
-
-        # Let the background jobs run, and check that the expected number of records got created.
-        expect(Work.count).to eq 2
-
-        # Ensure that all the fields got assigned as expected
-        work = Work.where(title: "*haberdashery*").first
-        expect(work.title.first).to match(/Exterior/)
-        expect(work.file_sets.first.label).to eq('dog.jpg')
+          # We expect to see the title of the collection on the page
+          expect(page).to have_content 'Testing Collection'
+        end.to change { Work.count }.by(1)
 
         # Ensure that all the fields got assigned as expected
-        work = Work.where(title: "*patisserie*").first
-        expect(work.title.first).to match(/Interior/)
-        expect(work.file_sets.first.label).to eq('cat.jpg')
+        work_one.reload
+        expect(work_one.title.first).to match(/Exterior/)
+        expect(work_one.file_sets.first.label).to eq('dog.jpg')
 
+        # Ensure that all the fields got assigned as expected
+        work_two = Work.where(title: "*patisserie*").first
+        expect(work_two.title.first).to match(/Interior/)
+        expect(work_two.file_sets.first.label).to eq('cat.jpg')
 
         # Update complete
+        expect do
+          visit '/csv_imports/new'
+          expect(page).to have_content 'Testing Collection'
+          expect(page).not_to have_content '["Testing Collection"]'
+          select 'Testing Collection', from: "csv_import[fedora_collection_id]"
 
-        visit '/csv_imports/new'
-        expect(page).to have_content 'Testing Collection'
-        expect(page).not_to have_content '["Testing Collection"]'
-        select 'Testing Collection', from: "csv_import[fedora_collection_id]"
+          select 'Overwrite All Files & Metadata', from: 'csv_import[update_actor_stack]'
+          # Fill in and submit the form
+          attach_file('csv_import[manifest]', csv_complete_update_file, make_visible: true)
 
-        select 'Overwrite All Files & Metadata', from: 'csv_import[update_actor_stack]'
-        # Fill in and submit the form
-        attach_file('csv_import[manifest]', csv_complete_update_file, make_visible: true)
+          click_on 'Preview Import'
 
-        click_on 'Preview Import'
+          # We expect to see the title of the collection on the page
+          expect(page).to have_content 'Testing Collection'
 
-        # We expect to see the title of the collection on the page
-        expect(page).to have_content 'Testing Collection'
-
-        expect(page).to have_content 'This import will process 1 row(s).'
-        # There is a link so the user can cancel.
-        expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
+          expect(page).to have_content 'This import will process 1 row(s).'
+          # There is a link so the user can cancel.
+          expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
 
 
-        # After reading the warnings, the user decides
-        # to continue with the import.
-        click_on 'Start Import'
+          # After reading the warnings, the user decides
+          # to continue with the import.
+          click_on 'Start Import'
 
-        # The show page for the CsvImport
-        expect(page).to have_content 'all_fields_complete_update.csv'
-        expect(page).to have_content 'Start time'
+          # The show page for the CsvImport
+          expect(page).to have_content 'all_fields_complete_update.csv'
+          expect(page).to have_content 'Start time'
 
-        # We expect to see the title of the collection on the page
-        expect(page).to have_content 'Testing Collection'
+          # We expect to see the title of the collection on the page
+          expect(page).to have_content 'Testing Collection'
 
-        # Let the background jobs run, and check that the expected number of records got created.
-        expect(Work.count).to eq 2
+          # Let the background jobs run, and check that the expected number of records got created.
+        end.to_not change { Work.count }
 
         # Ensure that all the fields got assigned as expected
-        work = Work.where(title: "*haberdashery*").first
-        expect(work.title.first).to match(/Interior/)
-        expect(work.file_sets.first.label).to eq('cat.jpg')
+        work_two.reload
+        expect(work_two.title.first).to match(/Interior/)
+        expect(work_two.file_sets.first.label).to eq('cat.jpg')
 
         # Viewing additional details after an import
         visit "/csv_import_details/index"
         expect(page).to have_content('Total Size')
-        click_on '4'
+        click_on "#{Zizia::CsvImportDetail.last.id}"
         click_on 'View Files'
         expect(page).to have_content('dog.jpg')
         expect(page).to have_content('cat.jpg')
@@ -483,6 +322,5 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
         expect(page).to have_content('Date Created')
       end
     end
-
   end
 end

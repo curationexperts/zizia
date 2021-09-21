@@ -126,8 +126,18 @@ bundle exec rspec spec
 
 System specs are located in the `spec/dummy/spec/system` folder:
 
-`bundle exec rspec spec/dummy/spec/system/csv_import_details_page_spec.rb`
+```bash
+bundle exec rspec spec/dummy/spec/system/csv_import_details_page_spec.rb
+```
 
+### Faster Testing Hints
+
+* Set the environment variable `NOCOV=true` to run the tests without Coveralls
+* You can run individual tests by giving the line number of the test, e.g.
+
+```bash
+bundle exec rspec spec/dummy/spec/system/csv_import_details_page_spec.rb:23
+```
 
 ## Customizing
 To input any kind of file other than CSV, you need to provide a `Parser` (out of the box, we support simple CSV import with `CsvParser`). We will be writing guides about
