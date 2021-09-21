@@ -1,5 +1,21 @@
 # Changelog
 
+## [v6.6.1](https://github.com/curationexperts/zizia/tree/v6.6.1) (2021-09-21)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v6.6.0...v6.6.1)
+
+**Merged pull requests:**
+
+- Display collection identifier rather than id [\#130](https://github.com/curationexperts/zizia/pull/130) ([maxkadel](https://github.com/maxkadel))
+
+## [v6.6.0](https://github.com/curationexperts/zizia/tree/v6.6.0) (2021-09-20)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v6.5.0...v6.6.0)
+
+**Merged pull requests:**
+
+- Adds blank line support to the csv\_validator [\#129](https://github.com/curationexperts/zizia/pull/129) ([mlooney](https://github.com/mlooney))
+
 ## [v6.5.0](https://github.com/curationexperts/zizia/tree/v6.5.0) (2021-09-20)
 
 [Full Changelog](https://github.com/curationexperts/zizia/compare/v6.4.1...v6.5.0)
@@ -369,19 +385,19 @@
 
 ## [v2.1.0.alpha.02](https://github.com/curationexperts/zizia/tree/v2.1.0.alpha.02) (2019-07-30)
 
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v2...v2.1.0.alpha.02)
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.1.0.alpha.01...v2.1.0.alpha.02)
 
 **Merged pull requests:**
 
 - Rename database migrations [\#6](https://github.com/curationexperts/zizia/pull/6) ([little9](https://github.com/little9))
 
-## [v2](https://github.com/curationexperts/zizia/tree/v2) (2019-07-29)
-
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.1.0.alpha.01...v2)
-
 ## [v2.1.0.alpha.01](https://github.com/curationexperts/zizia/tree/v2.1.0.alpha.01) (2019-07-29)
 
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.0.0.alpha.01...v2.1.0.alpha.01)
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v2...v2.1.0.alpha.01)
+
+## [v2](https://github.com/curationexperts/zizia/tree/v2) (2019-07-29)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.0.0.alpha.01...v2)
 
 **Merged pull requests:**
 
