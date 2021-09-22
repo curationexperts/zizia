@@ -72,7 +72,7 @@ module Zizia
     end
 
     def required_headers(object_type = "w")
-      if object_type == "c"
+      if object_type.casecmp("c").zero? || object_type.casecmp("collection").zero?
         ['title', 'visibility']
       else
         ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key']
@@ -137,7 +137,7 @@ module Zizia
       end
 
       def invalid_object_type
-        validate_values('object type', :valid_object_types)
+        validate_values('object type', :valid_object_types, true)
       end
 
       def valid_licenses
@@ -153,11 +153,11 @@ module Zizia
       end
 
       def valid_object_types
-        @valid_object_types ||= ['c', 'w', 'C', 'W']
+        @valid_object_types ||= ['c', 'collection', 'w', 'work']
       end
 
       # Make sure this column contains only valid values
-      def validate_values(header_name, valid_values_method)
+      def validate_values(header_name, valid_values_method, case_insensitive = false)
         column_number = @transformed_headers.find_index(header_name)
         return unless column_number
 
@@ -166,10 +166,23 @@ module Zizia
           next unless row[column_number]
           values = row[column_number].split(delimiter)
           valid_values = method(valid_values_method).call
-          invalid_values = values.select { |value| !valid_values.include?(value) }
+          invalid_values = invalid_values(values, valid_values, case_insensitive)
 
           invalid_values.each do |value|
             @errors << "Invalid #{header_name.titleize} in row #{i + 1}: #{value}"
+          end
+        end
+      end
+
+      def invalid_values(values, valid_values, case_insensitive = false)
+        if case_insensitive
+          values.select do |value|
+            valid_values = valid_values.map(&:downcase)
+            !valid_values.include?(value.downcase)
+          end
+        else
+          values.select do |value|
+            !valid_values.include?(value)
           end
         end
       end
