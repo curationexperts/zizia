@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-unless ENV['NOCOV']
+if ENV['COVERAGE']
   require 'coveralls'
   Coveralls.wear!('rails')
 end
