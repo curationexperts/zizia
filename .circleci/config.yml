@@ -20,6 +20,7 @@ jobs:
         parallelism: 1
         environment:
           COVERALLS_PARALLEL: true
+          COVERAGE: true
           RAILS_VERSION: << parameters.rails_version >>
           SOLR_URL: http://127.0.0.1:8985/solr/hydra-test
         steps:
