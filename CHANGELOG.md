@@ -1,5 +1,14 @@
 # Changelog
 
+## [v6.6.2](https://github.com/curationexperts/zizia/tree/v6.6.2) (2021-09-22)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v6.6.1...v6.6.2)
+
+**Merged pull requests:**
+
+- Allow validator to accept case insensitive values [\#132](https://github.com/curationexperts/zizia/pull/132) ([maxkadel](https://github.com/maxkadel))
+- Refactor slowest tests [\#131](https://github.com/curationexperts/zizia/pull/131) ([maxkadel](https://github.com/maxkadel))
+
 ## [v6.6.1](https://github.com/curationexperts/zizia/tree/v6.6.1) (2021-09-21)
 
 [Full Changelog](https://github.com/curationexperts/zizia/compare/v6.6.0...v6.6.1)
@@ -385,19 +394,19 @@
 
 ## [v2.1.0.alpha.02](https://github.com/curationexperts/zizia/tree/v2.1.0.alpha.02) (2019-07-30)
 
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.1.0.alpha.01...v2.1.0.alpha.02)
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v2...v2.1.0.alpha.02)
 
 **Merged pull requests:**
 
 - Rename database migrations [\#6](https://github.com/curationexperts/zizia/pull/6) ([little9](https://github.com/little9))
 
-## [v2.1.0.alpha.01](https://github.com/curationexperts/zizia/tree/v2.1.0.alpha.01) (2019-07-29)
-
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v2...v2.1.0.alpha.01)
-
 ## [v2](https://github.com/curationexperts/zizia/tree/v2) (2019-07-29)
 
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.0.0.alpha.01...v2)
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.1.0.alpha.01...v2)
+
+## [v2.1.0.alpha.01](https://github.com/curationexperts/zizia/tree/v2.1.0.alpha.01) (2019-07-29)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.0.0.alpha.01...v2.1.0.alpha.01)
 
 **Merged pull requests:**
 
