@@ -18,6 +18,36 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
     uploader.remove!
   end
 
+  context "with a csv with missing required fields" do
+    let(:path_to_file) { Rails.root.join('spec', 'fixtures', 'csv_import', 'csv_files_with_problems', 'row_missing_required_field.csv') }
+
+    it "collects warnings and errors for invalid entries" do
+      validator.validate
+      expect(validator.errors).to eq(['Missing required metadata in row 3: "Creator" field cannot be blank'])
+      expect(validator.warnings).to eq(['The field name "type" is not supported.  This field will be ignored, and the metadata for this field will not be imported.'])
+    end
+  end
+
+  context "with a csv with the wrong object type" do
+    let(:path_to_file) { Rails.root.join('spec', 'fixtures', 'csv_import', 'csv_files_with_problems', 'wrong_object_type.csv') }
+
+    it "collects warnings and errors for invalid entries" do
+      validator.validate
+      expect(validator.errors).to eq(['Invalid Object Type in row 2: i'])
+      expect(validator.warnings).to eq(['The field name "type" is not supported.  This field will be ignored, and the metadata for this field will not be imported.'])
+    end
+  end
+
+  context "with a csv with a mix of object types" do
+    let(:path_to_file) { Rails.root.join('spec', 'fixtures', 'csv_import', 'good', 'mix_of_object_types.csv') }
+
+    it "does not warn or error on a variety of valid object types" do
+      validator.validate
+      expect(validator.errors).to eq([])
+      expect(validator.warnings).to eq([])
+    end
+  end
+
   context "with a object type column" do
     let(:path_to_file) { Rails.root.join('spec', 'fixtures', 'csv_import', 'good', 'Postcards_Minneapolis_w_collection.csv') }
     let(:work_row) do
@@ -31,9 +61,14 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
     end
 
     it "returns required headers based on the object type" do
-      expect(validator.required_headers).to eq(['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key'])
-      expect(validator.required_headers("w")).to eq(['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key'])
-      expect(validator.required_headers("c")).to eq(['title', 'visibility'])
+      required_work_headers = ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key']
+      required_collection_headers = ['title', 'visibility']
+      expect(validator.required_headers).to eq(required_work_headers)
+      expect(validator.required_headers("w")).to eq(required_work_headers)
+      expect(validator.required_headers("c")).to eq(required_collection_headers)
+      expect(validator.required_headers("Collection")).to eq(required_collection_headers)
+      expect(validator.required_headers("CoLLection")).to eq(required_collection_headers)
+      expect(validator.required_headers("wOrk")).to eq(required_work_headers)
     end
 
     it "returns different required column numbers based on the row" do
@@ -41,6 +76,7 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
       expect(validator.required_column_numbers(collection_row)).to eq([1, 18])
     end
   end
+
   context "without an object type column" do
     let(:path_to_file) { Rails.root.join('spec', 'fixtures', 'csv_import', 'good', 'all_fields_only_new.csv') }
     let(:work_row) do
