@@ -48,6 +48,7 @@ module Zizia
     # Properties defined with `multiple: false` in
     # Hyrax should return a single value instead of
     # an Array of values.
+
     def depositor
       single_value('depositor')
     end

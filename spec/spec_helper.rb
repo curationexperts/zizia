@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 unless ENV['NOCOV']
-  require 'coveralls'
-  Coveralls.wear!('rails')
+  #require 'coveralls'
+  #Coveralls.wear!('rails')
 end
 require 'pry' unless ENV['CI']
 

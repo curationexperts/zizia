@@ -12,6 +12,11 @@
 # instead of here.
 module Zizia
   class CsvManifestValidator
+
+    LEGACY_HEADERS = { 
+      rights_statement: 'rights statement' 
+    }.freeze
+
     # @param manifest_uploader [CsvManifestUploader] The manifest that's mounted to a CsvImport record.  See carrierwave gem documentation.  This is basically a wrapper for the CSV file.
     def initialize(manifest_uploader)
       @csv_file = manifest_uploader.file
@@ -60,14 +65,16 @@ module Zizia
       @rows = CSV.read(csv_file.path)
       @headers = @rows.first || []
       @stripped_headers = @headers.map { |header| header.downcase.strip }
-      @transformed_headers = @stripped_headers.each { |stripped_header| stripped_header.delete! '*' if /\*/.match?(stripped_header[-1]) }
+      @pre_legacy_headers = @stripped_headers.each { |stripped_header| stripped_header.delete! '*' if /\*/.match?(stripped_header[-1]) }
+      @pre_legacy_headers.each { |plh| plh.gsub!(/\s+/,'_') if LEGACY_HEADERS.key(plh) } 
+      @transformed_headers = @pre_legacy_headers
     rescue
       @errors << 'We are unable to read this CSV file.'
     end
 
     def missing_headers
       required_headers.each do |header|
-        next if @transformed_headers.include?(header)
+        next if @transformed_headers.include?(header) 
         @errors << "Missing required column: \"#{header.titleize}\".  Your spreadsheet must have this column."
       end
     end
