@@ -109,9 +109,9 @@ module Zizia
         defined?(Hyrax) && Hyrax&.config&.curation_concerns&.any?
       if record.object_type.present?
         case record.object_type.first&.downcase
-        when "c"
+        when "c", "collection"
           Collection
-        when "w"
+        when "w", "work"
           Hyrax.config.curation_concerns.first
         else
           Rails.logger.error "[zizia] Unrecognized object_type: #{record.object_type.first&.downcase}"
