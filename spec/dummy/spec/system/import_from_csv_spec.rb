@@ -78,6 +78,23 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
         expect(work_one.title.first).to match(/haberdashery/)
       end
 
+      context 'with a variety of object types' do
+        let(:csv_file) { File.join(fixture_path, 'csv_import', 'good', 'mix_of_object_types.csv') }
+
+        it 'creates the different types of objects' do
+          # Let the background jobs run, and check that the expected number of records got created.
+          expect do
+            visit '/csv_imports/new'
+            select 'Update Existing Metadata, create new works', from: "csv_import[update_actor_stack]"
+
+            attach_file('csv_import[manifest]', csv_file, make_visible: true)
+            click_on 'Preview Import'
+            click_on 'Start Import'
+          end.to change { Work.count }.by(2)
+             .and change { Collection.count }.by(3)
+        end
+      end
+
       context 'with an existing collection' do
         let(:collection) { FactoryBot.build(:collection, title: ['Collection of Zuccini'], identifier: ['def/123']) }
         before do
