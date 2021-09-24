@@ -5,6 +5,7 @@
     </li>
     <li>CSV File: <%= @csv_import_detail.csv_import.manifest %></li>
     <li>Total Size: <%= number_to_human_size(@csv_import_detail.total_size) %></li>
+    <li>Overwrite Behavior Type: <%= human_update_actor_stack(@csv_import_detail.update_actor_stack) %></li>
   </ul>
 
   <h3>Works & Files</h3>
