@@ -1,5 +1,15 @@
 # Changelog
 
+## [v6.6.3](https://github.com/curationexperts/zizia/tree/v6.6.3) (2021-09-25)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v6.6.2...v6.6.3)
+
+**Merged pull requests:**
+
+- Raise error for unrecognized object type [\#135](https://github.com/curationexperts/zizia/pull/135) ([maxkadel](https://github.com/maxkadel))
+- Add Import Type to Job Status Page \(\#957\) [\#134](https://github.com/curationexperts/zizia/pull/134) ([norm0](https://github.com/norm0))
+- Allow for either first letter or full name of object [\#133](https://github.com/curationexperts/zizia/pull/133) ([maxkadel](https://github.com/maxkadel))
+
 ## [v6.6.2](https://github.com/curationexperts/zizia/tree/v6.6.2) (2021-09-22)
 
 [Full Changelog](https://github.com/curationexperts/zizia/compare/v6.6.1...v6.6.2)
@@ -394,19 +404,19 @@
 
 ## [v2.1.0.alpha.02](https://github.com/curationexperts/zizia/tree/v2.1.0.alpha.02) (2019-07-30)
 
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v2...v2.1.0.alpha.02)
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.1.0.alpha.01...v2.1.0.alpha.02)
 
 **Merged pull requests:**
 
 - Rename database migrations [\#6](https://github.com/curationexperts/zizia/pull/6) ([little9](https://github.com/little9))
 
-## [v2](https://github.com/curationexperts/zizia/tree/v2) (2019-07-29)
-
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.1.0.alpha.01...v2)
-
 ## [v2.1.0.alpha.01](https://github.com/curationexperts/zizia/tree/v2.1.0.alpha.01) (2019-07-29)
 
-[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.0.0.alpha.01...v2.1.0.alpha.01)
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v2...v2.1.0.alpha.01)
+
+## [v2](https://github.com/curationexperts/zizia/tree/v2) (2019-07-29)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v2.0.0.alpha.01...v2)
 
 **Merged pull requests:**
 
