@@ -69,6 +69,8 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
       expect(validator.required_headers("Collection")).to eq(required_collection_headers)
       expect(validator.required_headers("CoLLection")).to eq(required_collection_headers)
       expect(validator.required_headers("wOrk")).to eq(required_work_headers)
+      expect(validator.required_headers('garbage')).to eq(required_work_headers)
+      expect(validator.required_headers('')).to eq(required_work_headers)
     end
 
     it "returns different required column numbers based on the row" do
