@@ -1,7 +1,5 @@
-# coding: utf-8
 # frozen_string_literal: true
 require 'rails_helper'
-require 'spec_helper'
 
 describe Zizia::HyraxRecordImporter do
   let(:hyrax_record_importer) { described_class.new(attributes: { csv_import_detail: csv_import_detail }) }
@@ -21,7 +19,7 @@ describe Zizia::HyraxRecordImporter do
         'abstract or summary' => 'A book about moomins.' }
     end
 
-    it "ra" do
+    it "defaults to a work" do
       expect(hyrax_record_importer.import_type(record)).to eq Work
     end
   end
@@ -66,7 +64,7 @@ describe Zizia::HyraxRecordImporter do
     end
 
     it "raises an error" do
-      expect { hyrax_record_importer.import_type(record) }.to raise_error
+      expect { hyrax_record_importer.import_type(record) }.to raise_error(RuntimeError, "[zizia] Unrecognized object_type: garbage")
     end
   end
 
