@@ -18,6 +18,15 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
     uploader.remove!
   end
 
+  context "with a csv with an identifier with a space in it" do
+    let(:path_to_file) { Rails.root.join('spec', 'fixtures', 'csv_import', 'csv_files_with_problems', 'collection_issue.csv') }
+    it "collects warnings and errors for invalid entries" do
+      validator.validate
+      expect(validator.errors).to include("Invalid Identifier in row 2: Test Collection. Whitespace is not allowed in Identifiers.")
+      expect(validator.errors).to include("Invalid Deduplication Key in row 2: Test Collection. Whitespace is not allowed in Deduplication Keys.")
+    end
+  end
+
   context "with a csv with missing required fields" do
     let(:path_to_file) { Rails.root.join('spec', 'fixtures', 'csv_import', 'csv_files_with_problems', 'row_missing_required_field.csv') }
 

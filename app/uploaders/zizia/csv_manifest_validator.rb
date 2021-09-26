@@ -35,6 +35,8 @@ module Zizia
       invalid_resource_type
       invalid_rights_statement
       invalid_object_type
+      invalid_whitespace('identifier')
+      invalid_whitespace('deduplication_key')
     end
 
     # One record per row
@@ -120,6 +122,27 @@ module Zizia
 
       def object_type(row)
         row[@transformed_headers.find_index("object type")]&.downcase
+      end
+
+      def invalid_whitespace(header_name)
+        column_number = @transformed_headers.find_index(header_name)
+        return unless column_number
+        @rows.each_with_index do |row, i|
+          next if i.zero? # Skip the header row
+          next unless row[column_number]
+          values = row[column_number].split(delimiter)
+
+          invalid_values = values_with_whitespace(values)
+          invalid_values.each do |value|
+            @errors << "Invalid #{header_name.titleize} in row #{i + 1}: #{value}. Whitespace is not allowed in #{header_name.titleize}s."
+          end
+        end
+      end
+
+      def values_with_whitespace(values)
+        values.select do |value|
+          value if value =~ /\s/
+        end
       end
 
       # Only allow valid license values expected by Hyrax.
