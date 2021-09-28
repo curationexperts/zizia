@@ -72,11 +72,16 @@ module Zizia
     end
 
     def required_headers(object_type = "w")
+      return work_headers if object_type.nil?
       if object_type.casecmp("c").zero? || object_type.casecmp("collection").zero?
         ['title', 'visibility']
       else
-        ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key']
+        work_headers
       end
+    end
+
+    def work_headers
+      ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key']
     end
 
     def duplicate_headers
