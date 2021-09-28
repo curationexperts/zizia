@@ -120,6 +120,8 @@ module Zizia
         Collection
       when "w", "work"
         Hyrax.config.curation_concerns.first
+      when "f", "file"
+        FileSet
       else
         raise  "[zizia] Unrecognized object_type: #{object_type_string}"
       end
@@ -232,30 +234,41 @@ module Zizia
         attrs
       end
 
+      def create_collection(record)
+        created = Collection.new
+        attrs = process_collection_attrs(record: record)
+        created.update(attrs)
+        created.save!
+      end
+
+      def create_curation_concern(record, import_type)
+        created = import_type.new
+        attrs = process_attrs(record: record)
+        actor_env = Hyrax::Actors::Environment.new(created,
+                                                   ::Ability.new(depositor),
+                                                   attrs)
+        if Hyrax::CurationConcern.actor.create(actor_env)
+          Rails.logger.info "[zizia] event: record_created, batch_id: #{batch_id}, record_id: #{created.id}, collection_id: #{collection_id}, record_title: #{attrs[:title]&.first}"
+          csv_import_detail.success_count += 1
+        else
+          created.errors.each do |attr, msg|
+            Rails.logger.error "[zizia] event: validation_failed, batch_id: #{batch_id}, collection_id: #{collection_id}, attribute: #{attr.capitalize}, message: #{msg}, record_title: record_title: #{attrs[:title] ? attrs[:title] : attrs}"
+          end
+          csv_import_detail.failure_count += 1
+        end
+      end
+
       # Create an object using the Hyrax actor stack
       # We assume the object was created as expected if the actor stack returns true.
       def create_for(record:)
         Rails.logger.info "[zizia] event: record_import_started, batch_id: #{batch_id}, collection_id: #{collection_id}, record_title: #{record.respond_to?(:title) ? record.title : record}"
         import_type = import_type(record)
-        created = import_type.new
         if import_type == Collection
-          attrs = process_collection_attrs(record: record)
-          created.update(attrs)
-          created.save!
+          create_collection(record)
+        elsif import_type == FileSet
+          Rails.logger.error "[zizia] event: Attempted to create a FileSet; however, this is not yet implemented"
         else
-          attrs = process_attrs(record: record)
-          actor_env = Hyrax::Actors::Environment.new(created,
-                                                     ::Ability.new(depositor),
-                                                     attrs)
-          if Hyrax::CurationConcern.actor.create(actor_env)
-            Rails.logger.info "[zizia] event: record_created, batch_id: #{batch_id}, record_id: #{created.id}, collection_id: #{collection_id}, record_title: #{attrs[:title]&.first}"
-            csv_import_detail.success_count += 1
-          else
-            created.errors.each do |attr, msg|
-              Rails.logger.error "[zizia] event: validation_failed, batch_id: #{batch_id}, collection_id: #{collection_id}, attribute: #{attr.capitalize}, message: #{msg}, record_title: record_title: #{attrs[:title] ? attrs[:title] : attrs}"
-            end
-            csv_import_detail.failure_count += 1
-          end
+          create_curation_concern(record, import_type)
         end
         csv_import_detail.save
       end

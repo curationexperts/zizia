@@ -64,6 +64,28 @@ module Zizia
       @errors << 'We are unable to read this CSV file.'
     end
 
+    def object_types
+      return ["work"] unless @transformed_headers.include?("object type")
+      original_object_types = @rows.map { |row| row[@transformed_headers.find_index("object type")] }
+      original_object_types.map { |object_type| map_object_type(object_type) }.compact.uniq
+    end
+
+    def map_object_type(orig_value)
+      case orig_value&.downcase
+      when "c", "collection"
+        "collection"
+      when "w", "work"
+        "work"
+      when "f", "file"
+        "file"
+      # Don't return an object type for the header
+      when "object type"
+        nil
+      else
+        "work"
+      end
+    end
+
     def missing_headers
       required_headers.each do |header|
         next if @transformed_headers.include?(header)
@@ -71,10 +93,16 @@ module Zizia
       end
     end
 
+    def required_headers_for_sheet
+      object_types.flat_map { |object_type| required_headers(object_type) }.compact.uniq
+    end
+
     def required_headers(object_type = "w")
       return work_headers if object_type.nil?
       if object_type.casecmp("c").zero? || object_type.casecmp("collection").zero?
         ['title', 'visibility']
+      elsif object_type.casecmp("f").zero? || object_type.casecmp("file").zero?
+        ['files', 'parent']
       else
         work_headers
       end
@@ -158,7 +186,7 @@ module Zizia
       end
 
       def valid_object_types
-        @valid_object_types ||= ['c', 'collection', 'w', 'work']
+        @valid_object_types ||= ['c', 'collection', 'w', 'work', 'f', 'file']
       end
 
       # Make sure this column contains only valid values

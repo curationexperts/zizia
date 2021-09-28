@@ -46,6 +46,12 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
       expect(validator.errors).to eq([])
       expect(validator.warnings).to eq([])
     end
+
+    it "collects all the object_types in the file" do
+      required_file_plus_work_headers = ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key', 'parent']
+      expect(validator.object_types).to match_array(["collection", "work", "file"])
+      expect(validator.required_headers_for_sheet).to match_array(required_file_plus_work_headers)
+    end
   end
 
   context "with a object type column" do
@@ -58,6 +64,12 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
 
     it "thinks valid fields is the same as hyraxbasicmetadata.fields" do
       expect(validator.send(:valid_headers).sort).to eq(Zizia::HyraxBasicMetadataMapper.new.headers.map(&:to_s).sort)
+    end
+
+    it "collects all the object_types in the file" do
+      required_work_headers = ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key']
+      expect(validator.object_types).to eq(["work", "collection"])
+      expect(validator.required_headers_for_sheet).to match_array(required_work_headers)
     end
 
     it "returns required headers based on the object type" do
