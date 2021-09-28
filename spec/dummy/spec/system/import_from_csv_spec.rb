@@ -90,7 +90,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
             attach_file('csv_import[manifest]', csv_file, make_visible: true)
             click_on 'Preview Import'
             click_on 'Start Import'
-          end.to change { Work.count }.by(2)
+          end.to change { Work.count }.by(3)
              .and change { Collection.count }.by(3)
         end
       end
