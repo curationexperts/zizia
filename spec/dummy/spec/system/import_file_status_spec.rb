@@ -7,7 +7,13 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
 
   before do
     allow(CharacterizeJob).to receive(:perform_later)
+  end
+
+  around do |example|
+    orig_import_path = ENV['IMPORT_PATH']
     ENV['IMPORT_PATH'] = File.join(fixture_path, 'images')
+    example.run
+    ENV['IMPORT_PATH'] = orig_import_path
   end
 
   let(:csv_file) { File.join(fixture_path, 'csv_import', 'good', 'all_fields_multi.csv') }
