@@ -52,6 +52,7 @@ RSpec.configure do |config|
   config.before(:suite) do
     FactoryBot.find_definitions
     ActiveFedora::Cleaner.clean!
+    ActiveJob::Base.queue_adapter = :test
   end
 
   config.before perform_jobs: true do
