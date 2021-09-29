@@ -286,7 +286,6 @@ module Zizia
           create_collection(record)
         elsif import_type == FileSet
           create_file_set(record)
-          Rails.logger.error "[zizia] event: Attempted to create a FileSet; however, this is not yet implemented"
         else
           create_curation_concern(record, import_type)
         end
