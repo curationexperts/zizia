@@ -136,20 +136,24 @@ module Zizia
     # TODO: What if we can't find the file?
     # TODO: How do we specify where the files can be found?
     # @param [Zizia::InputRecord]
+    # @return [Array<Hyrax::UploadedFile>] uploaded_files - an array of files to attach
+    def create_upload_files(files_to_attach)
+      files_to_attach.map do |filename|
+        file = File.open(find_file_path(filename))
+        uploaded_file = Hyrax::UploadedFile.create(user: depositor, file: file)
+        file.close
+        uploaded_file
+      end
+    end
+
+    # @param [Zizia::InputRecord]
     # @return [Array] an array of Hyrax::UploadedFile ids
-    def create_upload_files(record)
+    def uploaded_files_ids(record)
       return unless record.mapper.respond_to?(:files)
       files_to_attach = record.mapper.files
       return [] if files_to_attach.nil? || files_to_attach.empty?
 
-      uploaded_file_ids = []
-      files_to_attach.each do |filename|
-        file = File.open(find_file_path(filename))
-        uploaded_file = Hyrax::UploadedFile.create(user: depositor, file: file)
-        uploaded_file_ids << uploaded_file.id
-        file.close
-      end
-      uploaded_file_ids
+      create_upload_files(files_to_attach).map { |file| file.id }
     end
 
     ##
@@ -193,7 +197,7 @@ module Zizia
 
       def process_attrs(record:)
         additional_attrs = {
-          uploaded_files: create_upload_files(record),
+          uploaded_files: uploaded_files_ids(record),
           depositor: depositor.user_key
         }
 
@@ -258,6 +262,18 @@ module Zizia
         end
       end
 
+      def find_parent_work(record)
+        parent_identifier = record.parent.first
+        Work.where(identifier: parent_identifier).first
+      end
+
+      def create_file_set(record)
+        work = find_parent_work(record)
+        files_to_attach = record.mapper.files
+        uploaded_files = create_upload_files(files_to_attach)
+        AttachFilesToWorkWithOrderedMembersJob.perform_later(work, uploaded_files)
+      end
+
       # Create an object using the Hyrax actor stack
       # We assume the object was created as expected if the actor stack returns true.
       def create_for(record:)
@@ -266,6 +282,7 @@ module Zizia
         if import_type == Collection
           create_collection(record)
         elsif import_type == FileSet
+          create_file_set(record)
           Rails.logger.error "[zizia] event: Attempted to create a FileSet; however, this is not yet implemented"
         else
           create_curation_concern(record, import_type)
