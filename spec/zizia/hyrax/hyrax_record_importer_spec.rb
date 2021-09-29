@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-describe Zizia::HyraxRecordImporter, :perform_jobs do
+describe Zizia::HyraxRecordImporter, :perform_jobs, :clean do
   let(:hyrax_record_importer) { described_class.new(attributes: { csv_import_detail: csv_import_detail }) }
   let(:collection) { FactoryBot.create(:collection) }
   let(:user) { FactoryBot.create(:user) }
