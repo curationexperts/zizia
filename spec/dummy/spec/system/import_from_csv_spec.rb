@@ -5,7 +5,13 @@ include Warden::Test::Helpers
 RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, type: :system, js: true do
   before do
     allow(CharacterizeJob).to receive(:perform_later)
+  end
+
+  around do |example|
+    orig_import_path = ENV['IMPORT_PATH']
     ENV['IMPORT_PATH'] = File.join(fixture_path, 'images')
+    example.run
+    ENV['IMPORT_PATH'] = orig_import_path
   end
 
   let(:csv_file) { File.join(fixture_path, 'csv_import', 'good', 'all_fields.csv') }
@@ -90,8 +96,9 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
             attach_file('csv_import[manifest]', csv_file, make_visible: true)
             click_on 'Preview Import'
             click_on 'Start Import'
-          end.to change { Work.count }.by(3)
-             .and change { Collection.count }.by(3)
+          end.to change { Work.count }.by(2)
+             .and change { Collection.count }.by(2)
+             .and change { FileSet.count }.by(3)
         end
       end
 
