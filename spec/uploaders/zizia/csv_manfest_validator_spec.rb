@@ -54,6 +54,26 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
     end
   end
 
+  context "with a mix of object types missing a field required for only one object type" do
+    let(:path_to_file) { Rails.root.join('spec', 'fixtures', 'csv_import', 'csv_files_with_problems', 'mix_of_object_types_missing_header.csv') }
+
+    it "gives an error for the missing header based on having a file row" do
+      validator.validate
+      expect(validator.errors).to eq(['Missing required column: "Parent".  Your spreadsheet must have this column.'])
+      expect(validator.warnings).to eq([])
+    end
+  end
+
+  context "with a mix of object types missing a value required for only one object type" do
+    let(:path_to_file) { Rails.root.join('spec', 'fixtures', 'csv_import', 'csv_files_with_problems', 'mix_of_object_types_missing_parent_for_file.csv') }
+
+    it "gives an error for the missing value based on having a file row" do
+      validator.validate
+      expect(validator.errors).to eq(['Missing required metadata in row 8: "Parent" field cannot be blank'])
+      expect(validator.warnings).to eq([])
+    end
+  end
+
   context "with a object type column" do
     let(:path_to_file) { Rails.root.join('spec', 'fixtures', 'csv_import', 'good', 'Postcards_Minneapolis_w_collection.csv') }
     let(:work_row) do
@@ -75,6 +95,7 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
     it "returns required headers based on the object type" do
       required_work_headers = ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key']
       required_collection_headers = ['title', 'visibility']
+      required_file_headers = ["files", "parent"]
       expect(validator.required_headers).to eq(required_work_headers)
       expect(validator.required_headers("w")).to eq(required_work_headers)
       expect(validator.required_headers("c")).to eq(required_collection_headers)
@@ -83,6 +104,7 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
       expect(validator.required_headers("wOrk")).to eq(required_work_headers)
       expect(validator.required_headers('garbage')).to eq(required_work_headers)
       expect(validator.required_headers('')).to eq(required_work_headers)
+      expect(validator.required_headers('file')).to eq(required_file_headers)
     end
 
     it "returns different required column numbers based on the row" do

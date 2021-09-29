@@ -1,0 +1,8 @@
+object type,title,creator,keyword,rights statement,visibility,files,deduplication_key
+c,Collection of vegetables,,,,public,,def/123
+Collection,Collection of fruits,,,,public,,def/234
+w,Work on tomatoes,"Tomato, Tommy",fruits|~|tomatoes,http://rightsstatements.org/vocab/InC/1.0/,public,birds.jpg,abc/123
+wOrk,Work on cabbages,"Cabbage, Carl",vegetables|~|cabbages,http://rightsstatements.org/vocab/InC/1.0/,public,dog.jpg,abs/234
+coLLEction,Collection of legumes,,,,public,,def/345
+,Work without object type,"Cabbage, Carl",vegetables|~|cabbages,http://rightsstatements.org/vocab/InC/1.0/,public,dog.jpg,abc/345
+f,,,,,,dog.jpg,,abc/123

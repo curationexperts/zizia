@@ -262,9 +262,12 @@ module Zizia
         end
       end
 
+      # TODO: Right now we assume that the parent is a Work, but it would be more generally
+      # applicable to let this be any sort of CurationConcern
       def find_parent_work(record)
-        parent_identifier = record.parent.first
-        Work.where(identifier: parent_identifier).first
+        parent_work = Work.where("#{deduplication_field}": record.mapper.send(deduplication_field).to_s).first
+        return parent_work if parent_work.present?
+        raise "[zizia] Parent work for file not found, cannot attach file to work"
       end
 
       def create_file_set(record)

@@ -87,7 +87,7 @@ module Zizia
     end
 
     def missing_headers
-      required_headers.each do |header|
+      required_headers_for_sheet.each do |header|
         next if @transformed_headers.include?(header)
         @errors << "Missing required column: \"#{header.titleize}\".  Your spreadsheet must have this column."
       end
@@ -108,6 +108,9 @@ module Zizia
       end
     end
 
+    # TODO: Map these headers appropriately all the way through the ingest
+    # Right now the transformed headers only downcase and strip them, they don't translate them
+    # based on the associated mapper
     def work_headers
       ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key']
     end
