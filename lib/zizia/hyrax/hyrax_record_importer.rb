@@ -153,7 +153,7 @@ module Zizia
       files_to_attach = record.mapper.files
       return [] if files_to_attach.nil? || files_to_attach.empty?
 
-      create_upload_files(files_to_attach).map { |file| file.id }
+      create_upload_files(files_to_attach).map(&:id)
     end
 
     ##
