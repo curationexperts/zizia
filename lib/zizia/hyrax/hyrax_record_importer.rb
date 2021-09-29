@@ -120,6 +120,8 @@ module Zizia
         Collection
       when "w", "work"
         Hyrax.config.curation_concerns.first
+      when "f", "file"
+        FileSet
       else
         raise  "[zizia] Unrecognized object_type: #{object_type_string}"
       end
@@ -134,20 +136,24 @@ module Zizia
     # TODO: What if we can't find the file?
     # TODO: How do we specify where the files can be found?
     # @param [Zizia::InputRecord]
+    # @return [Array<Hyrax::UploadedFile>] uploaded_files - an array of files to attach
+    def create_upload_files(files_to_attach)
+      files_to_attach.map do |filename|
+        file = File.open(find_file_path(filename))
+        uploaded_file = Hyrax::UploadedFile.create(user: depositor, file: file)
+        file.close
+        uploaded_file
+      end
+    end
+
+    # @param [Zizia::InputRecord]
     # @return [Array] an array of Hyrax::UploadedFile ids
-    def create_upload_files(record)
+    def uploaded_files_ids(record)
       return unless record.mapper.respond_to?(:files)
       files_to_attach = record.mapper.files
       return [] if files_to_attach.nil? || files_to_attach.empty?
 
-      uploaded_file_ids = []
-      files_to_attach.each do |filename|
-        file = File.open(find_file_path(filename))
-        uploaded_file = Hyrax::UploadedFile.create(user: depositor, file: file)
-        uploaded_file_ids << uploaded_file.id
-        file.close
-      end
-      uploaded_file_ids
+      create_upload_files(files_to_attach).map(&:id)
     end
 
     ##
@@ -191,7 +197,7 @@ module Zizia
 
       def process_attrs(record:)
         additional_attrs = {
-          uploaded_files: create_upload_files(record),
+          uploaded_files: uploaded_files_ids(record),
           depositor: depositor.user_key
         }
 
@@ -232,30 +238,57 @@ module Zizia
         attrs
       end
 
+      def create_collection(record)
+        created = Collection.new
+        attrs = process_collection_attrs(record: record)
+        created.update(attrs)
+        created.save!
+      end
+
+      def create_curation_concern(record, import_type)
+        created = import_type.new
+        attrs = process_attrs(record: record)
+        actor_env = Hyrax::Actors::Environment.new(created,
+                                                   ::Ability.new(depositor),
+                                                   attrs)
+        if Hyrax::CurationConcern.actor.create(actor_env)
+          Rails.logger.info "[zizia] event: record_created, batch_id: #{batch_id}, record_id: #{created.id}, collection_id: #{collection_id}, record_title: #{attrs[:title]&.first}"
+          csv_import_detail.success_count += 1
+        else
+          created.errors.each do |attr, msg|
+            Rails.logger.error "[zizia] event: validation_failed, batch_id: #{batch_id}, collection_id: #{collection_id}, attribute: #{attr.capitalize}, message: #{msg}, record_title: record_title: #{attrs[:title] ? attrs[:title] : attrs}"
+          end
+          csv_import_detail.failure_count += 1
+        end
+      end
+
+      # TODO: Right now we assume that the parent is a Work, but it would be more generally
+      # applicable to let this be any sort of CurationConcern
+      def find_parent_work(record)
+        parent_work = Work.where("#{deduplication_field}": record.mapper.send(deduplication_field).to_s).first
+        return parent_work if parent_work.present?
+        raise "[zizia] Parent work for file not found, cannot attach file to work"
+      end
+
+      def create_file_set(record)
+        work = find_parent_work(record)
+        files_to_attach = record.mapper.files
+        uploaded_files = create_upload_files(files_to_attach)
+        AttachFilesToWorkWithOrderedMembersJob.perform_later(work, uploaded_files)
+      end
+
       # Create an object using the Hyrax actor stack
       # We assume the object was created as expected if the actor stack returns true.
       def create_for(record:)
         Rails.logger.info "[zizia] event: record_import_started, batch_id: #{batch_id}, collection_id: #{collection_id}, record_title: #{record.respond_to?(:title) ? record.title : record}"
         import_type = import_type(record)
-        created = import_type.new
         if import_type == Collection
-          attrs = process_collection_attrs(record: record)
-          created.update(attrs)
-          created.save!
+          create_collection(record)
+        elsif import_type == FileSet
+          create_file_set(record)
+          Rails.logger.error "[zizia] event: Attempted to create a FileSet; however, this is not yet implemented"
         else
-          attrs = process_attrs(record: record)
-          actor_env = Hyrax::Actors::Environment.new(created,
-                                                     ::Ability.new(depositor),
-                                                     attrs)
-          if Hyrax::CurationConcern.actor.create(actor_env)
-            Rails.logger.info "[zizia] event: record_created, batch_id: #{batch_id}, record_id: #{created.id}, collection_id: #{collection_id}, record_title: #{attrs[:title]&.first}"
-            csv_import_detail.success_count += 1
-          else
-            created.errors.each do |attr, msg|
-              Rails.logger.error "[zizia] event: validation_failed, batch_id: #{batch_id}, collection_id: #{collection_id}, attribute: #{attr.capitalize}, message: #{msg}, record_title: record_title: #{attrs[:title] ? attrs[:title] : attrs}"
-            end
-            csv_import_detail.failure_count += 1
-          end
+          create_curation_concern(record, import_type)
         end
         csv_import_detail.save
       end

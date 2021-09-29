@@ -46,6 +46,32 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
       expect(validator.errors).to eq([])
       expect(validator.warnings).to eq([])
     end
+
+    it "collects all the object_types in the file" do
+      required_file_plus_work_headers = ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key', 'parent']
+      expect(validator.object_types).to match_array(["collection", "work", "file"])
+      expect(validator.required_headers_for_sheet).to match_array(required_file_plus_work_headers)
+    end
+  end
+
+  context "with a mix of object types missing a field required for only one object type" do
+    let(:path_to_file) { Rails.root.join('spec', 'fixtures', 'csv_import', 'csv_files_with_problems', 'mix_of_object_types_missing_header.csv') }
+
+    it "gives an error for the missing header based on having a file row" do
+      validator.validate
+      expect(validator.errors).to eq(['Missing required column: "Parent".  Your spreadsheet must have this column.'])
+      expect(validator.warnings).to eq([])
+    end
+  end
+
+  context "with a mix of object types missing a value required for only one object type" do
+    let(:path_to_file) { Rails.root.join('spec', 'fixtures', 'csv_import', 'csv_files_with_problems', 'mix_of_object_types_missing_parent_for_file.csv') }
+
+    it "gives an error for the missing value based on having a file row" do
+      validator.validate
+      expect(validator.errors).to eq(['Missing required metadata in row 8: "Parent" field cannot be blank'])
+      expect(validator.warnings).to eq([])
+    end
   end
 
   context "with a object type column" do
@@ -60,9 +86,16 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
       expect(validator.send(:valid_headers).sort).to eq(Zizia::HyraxBasicMetadataMapper.new.headers.map(&:to_s).sort)
     end
 
+    it "collects all the object_types in the file" do
+      required_work_headers = ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key']
+      expect(validator.object_types).to eq(["work", "collection"])
+      expect(validator.required_headers_for_sheet).to match_array(required_work_headers)
+    end
+
     it "returns required headers based on the object type" do
       required_work_headers = ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key']
       required_collection_headers = ['title', 'visibility']
+      required_file_headers = ["files", "parent"]
       expect(validator.required_headers).to eq(required_work_headers)
       expect(validator.required_headers("w")).to eq(required_work_headers)
       expect(validator.required_headers("c")).to eq(required_collection_headers)
@@ -71,6 +104,7 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
       expect(validator.required_headers("wOrk")).to eq(required_work_headers)
       expect(validator.required_headers('garbage')).to eq(required_work_headers)
       expect(validator.required_headers('')).to eq(required_work_headers)
+      expect(validator.required_headers('file')).to eq(required_file_headers)
     end
 
     it "returns different required column numbers based on the row" do
