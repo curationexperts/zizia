@@ -53,16 +53,19 @@ module Zizia
     end
 
     def valid_headers
-      Zizia::HyraxBasicMetadataMapper.new.headers.map do |header|
-        if header.class == Symbol
-          header
-        else
-          header.parameterize.underscore.to_sym
+      @valid_headers ||= begin
+        Zizia::HyraxBasicMetadataMapper.new.headers.map do |header|
+          if header.class == Symbol
+            header
+          else
+            header.parameterize.underscore.to_sym
+          end
         end
       end
     end
 
     def parse_csv
+      # Note: The 'table' method automatically turns the headers into symbols with underscores
       @parsed_csv = CSV.table(csv_file.path)
       @rows = CSV.read(csv_file.path).reject { |x| x.empty? || x.all?(nil) }
     rescue
@@ -97,7 +100,6 @@ module Zizia
 
     def missing_headers
       required_headers_for_sheet.each do |header|
-        header = header.parameterize.underscore.to_sym
         next if headers.include?(header)
         @errors << "Missing required column: \"#{header.to_s.titleize}\".  Your spreadsheet must have this column."
       end
@@ -110,27 +112,23 @@ module Zizia
     def required_headers(object_type = "w")
       return work_headers if object_type.nil?
       if object_type.casecmp("c").zero? || object_type.casecmp("collection").zero?
-        ['title', 'visibility']
+        [:title, :visibility]
       elsif object_type.casecmp("f").zero? || object_type.casecmp("file").zero?
-        ['files', 'parent']
+        [:files, :parent]
       else
         work_headers
       end
     end
 
     # TODO: Map these headers appropriately all the way through the ingest
-    # Right now the transformed headers only downcase and strip them, they don't translate them
+    # Right now we just turn them into symbols, we don't translate them
     # based on the associated mapper
     def work_headers
-      ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key']
+      [:title, :creator, :keyword, :rights_statement, :visibility, :files, :deduplication_key]
     end
 
     def duplicate_headers
-      duplicates = []
-      sorted_headers = headers.sort
-      sorted_headers.each_with_index do |x, i|
-        duplicates << x if x == sorted_headers[i + 1]
-      end
+      duplicates = headers.group_by { |e| e }.select { |_k, v| v.size > 1 }.map(&:first)
       duplicates.uniq.each do |header|
         @errors << "Duplicate column names: You can have only one \"#{header.to_s.titleize}\" column."
       end
@@ -149,16 +147,16 @@ module Zizia
         next if i.zero? # Skip the header row
         required_column_numbers(row).each_with_index do |required_column_number, j|
           next unless row[required_column_number].blank?
-          @errors << "Missing required metadata in row #{i + 1}: \"#{required_headers(object_type(row))[j].titleize}\" field cannot be blank"
+          @errors << "Missing required metadata in row #{i + 1}: \"#{required_headers(object_type(row))[j].to_s.titleize}\" field cannot be blank"
         end
       end
     end
 
     def required_column_numbers(row)
       if headers.include?(:object_type)
-        required_headers(object_type(row)).map { |header| headers.find_index(header.parameterize.underscore.to_sym) }.compact
+        required_headers(object_type(row)).map { |header| headers.find_index(header) }.compact
       else
-        required_headers.map { |header| headers.find_index(header.parameterize.underscore.to_sym) }.compact
+        required_headers.map { |header| headers.find_index(header) }.compact
       end
     end
 
@@ -171,19 +169,19 @@ module Zizia
       # Only allow valid license values expected by Hyrax.
       # Otherwise the app throws an error when it displays the work.
       def invalid_license
-        validate_values('license', :valid_licenses)
+        validate_values(:license, :valid_licenses)
       end
 
       def invalid_resource_type
-        validate_values('resource type', :valid_resource_types)
+        validate_values(:resource_type, :valid_resource_types)
       end
 
       def invalid_rights_statement
-        validate_values('rights statement', :valid_rights_statements)
+        validate_values(:rights_statement, :valid_rights_statements)
       end
 
       def invalid_object_type
-        validate_values('object type', :valid_object_types, true)
+        validate_values(:object_type, :valid_object_types, true)
       end
 
       def valid_licenses
@@ -204,7 +202,7 @@ module Zizia
 
       # Make sure this column contains only valid values
       def validate_values(header_name, valid_values_method, case_insensitive = false)
-        column_number = headers.find_index(header_name.parameterize.underscore.to_sym)
+        column_number = headers.find_index(header_name)
         return unless column_number
 
         @rows.each_with_index do |row, i|
@@ -215,7 +213,7 @@ module Zizia
           invalid_values = invalid_values(values, valid_values, case_insensitive)
 
           invalid_values.each do |value|
-            @errors << "Invalid #{header_name.titleize} in row #{i + 1}: #{value}"
+            @errors << "Invalid #{header_name.to_s.titleize} in row #{i + 1}: #{value}"
           end
         end
       end

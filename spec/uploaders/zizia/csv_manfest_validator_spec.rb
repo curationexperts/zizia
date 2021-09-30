@@ -6,14 +6,14 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
   subject(:validator) { described_class.new(uploader) }
 
   let(:uploader) { Zizia::CsvManifestUploader.new }
-  let(:required_file_plus_work_headers) { ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key', 'parent'] }
-  let(:required_work_headers) { ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key'] }
-  let(:required_collection_headers) { ['title', 'visibility'] }
-  let(:required_file_headers) { ["files", "parent"] }
-  # let(:required_file_plus_work_headers) {[:title, :creator, :keyword, :rights_statement, :visibility, :files, :deduplication_key, :parent]}
-  # let(:required_work_headers) {[:title, :creator, :keyword, :rights_statement, :visibility, :files, :deduplication_key]}
-  # let(:required_collection_headers) { [:title, :visibility] }
-  # let(:required_file_headers) { [:files, :parent] }
+  # let(:required_file_plus_work_headers) { ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key', 'parent'] }
+  # let(:required_work_headers) { ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key'] }
+  # let(:required_collection_headers) { ['title', 'visibility'] }
+  # let(:required_file_headers) { ["files", "parent"] }
+  let(:required_file_plus_work_headers) { [:title, :creator, :keyword, :rights_statement, :visibility, :files, :deduplication_key, :parent] }
+  let(:required_work_headers) { [:title, :creator, :keyword, :rights_statement, :visibility, :files, :deduplication_key] }
+  let(:required_collection_headers) { [:title, :visibility] }
+  let(:required_file_headers) { [:files, :parent] }
   before do
     Zizia::CsvManifestUploader.enable_processing = true
     File.open(path_to_file) { |f| uploader.store!(f) }
