@@ -53,20 +53,29 @@ module Zizia
     end
 
     def valid_headers
-      Zizia::HyraxBasicMetadataMapper.new.headers.map(&:to_s)
+      Zizia::HyraxBasicMetadataMapper.new.headers.map do |header|
+        if header.class == Symbol
+          header
+        else
+          header.parameterize.underscore.to_sym
+        end
+      end
     end
 
     def parse_csv
+      @parsed_csv = CSV.table(csv_file.path)
       @rows = CSV.read(csv_file.path).reject { |x| x.empty? || x.all?(nil) }
-      @headers = @rows.first || []
-      @transformed_headers = @headers.map { |header| header.downcase.strip }
     rescue
       @errors << 'We are unable to read this CSV file.'
     end
 
+    def headers
+      @headers ||= @parsed_csv.headers
+    end
+
     def object_types
-      return ["work"] unless @transformed_headers.include?("object type")
-      original_object_types = @rows.map { |row| row[@transformed_headers.find_index("object type")] }
+      return ["work"] unless headers.include?(:object_type)
+      original_object_types = @rows.map { |row| row[headers.find_index(:object_type)] }
       original_object_types.map { |object_type| map_object_type(object_type) }.compact.uniq
     end
 
@@ -88,8 +97,9 @@ module Zizia
 
     def missing_headers
       required_headers_for_sheet.each do |header|
-        next if @transformed_headers.include?(header)
-        @errors << "Missing required column: \"#{header.titleize}\".  Your spreadsheet must have this column."
+        header = header.parameterize.underscore.to_sym
+        next if headers.include?(header)
+        @errors << "Missing required column: \"#{header.to_s.titleize}\".  Your spreadsheet must have this column."
       end
     end
 
@@ -117,18 +127,18 @@ module Zizia
 
     def duplicate_headers
       duplicates = []
-      sorted_headers = @transformed_headers.sort
+      sorted_headers = headers.sort
       sorted_headers.each_with_index do |x, i|
         duplicates << x if x == sorted_headers[i + 1]
       end
       duplicates.uniq.each do |header|
-        @errors << "Duplicate column names: You can have only one \"#{header.titleize}\" column."
+        @errors << "Duplicate column names: You can have only one \"#{header.to_s.titleize}\" column."
       end
     end
 
     # Warn the user if we find any unexpected headers.
     def unrecognized_headers
-      extra_headers = @transformed_headers - valid_headers
+      extra_headers = headers - valid_headers
       extra_headers.each do |header|
         @warnings << "The field name \"#{header}\" is not supported.  This field will be ignored, and the metadata for this field will not be imported."
       end
@@ -145,17 +155,17 @@ module Zizia
     end
 
     def required_column_numbers(row)
-      if @transformed_headers.include?("object type")
-        required_headers(object_type(row)).map { |header| @transformed_headers.find_index(header) }.compact
+      if headers.include?(:object_type)
+        required_headers(object_type(row)).map { |header| headers.find_index(header.parameterize.underscore.to_sym) }.compact
       else
-        required_headers.map { |header| @transformed_headers.find_index(header) }.compact
+        required_headers.map { |header| headers.find_index(header.parameterize.underscore.to_sym) }.compact
       end
     end
 
     private
 
       def object_type(row)
-        row[@transformed_headers.find_index("object type")]&.downcase
+        row[headers.find_index(:object_type)]&.downcase
       end
 
       # Only allow valid license values expected by Hyrax.
@@ -194,7 +204,7 @@ module Zizia
 
       # Make sure this column contains only valid values
       def validate_values(header_name, valid_values_method, case_insensitive = false)
-        column_number = @transformed_headers.find_index(header_name)
+        column_number = headers.find_index(header_name.parameterize.underscore.to_sym)
         return unless column_number
 
         @rows.each_with_index do |row, i|
