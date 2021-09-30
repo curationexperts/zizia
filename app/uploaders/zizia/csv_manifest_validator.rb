@@ -78,8 +78,7 @@ module Zizia
 
     def object_types
       return ["work"] unless headers.include?(:object_type)
-      original_object_types = @rows.map { |row| row[headers.find_index(:object_type)] }
-      original_object_types.map { |object_type| map_object_type(object_type) }.compact.uniq
+      @object_types ||= @parsed_csv[:object_type].map { |object_type| map_object_type(object_type) }.compact.uniq
     end
 
     def map_object_type(orig_value)
@@ -90,9 +89,6 @@ module Zizia
         "work"
       when "f", "file"
         "file"
-      # Don't return an object type for the header
-      when "object type"
-        nil
       else
         "work"
       end
@@ -143,20 +139,13 @@ module Zizia
     end
 
     def missing_values
-      @rows.each_with_index do |row, i|
-        next if i.zero? # Skip the header row
-        required_column_numbers(row).each_with_index do |required_column_number, j|
-          next unless row[required_column_number].blank?
-          @errors << "Missing required metadata in row #{i + 1}: \"#{required_headers(object_type(row))[j].to_s.titleize}\" field cannot be blank"
+      @parsed_csv.each_with_index do |row, index|
+        # Skip blank rows
+        next if row.to_hash.values.all?(&:nil?)
+        required_headers(object_type(row)).each do |required_header|
+          next unless row[required_header].blank?
+          @errors << "Missing required metadata in row #{index + 2}: \"#{required_header.to_s.titleize}\" field cannot be blank"
         end
-      end
-    end
-
-    def required_column_numbers(row)
-      if headers.include?(:object_type)
-        required_headers(object_type(row)).map { |header| headers.find_index(header) }.compact
-      else
-        required_headers.map { |header| headers.find_index(header) }.compact
       end
     end
 

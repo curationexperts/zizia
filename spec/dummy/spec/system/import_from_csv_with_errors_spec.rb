@@ -85,9 +85,9 @@ RSpec.describe 'Importing records from a CSV file with fatal errors', :clean, ty
           click_on 'Preview Import'
 
           expect(page).to have_content 'This import will process 13 row(s).'
-          expect(page).to have_content 'Missing required metadata in row 14: "Visibility" field cannot be blank'
+          expect(page).to have_content 'Missing required metadata in row 17: "Visibility" field cannot be blank'
 
-          expect(page).not_to have_content 'Missing required metadata in row 14: "Creator" field cannot be blank'
+          expect(page).not_to have_content 'Missing required metadata in row 17: "Creator" field cannot be blank'
         end
       end
       context "with a csv with an unrecognized object_type" do

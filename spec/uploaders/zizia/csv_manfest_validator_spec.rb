@@ -6,14 +6,12 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
   subject(:validator) { described_class.new(uploader) }
 
   let(:uploader) { Zizia::CsvManifestUploader.new }
-  # let(:required_file_plus_work_headers) { ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key', 'parent'] }
-  # let(:required_work_headers) { ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key'] }
-  # let(:required_collection_headers) { ['title', 'visibility'] }
-  # let(:required_file_headers) { ["files", "parent"] }
+
   let(:required_file_plus_work_headers) { [:title, :creator, :keyword, :rights_statement, :visibility, :files, :deduplication_key, :parent] }
   let(:required_work_headers) { [:title, :creator, :keyword, :rights_statement, :visibility, :files, :deduplication_key] }
   let(:required_collection_headers) { [:title, :visibility] }
   let(:required_file_headers) { [:files, :parent] }
+
   before do
     Zizia::CsvManifestUploader.enable_processing = true
     File.open(path_to_file) { |f| uploader.store!(f) }
@@ -65,7 +63,7 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
 
     it "gives an error for the missing header based on having a file row" do
       validator.validate
-      expect(validator.errors).to eq(['Missing required column: "Parent".  Your spreadsheet must have this column.'])
+      expect(validator.errors).to eq(['Missing required column: "Parent".  Your spreadsheet must have this column.', 'Missing required metadata in row 8: "Parent" field cannot be blank'])
       expect(validator.warnings).to eq([])
     end
   end
@@ -109,11 +107,6 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
       expect(validator.required_headers('')).to eq(required_work_headers)
       expect(validator.required_headers('file')).to eq(required_file_headers)
     end
-
-    it "returns different required column numbers based on the row" do
-      expect(validator.required_column_numbers(work_row)).to eq([1, 3, 6, 8, 18, 19, 20])
-      expect(validator.required_column_numbers(collection_row)).to eq([1, 18])
-    end
   end
 
   context "without an object type column and empty rows" do
@@ -124,7 +117,10 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
     end
     it "still gives required headers and their associated column numbers" do
       expect(validator.required_headers).to match_array(required_work_headers)
-      expect(validator.required_column_numbers(work_row)).to eq([8, 7, 5, 6, 3, 9, 2])
+    end
+
+    it "can read the headers" do
+      expect(validator.headers).to eq([:identifier, :license, :deduplication_key, :visibility, :location, :keyword, :rights_statement, :creator, :title, :files])
     end
 
     it "still validates the file" do
