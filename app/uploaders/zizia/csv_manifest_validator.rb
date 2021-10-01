@@ -40,19 +40,14 @@ module Zizia
     # One record per row
     def record_count
       return nil unless @parsed_csv.size
-
-      row_with_values = @parsed_csv.map { |row| row.to_hash.values.all?(&:nil?) }
-      row_with_values.count(false)
+      row_with_values = @parsed_csv.reject { |row| row.to_hash.values.all?(&:nil?) }
+      row_with_values.count
     end
 
     def delimiter
-      @delimiter ||= default_delimiter
+      @delimiter ||= Zizia::HyraxBasicMetadataMapper.new.delimiter
     end
     attr_writer :delimiter
-
-    def default_delimiter
-      Zizia::HyraxBasicMetadataMapper.new.delimiter
-    end
 
     def valid_headers
       @valid_headers ||= begin
@@ -69,7 +64,6 @@ module Zizia
     def parse_csv
       # Note: The 'table' method automatically turns the headers into symbols with underscores
       @parsed_csv = CSV.table(csv_file.path)
-      # @rows = CSV.read(csv_file.path).reject { |x| x.empty? || x.all?(nil) }
     rescue
       @errors << 'We are unable to read this CSV file.'
     end
@@ -79,8 +73,10 @@ module Zizia
     end
 
     def object_types
-      return ["work"] unless headers.include?(:object_type)
-      @object_types ||= @parsed_csv[:object_type].map { |object_type| map_object_type(object_type) }.compact.uniq
+      @object_types ||= begin
+        return ["work"] unless headers.include?(:object_type)
+        @parsed_csv[:object_type].map { |object_type| map_object_type(object_type) }.compact.uniq
+      end
     end
 
     def map_object_type(orig_value)
@@ -144,7 +140,7 @@ module Zizia
       @parsed_csv.each_with_index do |row, index|
         # Skip blank rows
         next if row.to_hash.values.all?(&:nil?)
-        required_headers(object_type(row)).each do |required_header|
+        required_headers(row[:object_type]).each do |required_header|
           next unless row[required_header].blank?
           @errors << "Missing required metadata in row #{index + 2}: \"#{required_header.to_s.titleize}\" field cannot be blank"
         end
@@ -152,10 +148,6 @@ module Zizia
     end
 
     private
-
-      def object_type(row)
-        row[headers.find_index(:object_type)]&.downcase
-      end
 
       # Only allow valid license values expected by Hyrax.
       # Otherwise the app throws an error when it displays the work.
