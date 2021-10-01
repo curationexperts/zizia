@@ -48,7 +48,6 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
       end
 
       it 'creates a collection and a work via the UI' do
-        pending('Not requiring a work to have info in the files row if it has files elsewhere on the sheet')
         visit '/csv_imports/new'
         # Fill in and submit the form
         expect do
