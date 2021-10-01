@@ -151,7 +151,6 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
     end
 
     it "does not require a file row value for a work if the files are on a separate row" do
-      pending("Validating the CSV file as a whole")
       validator.validate
       expect(validator.errors).to eq([])
       expect(validator.warnings).to eq([])

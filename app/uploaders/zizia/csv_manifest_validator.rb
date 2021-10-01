@@ -40,8 +40,8 @@ module Zizia
     # One record per row
     def record_count
       return nil unless @parsed_csv.size
-      row_with_values = @parsed_csv.reject { |row| row.to_hash.values.all?(&:nil?) }
-      row_with_values.count
+      rows_with_values = @parsed_csv.reject { |row| row.to_hash.values.all?(&:nil?) }
+      rows_with_values.count
     end
 
     def delimiter
@@ -103,21 +103,32 @@ module Zizia
       object_types.flat_map { |object_type| required_headers(object_type) }.compact.uniq
     end
 
-    def required_headers(object_type = "w")
-      return work_headers if object_type.nil?
-      if object_type.casecmp("c").zero? || object_type.casecmp("collection").zero?
+    def required_headers(object_type = "w", *row)
+      return default_work_headers if object_type.nil?
+      case map_object_type(object_type)
+      when 'collection'
         [:title, :visibility]
-      elsif object_type.casecmp("f").zero? || object_type.casecmp("file").zero?
+      when 'file'
         [:files, :parent]
+      when 'work'
+        return default_work_headers if row.empty?
+        required_work_headers(row)
       else
-        work_headers
+        default_work_headers
       end
+    end
+
+    def required_work_headers(row)
+      file_rows = @parsed_csv.select { |csv_row| map_object_type(csv_row[:object_type]) == 'file' }
+      parent_identifiers_for_file_rows = file_rows.map { |csv_row| csv_row[:parent] }
+      return default_work_headers unless parent_identifiers_for_file_rows.include?(row.first[:identifier])
+      default_work_headers - [:files]
     end
 
     # TODO: Map these headers appropriately all the way through the ingest
     # Right now we just turn them into symbols, we don't translate them
     # based on the associated mapper
-    def work_headers
+    def default_work_headers
       [:title, :creator, :keyword, :rights_statement, :visibility, :files, :deduplication_key]
     end
 
@@ -140,7 +151,7 @@ module Zizia
       @parsed_csv.each_with_index do |row, index|
         # Skip blank rows
         next if row.to_hash.values.all?(&:nil?)
-        required_headers(row[:object_type]).each do |required_header|
+        required_headers(row[:object_type], row).each do |required_header|
           next unless row[required_header].blank?
           @errors << "Missing required metadata in row #{index + 2}: \"#{required_header.to_s.titleize}\" field cannot be blank"
         end
