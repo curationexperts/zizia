@@ -31,6 +31,10 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
       expect(validator.errors).to eq(['Missing required metadata in row 3: "Creator" field cannot be blank'])
       expect(validator.warnings).to eq(['The field name "type" is not supported.  This field will be ignored, and the metadata for this field will not be imported.'])
     end
+
+    it "counts the records in the sheet" do
+      expect(validator.record_count).to eq 2
+    end
   end
 
   context "with a csv with the wrong object type" do
@@ -132,6 +136,10 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
     it "still gives the expected headers" do
       sheet_headers = [:identifier, :license, :deduplication_key, :visibility, :location, :keyword, :rights_statement, :creator, :title, :files]
       expect(validator.headers). to match_array(sheet_headers)
+    end
+
+    it "counts the records in the sheet" do
+      expect(validator.record_count).to eq 2
     end
   end
 

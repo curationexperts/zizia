@@ -25,7 +25,7 @@ module Zizia
 
     def validate
       parse_csv
-      return unless @rows
+      return unless @parsed_csv
 
       missing_headers
       duplicate_headers
@@ -39,8 +39,10 @@ module Zizia
 
     # One record per row
     def record_count
-      return nil unless @rows
-      @rows.size - 1 # Don't include the header row
+      return nil unless @parsed_csv.size
+
+      row_with_values = @parsed_csv.map { |row| row.to_hash.values.all?(&:nil?) }
+      row_with_values.count(false)
     end
 
     def delimiter
@@ -67,7 +69,7 @@ module Zizia
     def parse_csv
       # Note: The 'table' method automatically turns the headers into symbols with underscores
       @parsed_csv = CSV.table(csv_file.path)
-      @rows = CSV.read(csv_file.path).reject { |x| x.empty? || x.all?(nil) }
+      # @rows = CSV.read(csv_file.path).reject { |x| x.empty? || x.all?(nil) }
     rescue
       @errors << 'We are unable to read this CSV file.'
     end
@@ -191,18 +193,15 @@ module Zizia
 
       # Make sure this column contains only valid values
       def validate_values(header_name, valid_values_method, case_insensitive = false)
-        column_number = headers.find_index(header_name)
-        return unless column_number
-
-        @rows.each_with_index do |row, i|
-          next if i.zero? # Skip the header row
-          next unless row[column_number]
-          values = row[column_number].split(delimiter)
+        @parsed_csv.each_with_index do |row, index|
+          next if row.to_hash.values.all?(&:nil?) # Skip blank rows
+          next unless row[header_name]
+          values = row[header_name].split(delimiter)
           valid_values = method(valid_values_method).call
           invalid_values = invalid_values(values, valid_values, case_insensitive)
 
           invalid_values.each do |value|
-            @errors << "Invalid #{header_name.to_s.titleize} in row #{i + 1}: #{value}"
+            @errors << "Invalid #{header_name.to_s.titleize} in row #{index + 2}: #{value}"
           end
         end
       end
