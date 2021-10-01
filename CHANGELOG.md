@@ -1,5 +1,13 @@
 # Changelog
 
+## [v6.7.1](https://github.com/curationexperts/zizia/tree/v6.7.1) (2021-10-01)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v6.7.0...v6.7.1)
+
+**Merged pull requests:**
+
+- Refactor headers to be parsed along with the rest of the CSV [\#141](https://github.com/curationexperts/zizia/pull/141) ([maxkadel](https://github.com/maxkadel))
+
 ## [v6.7.0](https://github.com/curationexperts/zizia/tree/v6.7.0) (2021-09-29)
 
 [Full Changelog](https://github.com/curationexperts/zizia/compare/v6.6.4...v6.7.0)
