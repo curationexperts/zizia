@@ -7,6 +7,11 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
 
   let(:uploader) { Zizia::CsvManifestUploader.new }
 
+  let(:required_file_plus_work_headers) { [:title, :creator, :keyword, :rights_statement, :visibility, :files, :deduplication_key, :parent] }
+  let(:required_work_headers) { [:title, :creator, :keyword, :rights_statement, :visibility, :files, :deduplication_key] }
+  let(:required_collection_headers) { [:title, :visibility] }
+  let(:required_file_headers) { [:files, :parent] }
+
   before do
     Zizia::CsvManifestUploader.enable_processing = true
     File.open(path_to_file) { |f| uploader.store!(f) }
@@ -25,6 +30,10 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
       validator.validate
       expect(validator.errors).to eq(['Missing required metadata in row 3: "Creator" field cannot be blank'])
       expect(validator.warnings).to eq(['The field name "type" is not supported.  This field will be ignored, and the metadata for this field will not be imported.'])
+    end
+
+    it "counts the records in the sheet" do
+      expect(validator.record_count).to eq 2
     end
   end
 
@@ -48,7 +57,6 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
     end
 
     it "collects all the object_types in the file" do
-      required_file_plus_work_headers = ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key', 'parent']
       expect(validator.object_types).to match_array(["collection", "work", "file"])
       expect(validator.required_headers_for_sheet).to match_array(required_file_plus_work_headers)
     end
@@ -59,7 +67,7 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
 
     it "gives an error for the missing header based on having a file row" do
       validator.validate
-      expect(validator.errors).to eq(['Missing required column: "Parent".  Your spreadsheet must have this column.'])
+      expect(validator.errors).to eq(['Missing required column: "Parent".  Your spreadsheet must have this column.', 'Missing required metadata in row 8: "Parent" field cannot be blank'])
       expect(validator.warnings).to eq([])
     end
   end
@@ -83,19 +91,16 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
     let(:collection_row) { 'C,,,,7,Public,,,,,Test collection,' }
 
     it "thinks valid fields is the same as hyraxbasicmetadata.fields" do
-      expect(validator.send(:valid_headers).sort).to eq(Zizia::HyraxBasicMetadataMapper.new.headers.map(&:to_s).sort)
+      valid_headers = [:abstract_or_summary, :bibliographic_citation, :contributor, :creator, :date_created, :deduplication_key, :files, :identifier, :keyword, :language, :license, :location, :object_type, :parent, :publisher, :related_url, :resource_type, :rights_statement, :source, :subject, :title, :visibility]
+      expect(validator.send(:valid_headers).sort).to match_array(valid_headers)
     end
 
     it "collects all the object_types in the file" do
-      required_work_headers = ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key']
       expect(validator.object_types).to eq(["work", "collection"])
       expect(validator.required_headers_for_sheet).to match_array(required_work_headers)
     end
 
     it "returns required headers based on the object type" do
-      required_work_headers = ['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key']
-      required_collection_headers = ['title', 'visibility']
-      required_file_headers = ["files", "parent"]
       expect(validator.required_headers).to eq(required_work_headers)
       expect(validator.required_headers("w")).to eq(required_work_headers)
       expect(validator.required_headers("c")).to eq(required_collection_headers)
@@ -106,22 +111,58 @@ RSpec.describe Zizia::CsvManifestValidator, type: :model do
       expect(validator.required_headers('')).to eq(required_work_headers)
       expect(validator.required_headers('file')).to eq(required_file_headers)
     end
-
-    it "returns different required column numbers based on the row" do
-      expect(validator.required_column_numbers(work_row)).to eq([1, 3, 6, 8, 18, 19, 20])
-      expect(validator.required_column_numbers(collection_row)).to eq([1, 18])
-    end
   end
 
-  context "without an object type column" do
+  context "without an object type column and empty rows" do
     let(:path_to_file) { Rails.root.join('spec', 'fixtures', 'csv_import', 'good', 'all_fields_only_new.csv') }
     let(:work_row) do
       'abc/123,https://creativecommons.org/licenses/by/4.0/,abc/123,PUBlic,http://www.geonames.org/5667009/montana.html|~|http://www.geonames.org/6252001/united-states.html,Clothing stores $z California $z Los Angeles|~|Interior design $z California $z Los Angeles,http://rightsstatements.org/vocab/InC/1.0/,"Connell, Will, $d 1898-1961","Interior view of The Bachelors haberdashery designed by Julius Ralph Davidson, Los Angeles, circa 1929",dog.jpg
     '
     end
     it "still gives required headers and their associated column numbers" do
-      expect(validator.required_headers).to eq(['title', 'creator', 'keyword', 'rights statement', 'visibility', 'files', 'deduplication_key'])
-      expect(validator.required_column_numbers(work_row)).to eq([8, 7, 5, 6, 3, 9, 2])
+      expect(validator.required_headers).to match_array(required_work_headers)
+    end
+
+    it "can read the headers" do
+      expect(validator.headers).to eq([:identifier, :license, :deduplication_key, :visibility, :location, :keyword, :rights_statement, :creator, :title, :files])
+    end
+
+    it "still validates the file" do
+      validator.validate
+      expect(validator.errors).to eq([])
+      expect(validator.warnings).to eq([])
+    end
+
+    it "still gives the expected headers" do
+      sheet_headers = [:identifier, :license, :deduplication_key, :visibility, :location, :keyword, :rights_statement, :creator, :title, :files]
+      expect(validator.headers). to match_array(sheet_headers)
+    end
+
+    it "counts the records in the sheet" do
+      expect(validator.record_count).to eq 2
+    end
+  end
+
+  context "with files for a work on a separate row" do
+    let(:path_to_file) { Rails.root.join('spec', 'fixtures', 'csv_import', 'good', 'many_files.csv') }
+
+    it "still gives required headers for entire sheet" do
+      expect(validator.required_headers_for_sheet).to match_array(required_file_plus_work_headers)
+    end
+
+    it "does not require a file row value for a work if the files are on a separate row" do
+      validator.validate
+      expect(validator.errors).to eq([])
+      expect(validator.warnings).to eq([])
+    end
+  end
+
+  context "with duplicate headers" do
+    let(:path_to_file) { Rails.root.join('spec', 'fixtures', 'csv_import', 'csv_files_with_problems', 'duplicate_headers.csv') }
+    it "gives a warning for duplicate headers" do
+      validator.validate
+      expect(validator.errors).to match_array(['Duplicate column names: You can have only one "Parent" column.'])
+      expect(validator.warnings).to eq([])
     end
   end
 end
