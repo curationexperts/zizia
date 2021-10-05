@@ -1,5 +1,13 @@
 # Changelog
 
+## [v6.7.2](https://github.com/curationexperts/zizia/tree/v6.7.2) (2021-10-05)
+
+[Full Changelog](https://github.com/curationexperts/zizia/compare/v6.7.1...v6.7.2)
+
+**Merged pull requests:**
+
+- Pass all records to importer so we can create files along with works [\#142](https://github.com/curationexperts/zizia/pull/142) ([maxkadel](https://github.com/maxkadel))
+
 ## [v6.7.1](https://github.com/curationexperts/zizia/tree/v6.7.1) (2021-10-01)
 
 [Full Changelog](https://github.com/curationexperts/zizia/compare/v6.7.0...v6.7.1)
