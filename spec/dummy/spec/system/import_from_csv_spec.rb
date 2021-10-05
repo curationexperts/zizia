@@ -65,7 +65,9 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
 
           # There is a link so the user can cancel.
           expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
-          expect(page).to have_button('Start Import')
+
+          expect(page).not_to have_content('The field name "parent" is not supported.')
+          expect(page).not_to have_content('The field name "object type" is not supported.')
 
           # After reading the warnings, the user decides
           # to continue with the import.
@@ -93,7 +95,6 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
 
             attach_file('csv_import[manifest]', csv_file, make_visible: true)
             click_on 'Preview Import'
-            expect(page).to have_button('Start Import')
             click_on 'Start Import'
           end.to change { Work.count }.by(2)
              .and change { Collection.count }.by(2)
@@ -115,7 +116,6 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
 
             attach_file('csv_import[manifest]', csv_file, make_visible: true)
             click_on 'Preview Import'
-            expect(page).to have_button('Start Import')
             click_on 'Start Import'
           end.to change { Work.count }.by(1)
 
@@ -169,7 +169,6 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
 
           # After reading the warnings, the user decides
           # to continue with the import.
-          expect(page).to have_button('Start Import')
           click_on 'Start Import'
 
           # The show page for the CsvImport
@@ -229,7 +228,6 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
 
           # After reading the warnings, the user decides
           # to continue with the import.
-          expect(page).to have_button('Start Import')
           click_on 'Start Import'
         end.to_not change { Work.count }
         # The show page for the CsvImport
@@ -276,7 +274,6 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
 
           # After reading the warnings, the user decides
           # to continue with the import.
-          expect(page).to have_button('Start Import')
           click_on 'Start Import'
 
           # The show page for the CsvImport
@@ -320,7 +317,6 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
 
           # After reading the warnings, the user decides
           # to continue with the import.
-          expect(page).to have_button('Start Import')
           click_on 'Start Import'
 
           # The show page for the CsvImport
