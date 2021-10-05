@@ -3,6 +3,7 @@ module ContentDepositEventJobPrepends
     super
     if repo_object.deduplication_key
       pre_ingest_work = Zizia::PreIngestWork.find_by(deduplication_key: repo_object.deduplication_key)
+      return nil unless pre_ingest_work
       pre_ingest_work.status = 'attached'
       pre_ingest_work.save
     end

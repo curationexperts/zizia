@@ -13,8 +13,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
     example.run
     ENV['IMPORT_PATH'] = orig_import_path
   end
-
-  let(:csv_file) { File.join(fixture_path, 'csv_import', 'good', 'many_files.csv') }
+  let(:csv_file) { File.join(fixture_path, 'csv_import', 'good', 'Postcards_-_Minneapolis_UNPACKED.csv') }
   let(:test_strategy) { Flipflop::FeatureSet.current.test! }
 
   context 'logged in as an admin user' do
@@ -53,24 +52,26 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
         expect do
           select 'Update Existing Metadata, create new works', from: "csv_import[update_actor_stack]"
           attach_file('csv_import[manifest]', csv_file, make_visible: true)
-          expect(page).to have_content('You sucessfully uploaded this CSV: many_files.csv')
+          expect(page).to have_content('You sucessfully uploaded this CSV: Postcards_-_Minneapolis_UNPACKED.csv')
 
           click_on 'Preview Import'
 
-          expect(page).to have_content 'This import will process 6 row(s).'
+          expect(page).to have_content 'This import will process 5 row(s).'
 
           click_on 'Start Import'
-        end.to change { Work.count }.by(1)
+        end.to change { Work.count }.by(2)
             .and change { Collection.count }.by(1)
             .and change { FileSet.count }.by(4)
 
         # The show page for the CsvImport
-        expect(page).to have_content 'many_files.csv'
+        expect(page).to have_content 'Postcards_-_Minneapolis_UNPACKED.csv'
         expect(page).to have_content 'Start time'
 
         # Ensure that all the fields got assigned as expected
-        work_one = Work.where(title: "*tomatoes*").first
-        expect(work_one.title.first).to match(/tomatoes/)
+        work_one = Work.where(title: "*Canoeing*").first
+        work_two = Work.where(title: "*flag*").first
+        expect(work_one.file_sets.count).to eq 2
+        expect(work_two.file_sets.count).to eq 2
       end
     end
   end
