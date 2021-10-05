@@ -65,10 +65,10 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
 
           # There is a link so the user can cancel.
           expect(page).to have_link 'Cancel', href: '/csv_imports/new?locale=en'
+          expect(page).to have_button('Start Import')
 
           # After reading the warnings, the user decides
           # to continue with the import.
-          expect(page).to have_button('Start Import')
           click_on 'Start Import'
         end.to change { Work.count }.by(1)
             .and change { Collection.count }.by(1)
