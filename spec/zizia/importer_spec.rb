@@ -15,6 +15,11 @@ describe Zizia::Importer do
         records << record.attributes
       end
 
+      def import_all_records(records)
+        @work_records = records.select { |record| record.object_type == "work" }
+        @work_records.each { |record| import(record: record) }
+      end
+
       def records
         @records ||= []
       end

@@ -24,6 +24,14 @@ module Zizia
       raise e
     end
 
+    def import_all_records(records)
+      @collection_records = records.select { |record| record.object_type == "collection" }
+      @collection_records.each { |record| create_collection(record) }
+      @work_records = records.select { |record| record.object_type == "work" }
+      @file_records = records.select { |record| record.object_type == "file" }
+      @work_records.each { |record| import(record: record) }
+    end
+
     def import_type(record)
       raise 'No curation_concern found for import' unless
         defined?(Hyrax) && Hyrax&.config&.curation_concerns&.any?
