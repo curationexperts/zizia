@@ -6,8 +6,8 @@ Capybara.server = :puma, { Silent: true }
 
 Capybara.register_driver :chrome_headless do |app|
   client = Selenium::WebDriver::Remote::Http::Default.new
-  client.read_timeout = 120
-  client.open_timeout = 120
+  client.read_timeout = 240
+  client.open_timeout = 240
   options = ::Selenium::WebDriver::Chrome::Options.new
 
   options.add_argument('--headless')
