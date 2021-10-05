@@ -50,6 +50,6 @@ workflows:
                 ruby_version: 2.6.6
                 rails_version: 5.2.6
             - build:
-                name: ruby2-7-1_with_rails_5_2
+                name: ruby2-7-4_with_rails_5_2
                 ruby_version: 2.7.4
                 rails_version: 5.2.6
