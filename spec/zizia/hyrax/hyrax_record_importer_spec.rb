@@ -159,11 +159,13 @@ describe Zizia::HyraxRecordImporter, :perform_jobs, :clean do
     end
     it "creates an importer" do
       expect(importer).to be_an_instance_of Zizia::Importer
+      # rubocop: disable Layout/MultilineMethodCallIndentation
       expect do
         importer.import
       end.to change { Collection.count }.by(1)
-                                        .and change { Work.count }.by(2)
-                                                                  .and change { FileSet.count }.by(4)
+         .and change { Work.count }.by(2)
+         .and change { FileSet.count }.by(4)
+      # rubocop: enable Layout/MultilineMethodCallIndentation
     end
   end
 end

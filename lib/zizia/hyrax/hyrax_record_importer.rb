@@ -57,10 +57,10 @@ module Zizia
     end
 
     def import_all_records(records)
-      @collection_records = records.select { |record| record.object_type == "collection" }
-      @collection_records.each { |record| create_collection(record) }
-      @work_records = records.select { |record| record.object_type == "work" }
-      @file_records = records.select { |record| record.object_type == "file" }
+      @collection_records = records.select { |record| record.object_type == :collection }
+      @collection_records.each { |record| import(record: record) }
+      @work_records = records.select { |record| record.object_type == :work }
+      @file_records = records.select { |record| record.object_type == :file }
       @work_records.each { |record| import(record: record) }
     end
 
@@ -116,19 +116,19 @@ module Zizia
       raise 'No curation_concern found for import' unless
         defined?(Hyrax) && Hyrax&.config&.curation_concerns&.any?
       if record.object_type.present?
-        determine_object_type(record.object_type.first&.downcase)
+        determine_object_type(record.object_type)
       else
         Hyrax.config.curation_concerns.first
       end
     end
 
-    def determine_object_type(object_type_string)
-      case object_type_string
-      when "c", "collection"
+    def determine_object_type(object_type)
+      case object_type
+      when :collection
         Collection
-      when "w", "work"
+      when :work
         Hyrax.config.curation_concerns.first
-      when "f", "file"
+      when :file
         FileSet
       else
         raise  "[zizia] Unrecognized object_type: #{object_type_string}"
@@ -163,7 +163,9 @@ module Zizia
                                else
                                  []
                                end
+      # Handle object_type=file rows that have one or more file per row
       separate_line_files_to_attach = file_records_to_attach.flat_map { |file_rec| file_rec.mapper.files }
+      # Handle a work with a single cell packed with multiple files - e.g. "file1.txt|~|file2.txt|~|file3.txt"
       inline_files_to_attach = record.mapper.files
       files_to_attach = separate_line_files_to_attach + inline_files_to_attach
 

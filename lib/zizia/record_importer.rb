@@ -24,20 +24,17 @@ module Zizia
       raise e
     end
 
+    # This method should be overwritten by a specific method in a concrete importer
     def import_all_records(records)
-      @collection_records = records.select { |record| record.object_type == "collection" }
-      @collection_records.each { |record| create_collection(record) }
-      @work_records = records.select { |record| record.object_type == "work" }
-      @file_records = records.select { |record| record.object_type == "file" }
-      @work_records.each { |record| import(record: record) }
+      records.each { |record| import(record: record) }
     end
 
     def import_type(record)
       raise 'No curation_concern found for import' unless
         defined?(Hyrax) && Hyrax&.config&.curation_concerns&.any?
       if record.object_type
-        case record.object_type.first&.downcase
-        when "c"
+        case record.object_type
+        when :collection
           Collection
         else
           Hyrax.config.curation_concerns.first
@@ -54,6 +51,7 @@ module Zizia
         attrs = record.attributes
         # Ensure nothing is passed in the object_type field, since this is internal to Zizia
         # and will eventually determine what type of object is created
+        attrs.delete(:deduplication_key)
         attrs.delete(:object_type)
         attrs.delete(:parent)
         attrs

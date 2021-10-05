@@ -104,14 +104,14 @@ module Zizia
 
     def object_type
       object_type_input = metadata[matching_header('object type')]&.downcase&.gsub(/\s+/, "")
-      return "work" unless object_type_input.present?
+      return :work unless object_type_input.present?
       case object_type_input
       when "collection", "c"
-        "collection"
+        :collection
       when "file", "f"
-        "file"
+        :file
       when "work", "w"
-        "work"
+        :work
       else
         raise "[zizia] Unrecognized object_type: #{object_type_input}"
       end
