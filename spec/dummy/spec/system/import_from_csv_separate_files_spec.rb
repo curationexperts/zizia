@@ -57,7 +57,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
           click_on 'Preview Import'
 
           expect(page).to have_content 'This import will process 5 row(s).'
-
+          expect(page).to have_button('Start Import')
           click_on 'Start Import'
         end.to change { Work.count }.by(2)
             .and change { Collection.count }.by(1)
