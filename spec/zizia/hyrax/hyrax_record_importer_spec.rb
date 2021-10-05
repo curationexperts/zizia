@@ -134,4 +134,36 @@ describe Zizia::HyraxRecordImporter, :perform_jobs, :clean do
       expect(parent_work.file_sets.first.files.first).to be_an_instance_of Hydra::PCDM::File
     end
   end
+
+  context "with a full parsed file" do
+    around do |example|
+      orig_import_path = ENV['IMPORT_PATH']
+      ENV['IMPORT_PATH'] = File.join(fixture_path, 'images')
+      example.run
+      ENV['IMPORT_PATH'] = orig_import_path
+    end
+
+    before do
+      allow(CharacterizeJob).to receive(:perform_later)
+      permission_template
+    end
+    let(:permission_template) { Hyrax::PermissionTemplate.find_or_create_by!(source_id: collection.id) }
+
+    let(:parser) { Zizia::CsvParser.new(file: file) }
+    let(:file) { File.open('spec/dummy/spec/fixtures/csv_import/good/Postcards_-_Minneapolis_UNPACKED.csv') }
+    let(:importer) do
+      Zizia::Importer.new(
+        parser: parser,
+        record_importer: hyrax_record_importer
+      )
+    end
+    it "creates an importer" do
+      expect(importer).to be_an_instance_of Zizia::Importer
+      expect do
+        importer.import
+      end.to change { Collection.count }.by(1)
+                                        .and change { Work.count }.by(2)
+                                                                  .and change { FileSet.count }.by(4)
+    end
+  end
 end

@@ -56,11 +56,19 @@ module Zizia
       find_depositor(csv_import_detail.depositor_id)
     end
 
+    def import_all_records(records)
+      @collection_records = records.select { |record| record.object_type == "collection" }
+      @collection_records.each { |record| create_collection(record) }
+      @work_records = records.select { |record| record.object_type == "work" }
+      @file_records = records.select { |record| record.object_type == "file" }
+      @work_records.each { |record| import(record: record) }
+    end
+
     def find_collection_id(csv_import_detail:, record:)
       if csv_import_detail&.collection_id&.present?
         csv_import_detail.collection_id
-      elsif record&.parent&.first
-        Collection.where("#{deduplication_field}": record.parent.first)&.first&.id
+      elsif record&.parent
+        Collection.where("#{deduplication_field}": record.parent)&.first&.id
       end
     end
 
@@ -150,9 +158,16 @@ module Zizia
     # @return [Array] an array of Hyrax::UploadedFile ids
     def uploaded_files_ids(record)
       return unless record.mapper.respond_to?(:files)
-      files_to_attach = record.mapper.files
-      return [] if files_to_attach.nil? || files_to_attach.empty?
+      file_records_to_attach = if @file_records
+                                 @file_records.select { |file_rec| file_rec.parent == record.deduplication_key }
+                               else
+                                 []
+                               end
+      separate_line_files_to_attach = file_records_to_attach.flat_map { |file_rec| file_rec.mapper.files }
+      inline_files_to_attach = record.mapper.files
+      files_to_attach = separate_line_files_to_attach + inline_files_to_attach
 
+      return [] if files_to_attach.nil? || files_to_attach.empty?
       create_upload_files(files_to_attach).map(&:id)
     end
 

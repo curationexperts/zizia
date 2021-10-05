@@ -1,0 +1,6 @@
+Identifier,deduplication_key,object type,parent,title,creator,keyword,Rights Statement,Visibility,files,Resource Type,abstract or summary,Contributor,License,Publisher,Date Created,Subject,Language,location,Related Url,bibliographic_citation,Source
+MINNESOTA_POSTCARDS,MINNESOTA_POSTCARDS,C,,Minnesota Postcard Collection,,,,Public,,,,,,,,,,,,,
+MPC002,MPC002,W,MINNESOTA_POSTCARDS,"Canoeing on Lake Harriet, Minneapolis",Minneapolis Selling Company,postcard|~|Minneapolis|~|Lake Harriet,http://rightsstatements.org/vocab/NoC-OKLR/1.0/,open,birds.jpg,Image,"Postcard depicting Lake Harriet in Minnneapolis, MN",,http://creativecommons.org/publicdomain/mark/1.0/,,1900-1945,Postcards,English,,,,
+,,F,MPC002,,,,,,cat.jpg,Image,,,,,,,,,,,
+MPC003,MPC003,W,MINNESOTA_POSTCARDS,"Lake Harriet, Minneapolis, Minn with flag",Bloom Bros Co.,postcard|~|Minneapolis|~|Lake Harriet,http://rightsstatements.org/vocab/NoC-OKLR/1.0/,open,dog.jpg,Image,Postcard depicting Lake Harriet,,http://creativecommons.org/publicdomain/mark/1.0/,,1900-1945,Postcards,English,,,,
+,,F,MPC003,,,,,,zizia.png,Image,,,,,,,,,,,

@@ -49,7 +49,8 @@ module Zizia
       no_records_message && return unless records.count.positive?
       start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       Rails.logger.info "[zizia] event: start_import, batch_id: #{record_importer.batch_id}, expecting to import #{records.count} records."
-      records.each { |record| record_importer.import(record: record) }
+      record_importer.import_all_records(records)
+      # records.each { |record| record_importer.import(record: record) }
       end_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       elapsed_time = end_time - start_time
       Rails.logger.info "[zizia] event: finish_import, batch_id: #{record_importer.batch_id}, successful_record_count: #{record_importer.success_count}, failed_record_count: #{record_importer.failure_count}, elapsed_time: #{elapsed_time}, elapsed_time_per_record: #{elapsed_time / records.count}"

@@ -44,6 +44,11 @@ module Zizia
     # Properties defined with `multiple: false` in
     # Hyrax should return a single value instead of
     # an Array of values.
+
+    def parent
+      single_value('parent')
+    end
+
     def depositor
       single_value('depositor')
     end
@@ -95,6 +100,21 @@ module Zizia
 
     def files
       map_field('files')
+    end
+
+    def object_type
+      object_type_input = metadata[matching_header('object type')]&.downcase&.gsub(/\s+/, "")
+      return "work" unless object_type_input.present?
+      case object_type_input
+      when "collection", "c"
+        "collection"
+      when "file", "f"
+        "file"
+      when "work", "w"
+        "work"
+      else
+        raise "[zizia] Unrecognized object_type: #{object_type_input}"
+      end
     end
 
     ##

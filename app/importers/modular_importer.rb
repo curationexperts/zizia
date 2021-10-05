@@ -34,7 +34,10 @@ class ModularImporter
 
     Rails.logger.info "[zizia] event: start_import, batch_id: #{@csv_import.id}, collection_id: #{@collection_id}, user: #{@user_email}"
 
-    importer = Zizia::Importer.new(parser: Zizia::CsvParser.new(file: file), record_importer: Zizia::HyraxRecordImporter.new(attributes: attrs))
+    importer = Zizia::Importer.new(
+      parser: Zizia::CsvParser.new(file: file),
+      record_importer: Zizia::HyraxRecordImporter.new(attributes: attrs)
+    )
 
     importer.records.each_with_index do |record, index|
       pre_ingest_work = Zizia::PreIngestWork.find_or_create_by(deduplication_key: record.mapper.metadata['deduplication_key'])
@@ -63,8 +66,8 @@ class ModularImporter
   def find_collection_id(csv_import_detail:, record:)
     if csv_import_detail&.collection_id&.present?
       csv_import_detail.collection_id
-    elsif record&.parent&.first
-      Collection.where("#{csv_import_detail.deduplication_field}": record.parent.first)&.first&.id
+    elsif record&.parent
+      Collection.where("#{csv_import_detail.deduplication_field}": record.parent)&.first&.id
     end
   end
 end
