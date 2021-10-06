@@ -9,7 +9,7 @@ module Zizia
     end
 
     def update
-      existing_record.file_sets.map(&:destroy) if existing_record.respond_to?(:file_sets)
+      existing_record.file_sets.map(&:destroy)
       super
     end
   end

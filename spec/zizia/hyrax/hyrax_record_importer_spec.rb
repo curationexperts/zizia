@@ -210,7 +210,7 @@ describe Zizia::HyraxRecordImporter, :perform_jobs, :clean do
         expect do
           importer.import
           collection.reload
-        # note: this says it changes, but it keeps the same string value inside the array
+          # note: this says it changes, but it keeps the same string value inside the array
         end.to change { collection.title }.from(['Awesome Minnesota Postcard Collection']).to(['Awesome Minnesota Postcard Collection'])
       end
     end
