@@ -12,7 +12,7 @@ The simplest use case is importing content that matches [Hyrax's core and basic 
 1. Make a directory for your importer: `mkdir app/importers`
 1. Make a directory for your importer tests: `mkdir spec/importers`
 1. Make a directory for your fixture files: `mkdir spec/fixtures/images`
-1. Put three small images in `spec/fixtures/images` In this guide, we're using copyright free images from https://www.pexels.com/, `birds.jpg`, `cat.jpg`, and `dog.jpg`.
+1. Put three small images in `spec/fixtures/images` In this guide, we're using copyright free images from https://www.pexels.com/, `birds_1.jpg`, `cat_2.jpg`, and `dog_3.jpg`.
 1. Make a directory for your CSV fixture files: `mkdir spec/fixtures/csv_import`
 1. Put a file like this in `spec/fixtures/csv_import/zizia_basic.csv`:
   ```

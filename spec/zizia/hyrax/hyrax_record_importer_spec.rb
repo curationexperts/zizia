@@ -17,7 +17,7 @@ describe Zizia::HyraxRecordImporter, :perform_jobs, :clean do
     let(:metadata) do
       { 'title' => 'Comet in Moominland',
         'abstract or summary' => 'A book about moomins.',
-        'files' => 'dog.jpg' }
+        'files' => 'dog_3.jpg' }
     end
     context "importing a work" do
       let(:permission_template) { Hyrax::PermissionTemplate.find_or_create_by!(source_id: collection.id) }
@@ -115,7 +115,7 @@ describe Zizia::HyraxRecordImporter, :perform_jobs, :clean do
     let(:metadata) do
       { 'object type' => 'f',
         'abstract or summary' => 'A book about moomins.',
-        'files' => 'dog.jpg',
+        'files' => 'dog_3.jpg',
         'parent' => 'abc/123' }
     end
     let(:admin_set_id) { AdminSet.find_or_create_default_admin_set_id }
@@ -166,6 +166,16 @@ describe Zizia::HyraxRecordImporter, :perform_jobs, :clean do
          .and change { Work.count }.by(2)
          .and change { FileSet.count }.by(4)
       # rubocop: enable Layout/MultilineMethodCallIndentation
+    end
+
+    xit "attaches the files in the correct order" do
+      importer.import
+      work_one = Work.where(title: "*Canoeing*").first
+      expect(work_one.file_sets.first.label).to eq('birds_1.jpg')
+      expect(work_one.file_sets.second.label).to eq('cat_2.jpg')
+      work_two = Work.where(title: "*flag*").first
+      expect(work_two.file_sets.first.label).to eq('dog_3.jpg')
+      expect(work_two.file_sets.second.label).to eq('zizia_4.png')
     end
   end
 end
