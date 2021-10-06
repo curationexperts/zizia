@@ -1,7 +1,7 @@
 object type,title,creator,keyword,rights statement,visibility,files,identifier,deduplication_key,parent
 Collection,Collection of fruits,,,,public,,def/234,def/234,
 w,Work on tomatoes,"Tomato, Tommy",fruits|~|tomatoes,http://rightsstatements.org/vocab/InC/1.0/,public,,abc/123,abc/123,def/234
-f,,,,,,dog.jpg,,,abc/123
-f,,,,,,birds.jpg,,,abc/123
-f,,,,,,cat.jpg,,,abc/123
-f,,,,,,zizia.png,,,abc/123
+f,,,,,,dog_3.jpg,,,abc/123
+f,,,,,,birds_1.jpg,,,abc/123
+f,,,,,,cat_2.jpg,,,abc/123
+f,,,,,,zizia_4.png,,,abc/123

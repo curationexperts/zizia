@@ -240,7 +240,7 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
         # Ensure that all the fields got assigned as expected
         work_one.reload
         expect(work_one.title.first).to match(/Exterior/)
-        expect(work_one.file_sets.first.label).to eq('dog.jpg')
+        expect(work_one.file_sets.first.label).to eq('dog_3.jpg')
 
         # The show page for the CsvImport
         expect(page).to have_content 'all_fields_metadata_update.csv'
@@ -287,12 +287,12 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
         # Ensure that all the fields got assigned as expected
         work_one.reload
         expect(work_one.title.first).to match(/Exterior/)
-        expect(work_one.file_sets.first.label).to eq('dog.jpg')
+        expect(work_one.file_sets.first.label).to eq('dog_3.jpg')
 
         # Ensure that all the fields got assigned as expected
         work_two = Work.where(title: "*patisserie*").first
         expect(work_two.title.first).to match(/Interior/)
-        expect(work_two.file_sets.first.label).to eq('cat.jpg')
+        expect(work_two.file_sets.first.label).to eq('cat_2.jpg')
 
         # Update complete
         expect do
@@ -332,15 +332,15 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, clean: true, 
         # Ensure that all the fields got assigned as expected
         work_two.reload
         expect(work_two.title.first).to match(/Interior/)
-        expect(work_two.file_sets.first.label).to eq('cat.jpg')
+        expect(work_two.file_sets.first.label).to eq('cat_2.jpg')
 
         # Viewing additional details after an import
         visit "/csv_import_details/index"
         expect(page).to have_content('Total Size')
         click_on "#{Zizia::CsvImportDetail.last.id}"
         click_on 'View Files'
-        expect(page).to have_content('dog.jpg')
-        expect(page).to have_content('cat.jpg')
+        expect(page).to have_content('dog_3.jpg')
+        expect(page).to have_content('cat_2.jpg')
         expect(page).to have_content('5.74 MB')
         expect(page).to have_content('abc/123')
         expect(page).to have_content('haberdashery')

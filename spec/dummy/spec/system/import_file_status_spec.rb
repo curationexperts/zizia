@@ -95,8 +95,8 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
         click_on 'View Files'
         expect(page.html).not_to match(/glyphicon-question-sign/)
         expect(page.html).to match(/glyphicon-ok-sign/)
-        expect(page).to have_content('dog.jpg')
-        expect(page).to have_content('cat.jpg')
+        expect(page).to have_content('dog_3.jpg')
+        expect(page).to have_content('cat_2.jpg')
       end
     end
     context 'with the old ui' do
@@ -176,8 +176,8 @@ RSpec.describe 'Importing records from a CSV file', :perform_jobs, :clean, type:
         click_on 'View Files'
         expect(page.html).not_to match(/glyphicon-question-sign/)
         expect(page.html).to match(/glyphicon-ok-sign/)
-        expect(page).to have_content('dog.jpg')
-        expect(page).to have_content('cat.jpg')
+        expect(page).to have_content('dog_3.jpg')
+        expect(page).to have_content('cat_2.jpg')
       end
     end
   end
