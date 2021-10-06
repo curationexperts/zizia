@@ -188,7 +188,7 @@ module Zizia
     private
 
       def update_for(existing_record:, update_record:)
-        if existing_record.class == Collection
+        if update_record.object_type == :collection
           collection_updater(existing_record: existing_record, update_record: update_record)
         else
           curation_concern_updater(existing_record: existing_record, update_record: update_record)
