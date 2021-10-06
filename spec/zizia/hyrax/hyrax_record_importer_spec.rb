@@ -168,4 +168,51 @@ describe Zizia::HyraxRecordImporter, :perform_jobs, :clean do
       # rubocop: enable Layout/MultilineMethodCallIndentation
     end
   end
+  context "reingesting a collection" do
+    around do |example|
+      orig_import_path = ENV['IMPORT_PATH']
+      ENV['IMPORT_PATH'] = File.join(fixture_path, 'images')
+      example.run
+      ENV['IMPORT_PATH'] = orig_import_path
+    end
+
+    before do
+      allow(CharacterizeJob).to receive(:perform_later)
+      permission_template
+    end
+
+    let(:collection) { FactoryBot.create(:collection, identifier: ['MINNESOTA_POSTCARDS'], deduplication_key: 'MINNESOTA_POSTCARDS', title: ['Awesome Minnesota Postcard Collection'], visibility: 'open') }
+    let(:permission_template) { Hyrax::PermissionTemplate.find_or_create_by!(source_id: collection.id) }
+
+    let(:parser) { Zizia::CsvParser.new(file: file) }
+    let(:file) { File.open('spec/dummy/spec/fixtures/csv_import/good/Postcards_-_Minneapolis_UNPACKED.csv') }
+    let(:importer) do
+      Zizia::Importer.new(
+        parser: parser,
+        record_importer: hyrax_record_importer
+      )
+    end
+
+    it "can import a csv with an existing collection" do
+      expect do
+        importer.import
+        collection.reload
+      end.to change { collection.title }.from(['Awesome Minnesota Postcard Collection']).to(['Minnesota Postcard Collection'])
+    end
+
+    context "only changing new objects" do
+      let(:csv_import_detail) do
+        Zizia::CsvImportDetail.create(csv_import_id: 1, collection_id: collection.id, depositor_id: user.id,
+                                      batch_id: 1, deduplication_field: 'identifier', update_actor_stack: 'HyraxOnlyNew')
+      end
+
+      it "can import a csv with an existing collection" do
+        expect do
+          importer.import
+          collection.reload
+        # note: this says it changes, but it keeps the same string value inside the array
+        end.to change { collection.title }.from(['Awesome Minnesota Postcard Collection']).to(['Awesome Minnesota Postcard Collection'])
+      end
+    end
+  end
 end
