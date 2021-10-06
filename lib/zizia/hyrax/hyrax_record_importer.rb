@@ -187,10 +187,32 @@ module Zizia
 
     private
 
+      def update_for(existing_record:, update_record:)
+        if update_record.object_type == :collection
+          collection_updater(existing_record: existing_record, update_record: update_record)
+        else
+          curation_concern_updater(existing_record: existing_record, update_record: update_record)
+        end
+      end
+
+      def collection_updater(existing_record:, update_record:)
+        attrs = process_collection_attrs(record: update_record)
+
+        case csv_import_detail.update_actor_stack
+        when 'HyraxMetadataOnly', 'HyraxDelete'
+          # Update Existing Metadata, create new works
+          existing_record.update(attrs)
+        when 'HyraxOnlyNew'
+          return unless existing_record[deduplication_field] != update_record.try(deduplication_field)
+          # Ignore Existing Works, new works only
+          raise "This has not been implemented yet"
+        end
+      end
+
       # Update an existing object using the Hyrax actor stack
       # We assume the object was created as expected if the actor stack returns true.
       # Note that for now the update stack will only update metadata and update collection membership, it will not re-import files.
-      def update_for(existing_record:, update_record:)
+      def curation_concern_updater(existing_record:, update_record:)
         updater = case csv_import_detail.update_actor_stack
                   when 'HyraxMetadataOnly'
                     Zizia::HyraxMetadataOnlyUpdater.new(csv_import_detail: csv_import_detail,
